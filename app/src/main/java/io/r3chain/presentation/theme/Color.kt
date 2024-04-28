@@ -1,4 +1,4 @@
-package io.r3chain.ui.theme
+package io.r3chain.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
