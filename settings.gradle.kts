@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "R3"
 include(":app")
+include(":data_api")
