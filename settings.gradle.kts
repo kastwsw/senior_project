@@ -12,7 +12,9 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
+    // no repositories set in modules
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // for all modules
     repositories {
         google()
         mavenCentral()
