@@ -17,8 +17,19 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Включает функции сборки, включая пользовательские поля BuildConfig
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
+        debug {
+            // staging API
+            buildConfigField("String", "BASE_URL", "\"http://api.r3chain.io/\"")
+        }
         release {
+            // production API
+            buildConfigField("String", "BASE_URL", "\"http://api.r3chain.io\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -73,7 +84,16 @@ dependencies {
 //    // Add window size utils
 //    implementation("androidx.compose.material3:material3-window-size-class")
 
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
+    implementation("com.squareup.moshi:moshi-adapters:1.15.1")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.10.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.10.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(project(":data_api"))
 }
