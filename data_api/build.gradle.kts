@@ -35,16 +35,12 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
 
-//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-//    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
-
-    implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
-    implementation("com.squareup.moshi:moshi-adapters:1.15.1")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation("com.squareup.retrofit2:retrofit:2.10.0")
-    implementation("com.squareup.retrofit2:converter-moshi:2.10.0")
-    implementation("com.squareup.retrofit2:converter-scalars:2.10.0")
+    implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
+    implementation(libs.okhttp3.logging.interceptor)
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.moshi)
+    implementation(libs.retrofit2.converter.scalars)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
