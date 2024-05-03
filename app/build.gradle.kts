@@ -85,8 +85,12 @@ dependencies {
 //    // Add window size utils
 //    implementation("androidx.compose.material3:material3-window-size-class")
 
+    implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
     implementation(libs.okhttp3.logging.interceptor)
     implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.moshi)
+    implementation(libs.retrofit2.converter.scalars)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

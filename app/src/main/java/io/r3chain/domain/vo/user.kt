@@ -1,4 +1,4 @@
-package io.r3chain.presentation.vo
+package io.r3chain.domain.vo
 
 import io.r3chain.data.api.models.AuthDto
 
