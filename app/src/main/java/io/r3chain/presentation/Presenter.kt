@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.r3chain.data.repositories.UserRepository
+import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,7 +16,7 @@ class Presenter : ViewModel() {
         UserRepository()
     }
 
-    var currentUser by mutableStateOf<io.r3chain.data.vo.UserVO?>(null)
+    var currentUser by mutableStateOf<UserVO?>(null)
 
     fun signIn(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
