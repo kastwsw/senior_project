@@ -1,4 +1,4 @@
-package io.r3chain.presentation.theme
+package io.r3chain.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

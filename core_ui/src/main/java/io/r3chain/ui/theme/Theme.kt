@@ -1,4 +1,4 @@
-package io.r3chain.presentation.theme
+package io.r3chain.ui.theme
 
 import android.app.Activity
 import android.os.Build

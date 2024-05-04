@@ -35,12 +35,12 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
 
-    implementation(libs.moshi.kotlin)
-    implementation(libs.moshi.adapters)
-    implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.retrofit2)
-    implementation(libs.retrofit2.converter.moshi)
-    implementation(libs.retrofit2.converter.scalars)
+    api(libs.moshi.kotlin)
+    api(libs.moshi.adapters)
+    api(libs.okhttp3.logging.interceptor)
+    api(libs.retrofit2)
+    api(libs.retrofit2.converter.moshi)
+    api(libs.retrofit2.converter.scalars)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

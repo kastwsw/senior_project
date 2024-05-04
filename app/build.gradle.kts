@@ -17,19 +17,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // Включает функции сборки, включая пользовательские поля BuildConfig
-    buildFeatures {
-        buildConfig = true
-    }
-
     buildTypes {
-        debug {
-            // staging API
-            buildConfigField("String", "BASE_URL", "\"http://api.r3chain.io/\"")
-        }
         release {
-            // production API
-            buildConfigField("String", "BASE_URL", "\"http://api.r3chain.io\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -61,22 +50,14 @@ android {
     }
 }
 
-// NOTE: оставить подход с libs.versions.toml для возможной будущей многомодульности
 dependencies {
     implementation(libs.androidx.core.ktx)
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    implementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
-
     // Integration with activities
     implementation(libs.androidx.activity.compose)
-
-    // Android Studio Preview support
-    implementation(libs.androidx.ui.tooling.preview)
-    debugImplementation(libs.androidx.ui.tooling)
 
     // UI Tests
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -85,16 +66,11 @@ dependencies {
 //    // Add window size utils
 //    implementation("androidx.compose.material3:material3-window-size-class")
 
-    implementation(libs.moshi.kotlin)
-    implementation(libs.moshi.adapters)
-    implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.retrofit2)
-    implementation(libs.retrofit2.converter.moshi)
-    implementation(libs.retrofit2.converter.scalars)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
-    implementation(project(":data_api"))
+    implementation(project(":core_ui"))
+    implementation(project(":core_data"))
 }

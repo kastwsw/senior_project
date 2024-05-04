@@ -1,9 +1,9 @@
-package io.r3chain.data
+package io.r3chain.data.repositories
 
-import io.r3chain.DiContainer
 import io.r3chain.data.api.apis.AuthApi
 import io.r3chain.data.api.models.AuthLoginRequestDto
-import io.r3chain.domain.vo.UserVO
+import io.r3chain.data.di.DiContainer
+import io.r3chain.data.vo.UserVO
 
 class UserRepository {
 
@@ -20,5 +20,4 @@ class UserRepository {
             UserVO().createByApi(it)
         }
     }
-
 }
