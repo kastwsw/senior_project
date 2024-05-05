@@ -1,4 +1,4 @@
-package io.r3chain.features.auth.presentation.screens
+package io.r3chain.features.auth.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,13 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.r3chain.R
-import io.r3chain.features.auth.presentation.LocalModel
+import io.r3chain.features.root.ui.LocalSharedModel
 import io.r3chain.ui.atoms.PrimaryButton
 import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen() {
-    val presenter = LocalModel.current
+    val presenter = LocalSharedModel.current
     Box(
         modifier = Modifier
             .fillMaxSize()

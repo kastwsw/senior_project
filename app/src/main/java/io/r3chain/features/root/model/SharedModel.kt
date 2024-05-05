@@ -1,4 +1,4 @@
-package io.r3chain.features.auth.presentation
+package io.r3chain.features.root.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,7 @@ import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class Model : ViewModel() {
+class SharedModel : ViewModel() {
 
     private val userRepository by lazy {
         UserRepository()
