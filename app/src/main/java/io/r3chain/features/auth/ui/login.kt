@@ -8,13 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,11 +18,11 @@ import io.r3chain.R
 import io.r3chain.features.auth.model.AuthModel
 import io.r3chain.features.root.ui.LocalSharedModel
 import io.r3chain.ui.atoms.PrimaryButton
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen() {
     val sharedModel = LocalSharedModel.current
+    // TODO: инджектить sharedModel в AuthModel
     val authModel: AuthModel = viewModel()
     Box(
         modifier = Modifier
@@ -44,26 +38,15 @@ fun LoginScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            var isLoading by remember {
-                mutableStateOf(false)
-            }
-            Text(
-                text = sharedModel.currentUser?.firstName ?: ""
-            )
-            val coroutineScope = rememberCoroutineScope()
             PrimaryButton(
                 text = stringResource(R.string.action_sign_in),
-                enabled = !isLoading
+                enabled = !authModel.isLoading
             ) {
-                coroutineScope.launch {
-                    isLoading = true
-                    authModel.signIn(
-                        email = "test3@example.com",
-                        password = "test_pass",
-                        model = sharedModel
-                    )
-                    isLoading = false
-                }
+                authModel.signIn(
+                    email = "test3@example.com",
+                    password = "test_pass",
+                    model = sharedModel
+                )
             }
         }
     }
