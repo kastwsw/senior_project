@@ -25,7 +25,7 @@ import io.r3chain.ui.atoms.PrimaryButton
 import kotlinx.coroutines.launch
 
 @Composable
-fun AuthScreen() {
+fun LoginScreen() {
     val presenter = LocalSharedModel.current
     Box(
         modifier = Modifier
