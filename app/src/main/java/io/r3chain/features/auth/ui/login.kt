@@ -19,14 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.R
+import io.r3chain.features.auth.model.AuthModel
 import io.r3chain.features.root.ui.LocalSharedModel
 import io.r3chain.ui.atoms.PrimaryButton
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen() {
-    val presenter = LocalSharedModel.current
+    val sharedModel = LocalSharedModel.current
+    val authModel: AuthModel = viewModel()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +48,7 @@ fun LoginScreen() {
                 mutableStateOf(false)
             }
             Text(
-                text = presenter.currentUser?.firstName ?: ""
+                text = sharedModel.currentUser?.firstName ?: ""
             )
             val coroutineScope = rememberCoroutineScope()
             PrimaryButton(
@@ -54,9 +57,10 @@ fun LoginScreen() {
             ) {
                 coroutineScope.launch {
                     isLoading = true
-                    presenter.signIn(
+                    authModel.signIn(
                         email = "test3@example.com",
-                        password = "test_pass"
+                        password = "test_pass",
+                        model = sharedModel
                     )
                     isLoading = false
                 }

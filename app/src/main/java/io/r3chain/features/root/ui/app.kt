@@ -6,7 +6,8 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.features.auth.ui.LoginScreen
-import io.r3chain.features.root.model.SharedModel
+import io.r3chain.features.root.model.RootModel
+import io.r3chain.navigation.SharedModel
 import io.r3chain.ui.theme.R3Theme
 
 val LocalSharedModel = compositionLocalOf<SharedModel> {
@@ -17,7 +18,7 @@ val LocalSharedModel = compositionLocalOf<SharedModel> {
 fun App() {
     R3Theme {
         CompositionLocalProvider(
-            LocalSharedModel provides viewModel<SharedModel>()
+            LocalSharedModel provides viewModel<RootModel>()
         ) {
             LoginScreen()
         }
