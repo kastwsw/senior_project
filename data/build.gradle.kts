@@ -49,5 +49,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 
-    implementation(project(":core_api"))
+    implementation(project(":data_api"))
 }

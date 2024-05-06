@@ -72,5 +72,5 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":core_ui"))
-    implementation(project(":core_data"))
+    implementation(project(":data"))
 }
