@@ -3,18 +3,21 @@ package io.r3chain.features.auth.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
 import io.r3chain.navigation.SharedModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthModel : ViewModel() {
-
-    private val userRepository by lazy {
-        UserRepository()
-    }
+@HiltViewModel
+class AuthModel @Inject constructor(
+    private val handle: SavedStateHandle,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     var isLoading by mutableStateOf(false)
         private set

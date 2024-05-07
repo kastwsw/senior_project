@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kspTool)
+    alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -40,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
 
     packaging {
@@ -59,12 +61,15 @@ dependencies {
     // Integration with activities
     implementation(libs.androidx.activity.compose)
 
+//    // Add window size utils
+//    implementation("androidx.compose.material3:material3-window-size-class")
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     // UI Tests
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-//    // Add window size utils
-//    implementation("androidx.compose.material3:material3-window-size-class")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -73,4 +78,8 @@ dependencies {
 
     implementation(project(":core_ui"))
     implementation(project(":data"))
+}
+
+hilt {
+    enableAggregatingTask = true
 }

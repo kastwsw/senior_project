@@ -20,10 +20,11 @@ import io.r3chain.features.root.ui.LocalSharedModel
 import io.r3chain.ui.atoms.PrimaryButton
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    authModel: AuthModel = viewModel()
+) {
     val sharedModel = LocalSharedModel.current
-    // TODO: инджектить sharedModel в AuthModel
-    val authModel: AuthModel = viewModel()
+
     Box(
         modifier = Modifier
             .fillMaxSize()

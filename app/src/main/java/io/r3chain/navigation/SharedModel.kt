@@ -11,7 +11,7 @@ open class SharedModel : ViewModel() {
     var currentUser by mutableStateOf<UserVO?>(null)
         private set
 
-    // TODO: делать это через апдейт БД (хз что с "не запоминать")
+    // TODO: делать это через апдейт БД (хз что с "не запоминать меня")
     fun updateUser(value: UserVO) {
         currentUser = value
     }

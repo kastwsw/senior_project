@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kspTool)
+    alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -46,8 +48,15 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
 
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 
     implementation(project(":data_api"))
+}
+
+hilt {
+    enableAggregatingTask = true
 }

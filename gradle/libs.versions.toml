@@ -1,12 +1,15 @@
 [versions]
 agp = "8.3.2"
-kotlin = "1.9.0"
+kotlin = "1.9.23"
+ksp = "1.9.23-1.0.20"
 
-coreKtx = "1.13.0"
+coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.7.0"
 
-composeBom = "2024.04.01"
+composeBom = "2024.05.00"
 activityCompose = "1.9.0"
+
+hilt = "2.51.1"
 
 moshi = "1.15.1"
 okhttp3 = "4.12.0"
@@ -28,6 +31,9 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 
@@ -46,3 +52,5 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kspTool = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
