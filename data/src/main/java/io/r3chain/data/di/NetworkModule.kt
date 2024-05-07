@@ -10,16 +10,12 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface DataModule {
+interface NetworkModule {
 
     companion object {
+
         @Singleton
         @Provides
-        fun provideApiClient(): ApiClient = ApiClient(baseUrl = BuildConfig.BASE_URL)
-
-        // TODO: запровайдить БД
-//        @Singleton
-//        @Provides
-//        fun provideRoom(@ApplicationContext context: Context): SomeBD = SomeBD(context = context)
+        fun provideApiClient() = ApiClient(baseUrl = BuildConfig.BASE_URL)
     }
 }

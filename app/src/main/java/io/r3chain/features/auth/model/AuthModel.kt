@@ -25,9 +25,7 @@ class AuthModel @Inject constructor(
     fun signIn(email: String, password: String, model: SharedModel) {
         viewModelScope.launch(Dispatchers.IO) {
             isLoading = true
-            userRepository.getUser(email = email, password = password)?.also {
-                model.updateUser(it)
-            }
+            userRepository.fetchUser(email = email, password = password)
             isLoading = false
         }
     }

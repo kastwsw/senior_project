@@ -15,6 +15,8 @@
 
 package io.r3chain.data.api.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import io.r3chain.data.api.models.EnumUserOrganizationState
 
 import com.squareup.moshi.Json
@@ -36,9 +38,10 @@ import com.squareup.moshi.JsonClass
  * @param uiId 
  */
 
-
+@Entity
 data class AuthDto (
 
+    @PrimaryKey
     @Json(name = "id")
     val id: kotlin.Int,
 

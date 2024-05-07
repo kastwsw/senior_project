@@ -3,10 +3,30 @@ package io.r3chain.navigation
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.r3chain.data.repositories.UserRepository
 import io.r3chain.data.vo.UserVO
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-open class SharedModel : ViewModel() {
+@HiltViewModel
+open class SharedModel @Inject constructor(
+    private val handle: SavedStateHandle,
+    private val userRepository: UserRepository
+) : ViewModel() {
+
+    // TODO: запрашивать где-нить позже инициализации
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.getUserFlow().collect {
+                currentUser = it
+            }
+        }
+    }
 
     var currentUser by mutableStateOf<UserVO?>(null)
         private set

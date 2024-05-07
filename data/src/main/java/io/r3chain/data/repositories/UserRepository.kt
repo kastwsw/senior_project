@@ -4,24 +4,32 @@ import dagger.Lazy
 import io.r3chain.data.api.apis.AuthApi
 import io.r3chain.data.api.infrastructure.ApiClient
 import io.r3chain.data.api.models.AuthLoginRequestDto
+import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.vo.UserVO
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
+    private val cacheDatabase: Lazy<CacheDatabase>,
     private val apiClient: Lazy<ApiClient>
 ) {
 
-    suspend fun getUser(email: String, password: String): UserVO? {
+    fun getUserFlow() = cacheDatabase.get().userDao().getAll().map { list ->
+        list.firstOrNull()?.let {
+            UserVO().createByApi(it)
+        }
+    }
+
+    suspend fun fetchUser(email: String, password: String) {
         // TODO: обработка ошибок и всё такое
         val response = apiClient.get()
             .createService(AuthApi::class.java)
             .apiV1AuthLoginPost(
                 AuthLoginRequestDto(email = email, password = password)
             )
-        // TODO: кэш в БД
 //        val token = response.body()?.sessionList?.values?.firstOrNull()?.token ?: ""
-        return response.body()?.authList?.values?.firstOrNull()?.let {
-            UserVO().createByApi(it)
+        response.body()?.authList?.values?.firstOrNull()?.let {
+            cacheDatabase.get().userDao().insert(it)
         }
     }
 }
