@@ -16,15 +16,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthModel
-import io.r3chain.features.root.ui.LocalSharedModel
+import io.r3chain.navigation.SharedModel
 import io.r3chain.ui.atoms.PrimaryButton
 
 @Composable
 fun LoginScreen(
-    authModel: AuthModel = viewModel()
+    authModel: AuthModel = viewModel(),
+    sharedModel: SharedModel = viewModel()
 ) {
-    val sharedModel = LocalSharedModel.current
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -45,8 +44,7 @@ fun LoginScreen(
             ) {
                 authModel.signIn(
                     email = "test3@example.com",
-                    password = "test_pass",
-                    model = sharedModel
+                    password = "test_pass"
                 )
             }
         }

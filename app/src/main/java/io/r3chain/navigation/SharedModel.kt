@@ -20,7 +20,7 @@ open class SharedModel @Inject constructor(
 ) : ViewModel() {
 
     // TODO: запрашивать где-нить позже инициализации
-    init {
+    fun initUser() {
         viewModelScope.launch(Dispatchers.IO) {
             userRepository.getUserFlow().collect {
                 currentUser = it

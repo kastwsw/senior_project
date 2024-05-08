@@ -22,7 +22,7 @@ class AuthModel @Inject constructor(
     var isLoading by mutableStateOf(false)
         private set
 
-    fun signIn(email: String, password: String, model: SharedModel) {
+    fun signIn(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             isLoading = true
             userRepository.fetchUser(email = email, password = password)
