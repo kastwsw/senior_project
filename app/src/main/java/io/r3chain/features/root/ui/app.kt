@@ -4,9 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.r3chain.navigation.SharedModel
+import io.r3chain.navigation.NavigationModel
 import io.r3chain.ui.theme.R3Theme
-
 
 @Composable
 fun App() {
@@ -17,7 +16,7 @@ fun App() {
 
 @Composable
 private fun Content(
-    model: SharedModel = viewModel()
+    model: NavigationModel = viewModel()
 ) {
     if (model.currentUser == null) {
         RootScreen.Auth.Draw()

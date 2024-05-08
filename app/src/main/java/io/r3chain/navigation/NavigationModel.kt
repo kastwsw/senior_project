@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class SharedModel @Inject constructor(
+open class NavigationModel @Inject constructor(
     private val handle: SavedStateHandle,
     private val userRepository: UserRepository
 ) : ViewModel() {

@@ -7,18 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.r3chain.navigation.SharedModel
+import io.r3chain.navigation.NavigationModel
 
 @Composable
 fun SettingsScreen(
-    sharedModel: SharedModel = viewModel()
+    navigationModel: NavigationModel = viewModel()
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = sharedModel.currentUser?.firstName ?: ""
+            text = navigationModel.currentUser?.firstName ?: ""
         )
     }
 }

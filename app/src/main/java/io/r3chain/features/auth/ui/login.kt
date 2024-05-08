@@ -16,13 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthModel
-import io.r3chain.navigation.SharedModel
+import io.r3chain.navigation.NavigationModel
 import io.r3chain.ui.atoms.PrimaryButton
 
 @Composable
 fun LoginScreen(
     authModel: AuthModel = viewModel(),
-    sharedModel: SharedModel = viewModel()
+    navigationModel: NavigationModel = viewModel()
 ) {
     Box(
         modifier = Modifier
