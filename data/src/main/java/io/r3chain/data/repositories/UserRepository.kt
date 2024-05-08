@@ -32,4 +32,9 @@ class UserRepository @Inject constructor(
             cacheDatabase.get().userDao().insert(it)
         }
     }
+
+    suspend fun exit() {
+        cacheDatabase.get().userDao().deleteAll()
+    }
+
 }

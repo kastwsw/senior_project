@@ -2,4 +2,5 @@
     <string name="app_name">R3</string>
 
     <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_out">Exit</string>
 </resources>
