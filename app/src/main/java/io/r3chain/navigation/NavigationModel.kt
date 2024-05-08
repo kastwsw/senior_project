@@ -1,4 +1,4 @@
-package io.r3chain.features.auth.model
+package io.r3chain.navigation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,24 +8,32 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
+import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthModel @Inject constructor(
+open class NavigationModel @Inject constructor(
     private val handle: SavedStateHandle,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var isLoading by mutableStateOf(false)
-        private set
-
-    fun signIn(email: String, password: String) {
+    // TODO: запрашивать где-нить позже инициализации
+    fun initUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            isLoading = true
-            userRepository.fetchUser(email = email, password = password)
-            isLoading = false
+            userRepository.getUserFlow().collect {
+                currentUser = it
+            }
         }
     }
+
+    var currentUser by mutableStateOf<UserVO?>(null)
+        private set
+
+    // TODO: делать это через апдейт БД (хз что с "не запоминать меня")
+    fun updateUser(value: UserVO) {
+        currentUser = value
+    }
+
 }

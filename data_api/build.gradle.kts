@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kspPlugin)
 }
 
 android {
@@ -41,6 +42,9 @@ dependencies {
     api(libs.retrofit2)
     api(libs.retrofit2.converter.moshi)
     api(libs.retrofit2.converter.scalars)
+
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

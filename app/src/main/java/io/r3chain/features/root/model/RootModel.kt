@@ -1,7 +1,7 @@
 package io.r3chain.features.root.model
 
-import io.r3chain.navigation.SharedModel
+import androidx.lifecycle.ViewModel
 
-class RootModel : SharedModel() {
+class RootModel: ViewModel() {
 
 }
