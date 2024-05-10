@@ -40,7 +40,8 @@ fun LoginScreen(
         ) {
             PrimaryButton(
                 text = stringResource(R.string.action_sign_in),
-                enabled = !authModel.isLoading
+                enabled = !authModel.isLoading,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 authModel.signIn(
                     email = "test3@example.com",

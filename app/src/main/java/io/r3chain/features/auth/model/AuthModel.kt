@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,9 +19,9 @@ class AuthModel @Inject constructor(
         private set
 
     fun signIn(email: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             isLoading = true
-            userRepository.fetchUser(email = email, password = password)
+            userRepository.authUser(email = email, password = password)
             isLoading = false
         }
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
+import io.r3chain.data.services.NetworkService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 open class NavigationModel @Inject constructor(
     private val handle: SavedStateHandle,
-    private val connectivityService: ConnectivityService,
+    private val networkService: NetworkService,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -33,7 +34,7 @@ open class NavigationModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             // не реагировать не мелкие изменения состояния
             @OptIn(FlowPreview::class)
-            connectivityService.internetAvailableFlow
+            networkService.internetAvailableFlow
                 .debounce(800)
                 .distinctUntilChanged()
                 .collect {
