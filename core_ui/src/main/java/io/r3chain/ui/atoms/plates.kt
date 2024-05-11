@@ -16,14 +16,14 @@ fun ErrorPlate(
 ) {
     Text(
         text = text,
+        style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onError,
         modifier = Modifier
-            .padding(horizontal = 12.dp, vertical = 20.dp)
+            .padding(horizontal = 14.dp, vertical = 16.dp)
             .background(
                 color = MaterialTheme.colorScheme.error,
-                shape = CircleShape
+                shape = MaterialTheme.shapes.small
             )
-            .padding(16.dp)
             .then(modifier)
     )
 }

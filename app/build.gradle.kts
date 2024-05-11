@@ -61,6 +61,8 @@ dependencies {
     // Integration with activities
     implementation(libs.androidx.activity.compose)
 
+//    // accompanist for compose
+//    implementation(libs.accompanist.systemuicontroller)
 //    // Add window size utils
 //    implementation("androidx.compose.material3:material3-window-size-class")
 

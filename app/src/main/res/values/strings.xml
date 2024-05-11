@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">R3</string>
 
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_out">Exit</string>
+    <string name="r3_slogan">Join the Circular Economy</string>
+    <string name="sign_up_hint">Don\'t have an account?</string>
+    <string name="sign_up_label">Sign Up</string>
+
+    <string name="sign_in_label">Sign in</string>
+    <string name="sign_out_label">Log out</string>
+
+    <string name="error_no_connection">Internet connection not found</string>
+    <string name="error_no_server">Oops.. Server not answered\nPlease check your internet and try again</string>
 </resources>

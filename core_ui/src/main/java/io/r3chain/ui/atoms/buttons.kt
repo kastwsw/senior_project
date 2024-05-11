@@ -2,8 +2,7 @@ package io.r3chain.ui.atoms
 
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,7 +15,7 @@ fun PrimaryButton(
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
-    FilledTonalButton(
+    Button(
         modifier = Modifier
             .defaultMinSize(minWidth = 160.dp)
             .height(60.dp)

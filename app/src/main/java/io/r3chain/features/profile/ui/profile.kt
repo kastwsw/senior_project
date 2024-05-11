@@ -40,7 +40,7 @@ fun SettingsScreen(
                     text = navigationModel.currentUser?.firstName ?: ""
                 )
                 PrimaryButton(
-                    text = stringResource(R.string.action_sign_out),
+                    text = stringResource(R.string.sign_out_label),
                     enabled = !profileModel.isLoading
                 ) {
                     profileModel.signOut()

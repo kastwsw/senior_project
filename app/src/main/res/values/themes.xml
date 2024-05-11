@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.R3" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.R3" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/splashBackground</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:navigationBarColor">@color/splashBackground</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <item name="android:windowBackground">@color/splashBackground</item>
+    </style>
 </resources>
