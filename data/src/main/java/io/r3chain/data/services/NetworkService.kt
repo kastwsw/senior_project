@@ -4,9 +4,13 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -32,7 +36,8 @@ class NetworkService @Inject constructor(
     /**
      * Системная служба контроля сетевых подключений.
      */
-    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     /**
      * Обработчик событий сетевых подключений.
@@ -48,7 +53,10 @@ class NetworkService @Inject constructor(
             _internetAvailableFlow.value = false
         }
 
-        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
+        override fun onCapabilitiesChanged(
+            network: Network,
+            networkCapabilities: NetworkCapabilities
+        ) {
             // Обновление состояния доступа к Интернету при изменении возможностей сети
             _internetAvailableFlow.value = networkCapabilities
                 .hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -92,26 +100,41 @@ class NetworkService @Inject constructor(
         РАБОТА С API СЕРВЕРА
      */
 
+    private val _exceptionsFlow = MutableSharedFlow<IOException>(
+        // 0 - новые подписчики не получат предыдущие ошибки
+        replay = 0,
+        // хранить не более 10 ошибок
+        extraBufferCapacity = 10,
+        // удалять старые ошибоки в случае переполнения буфера
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
+    /**
+     * Flow сетевых ошибок обращения к серверу.
+     */
+    val exceptionsFlow = _exceptionsFlow.asSharedFlow()
+
     suspend fun <T> safeApiCall(apiCall: suspend () -> T) = withContext(Dispatchers.IO) {
         // проверить доступ в интернет
         checkCurrentNetworkState()
         if (!internetAvailableFlow.value) {
-            // TODO: добавить ошибку в flow ошибок
-            // TODO: изменить стейт для UI, сообщающий о неудачной попытке доступа в сеть
-            Result.failure(IOException("No internet connection."))
+            // добавить ошибку в flow ошибок
+            val e = IOException("No internet connection.")
+            _exceptionsFlow.emit(e)
+            Result.failure(e)
         } else {
             // сделать запрос к серверу
             try {
                 Result.success(apiCall())
             } catch (e: IOException) {
-                // TODO: добавить ошибку в flow ошибок
-                // TODO: изменить стейт для UI, сообщающий о неудачной попытке доступа в сеть
+                // добавить ошибку в flow ошибок
+                _exceptionsFlow.emit(e)
                 // проверить доступ в интернет
                 checkCurrentNetworkState()
                 if (internetAvailableFlow.value) {
                     // TODO: логировать в Firebase
                     // серевер недоступен при активном доступе в Интернет
-//                    Log.w(Log.WARN, "Server not answered.", e)
+                    Log.d(this::class.simpleName, "Server did not answer.", e)
                 }
                 Result.failure(e)
             } catch (e: Throwable) {

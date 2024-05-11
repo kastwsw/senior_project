@@ -25,3 +25,9 @@
 #}
 #-keep class com.google.gson.reflect.TypeToken { *; }
 #-keep class * extends com.google.gson.reflect.TypeToken
+
+# Cut VERBOSE and DEBUG logs.
+-assumenosideeffects class android.util.Log {
+    public static int v(...);
+    public static int d(...);
+}

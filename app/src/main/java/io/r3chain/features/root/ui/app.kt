@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.navigation.NavigationModel
+import io.r3chain.ui.atoms.ErrorPlate
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
@@ -35,27 +36,12 @@ private fun Content(
             RootScreen.Sets.Draw()
         }
 
-        // есть или нет коннект
-        if (!model.hasConnection) NoConnection(
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
+//        // есть или нет коннект
+//        if (!model.hasConnection) ErrorPlate(
+//            text = "!No connection",
+//            modifier = Modifier.align(Alignment.BottomCenter)
+//        )
     }
-}
-
-@Composable
-private fun NoConnection(modifier: Modifier = Modifier) {
-    Text(
-        text = "!No connection",
-        color = MaterialTheme.colorScheme.onError,
-        modifier = Modifier
-            .padding(horizontal = 12.dp, vertical = 20.dp)
-            .background(
-                color = MaterialTheme.colorScheme.error,
-                shape = CircleShape
-            )
-            .padding(16.dp)
-            .then(modifier)
-    )
 }
 
 @Preview(name = "Login", showSystemUi = true)

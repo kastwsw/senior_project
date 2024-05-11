@@ -26,30 +26,34 @@ open class NavigationModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    /**
+     * Flow с ошибками обращения к API.
+     */
+    val apiErrors = networkService.exceptionsFlow
+
+    /**
+     * Есть доступ в интерент или нет.
+     */
     var hasConnection by mutableStateOf(true)
         private set
 
     init {
         // Доступ в Интернет
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             // не реагировать не мелкие изменения состояния
             @OptIn(FlowPreview::class)
             networkService.internetAvailableFlow
                 .debounce(800)
                 .distinctUntilChanged()
                 .collect {
-                    withContext(Dispatchers.Main) {
-                        hasConnection = it
-                    }
+                    hasConnection = it
                 }
         }
 
         // Начать отслеживать данные текущего пользователя.
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             userRepository.getUserFlow().collectLatest {
-                withContext(Dispatchers.Main) {
-                    currentUser = it
-                }
+                currentUser = it
             }
         }
     }

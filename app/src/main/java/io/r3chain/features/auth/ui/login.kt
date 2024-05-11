@@ -9,6 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,7 +22,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthModel
 import io.r3chain.navigation.NavigationModel
+import io.r3chain.ui.atoms.ErrorPlate
 import io.r3chain.ui.atoms.PrimaryButton
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
@@ -47,6 +54,22 @@ fun LoginScreen(
                     email = "test3@example.com",
                     password = "test_pass"
                 )
+            }
+        }
+
+        var showError by remember { mutableStateOf(false) }
+
+        // ошбика доступа к серверу
+        if (showError) ErrorPlate(
+            text = "!Server error",
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+
+        LaunchedEffect(navigationModel.apiErrors) {
+            navigationModel.apiErrors.collect {
+                showError = true
+                delay(2000)  // Показываем сообщение в течение 2 секунд
+                showError = false
             }
         }
     }
