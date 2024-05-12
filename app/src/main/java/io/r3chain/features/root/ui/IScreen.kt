@@ -1,4 +1,4 @@
-package io.r3chain.navigation
+package io.r3chain.features.root.ui
 
 import androidx.compose.runtime.Composable
 

@@ -12,16 +12,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.profile.model.ProfileModel
-import io.r3chain.navigation.NavigationModel
+import io.r3chain.features.root.model.RootModel
 import io.r3chain.ui.atoms.PrimaryButton
 
 @Composable
 fun SettingsScreen(
-    navigationModel: NavigationModel = viewModel(),
-    profileModel: ProfileModel = viewModel()
+    rootModel: RootModel = hiltViewModel(),
+    profileModel: ProfileModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -37,7 +37,7 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = navigationModel.currentUser?.firstName ?: ""
+                    text = rootModel.currentUser?.firstName ?: ""
                 )
                 PrimaryButton(
                     text = stringResource(R.string.sign_out_label),

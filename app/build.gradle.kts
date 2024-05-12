@@ -60,6 +60,9 @@ dependencies {
 
     // Integration with activities
     implementation(libs.androidx.activity.compose)
+    // navigation
+    implementation(libs.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
 
 //    // accompanist for compose
 //    implementation(libs.accompanist.systemuicontroller)
