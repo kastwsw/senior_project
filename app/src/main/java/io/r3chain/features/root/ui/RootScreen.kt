@@ -1,6 +1,7 @@
 package io.r3chain.features.root.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.r3chain.features.auth.ui.LoginScreen
@@ -16,7 +17,9 @@ sealed class RootScreen : IScreen {
 
         @Composable
         override fun Draw() {
-            LoadingBox(modifier = Modifier.fillMaxSize())
+            Surface {
+                LoadingBox(modifier = Modifier.fillMaxSize())
+            }
         }
     }
 

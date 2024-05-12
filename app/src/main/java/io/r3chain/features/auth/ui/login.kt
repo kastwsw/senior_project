@@ -30,6 +30,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -229,7 +230,12 @@ private fun LoginField(
             autoCorrect = true,
             imeAction = ImeAction.Next
         ),
-        onValueChange = onValueChange
+        onValueChange = onValueChange,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        shape = MaterialTheme.shapes.small
     )
 }
 
@@ -324,7 +330,12 @@ private fun PasswordField(
             }
             // отработать
             onValueChange(it)
-        }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        shape = MaterialTheme.shapes.small
     )
 }
 

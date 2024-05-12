@@ -21,14 +21,14 @@ fun ErrorPlate(
     Text(
         text = text,
         style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onError,
+        color = MaterialTheme.colorScheme.onErrorContainer,
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .then(modifier)
             .background(
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colorScheme.errorContainer,
                 shape = MaterialTheme.shapes.small
             )
-            .then(modifier)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     )
 }
 
