@@ -52,6 +52,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -179,7 +180,10 @@ fun LoginScreen(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                             Text(
-                                text = stringResource(R.string.sign_up_label)
+                                text = stringResource(R.string.sign_up_label),
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                textDecoration = TextDecoration.Underline
                             )
                         }
                     }
@@ -232,8 +236,8 @@ private fun LoginField(
         ),
         onValueChange = onValueChange,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         ),
         shape = MaterialTheme.shapes.small
     )
@@ -332,8 +336,8 @@ private fun PasswordField(
             onValueChange(it)
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
-            unfocusedContainerColor = MaterialTheme.colorScheme.onPrimary
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
         ),
         shape = MaterialTheme.shapes.small
     )

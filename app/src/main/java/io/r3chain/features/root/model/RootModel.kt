@@ -11,6 +11,7 @@ import io.r3chain.data.repositories.UserRepository
 import io.r3chain.data.services.NetworkService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -25,14 +26,26 @@ open class RootModel @Inject constructor(
 ) : ViewModel() {
 
     /**
-     * Flow с ошибками обращения к API.
+     * Current screen state.
      */
-    val apiErrors = networkService.exceptionsFlow
+    var currentScreen by mutableStateOf(ScreenState.LOADING)
+        private set
 
     /**
      * Есть доступ в интерент или нет.
      */
     var hasConnection by mutableStateOf(true)
+        private set
+
+    /**
+     * Flow с ошибками обращения к API.
+     */
+    val apiErrors = networkService.exceptionsFlow
+
+    /**
+     * Данные авторизованного пользователя.
+     */
+    var currentUser: UserVO? by mutableStateOf(null)
         private set
 
     init {
@@ -50,18 +63,16 @@ open class RootModel @Inject constructor(
 
         // Начать отслеживать данные текущего пользователя.
         viewModelScope.launch {
+//            delay(3500)
             userRepository.getUserFlow().collectLatest {
+                currentScreen = if (it != null) ScreenState.INSIDE else ScreenState.AUTH
                 currentUser = it
             }
         }
     }
 
-    var currentUser by mutableStateOf<UserVO?>(null)
-        private set
-
-    // TODO: делать это через апдейт БД (хз что с "не запоминать меня")
-    fun updateUser(value: UserVO) {
-        currentUser = value
+    enum class ScreenState {
+        LOADING, AUTH, INSIDE
     }
 
 }

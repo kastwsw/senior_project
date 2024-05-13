@@ -1,10 +1,11 @@
 package io.r3chain.features.root.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -27,6 +28,7 @@ private fun Content(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.background)
             .navigationBarsPadding()
     ) {
         val navigationController = rememberNavController()
@@ -34,32 +36,36 @@ private fun Content(
         // navigation sets
         NavHost(
             navController = navigationController,
-            startDestination = RootScreen.Loading.javaClass.name
+            startDestination = model.currentScreen.name
         ) {
-            composable(route = RootScreen.Loading.javaClass.name) {
+            composable(route = RootModel.ScreenState.LOADING.name) {
                 RootScreen.Loading.Draw()
             }
-            composable(route = RootScreen.Auth.javaClass.name) {
+            composable(route = RootModel.ScreenState.AUTH.name) {
                 RootScreen.Auth.Draw()
             }
-            composable(route = RootScreen.Sets.javaClass.name) {
+            composable(route = RootModel.ScreenState.INSIDE.name) {
                 RootScreen.Sets.Draw()
             }
         }
 
-        // navigate by state
-        LaunchedEffect(model.currentUser) {
-            val route = navigationController.currentBackStackEntry?.destination?.route
-            if (model.currentUser == null) {
-                if (route != RootScreen.Auth.javaClass.name) navigationController.navigate(
-                    RootScreen.Auth.javaClass.name
-                )
-            } else {
-                if  (route != RootScreen.Sets.javaClass.name) navigationController.navigate(
-                    RootScreen.Sets.javaClass.name
-                )
-            }
-        }
+        // TODO: проверить анимацию в NavHost, если она работает без принудительного navigate, то OK
+//        // navigate by state
+//        LaunchedEffect(model.screenState) {
+//            val route = navigationController.currentBackStackEntry?.destination?.route
+//            when (model.screenState) {
+//                RootModel.ScreenState.LOADING -> na
+//            }
+//            if (model.currentUser == null) {
+//                if (route != RootScreen.Auth.javaClass.name) navigationController.navigate(
+//                    RootScreen.Auth.javaClass.name
+//                )
+//            } else {
+//                if  (route != RootScreen.Sets.javaClass.name) navigationController.navigate(
+//                    RootScreen.Sets.javaClass.name
+//                )
+//            }
+//        }
 
 //        // есть или нет коннект
 //        if (!model.hasConnection) ErrorPlate(
