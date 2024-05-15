@@ -9,12 +9,14 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
 import io.r3chain.data.services.NetworkService
-import io.r3chain.data.vo.UserVO
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +29,7 @@ open class RootViewModel @Inject constructor(
     /**
      * Current screen state.
      */
-    var currentScreen by mutableStateOf(ScreenState.LOADING)
+    var currentState by mutableStateOf(ScreenState.LOADING)
         private set
 
     /**
@@ -41,11 +43,6 @@ open class RootViewModel @Inject constructor(
      */
     val apiErrors = networkService.exceptionsFlow
 
-    /**
-     * Данные авторизованного пользователя.
-     */
-    var currentUser: UserVO? by mutableStateOf(null)
-        private set
 
     init {
         // Доступ в Интернет
@@ -61,11 +58,12 @@ open class RootViewModel @Inject constructor(
         }
 
         // Начать отслеживать данные текущего пользователя.
-        viewModelScope.launch {
-//            delay(3500)
-            userRepository.getUserFlow().collectLatest {
-                currentScreen = if (it != null) ScreenState.INSIDE else ScreenState.AUTH
-                currentUser = it
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(3500)
+            userRepository.getAuthTokenFlow().collectLatest {
+                withContext(Dispatchers.Main) {
+                    currentState = if (it.isBlank()) ScreenState.AUTH else ScreenState.INSIDE
+                }
             }
         }
     }

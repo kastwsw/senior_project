@@ -5,13 +5,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import io.r3chain.features.auth.ui.LoginScreen
+import io.r3chain.features.profile.ui.SettingsScreen
 import io.r3chain.features.root.model.RootViewModel
+import io.r3chain.ui.atoms.LoadingBox
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
@@ -23,7 +28,7 @@ fun App() {
 
 @Composable
 private fun Content(
-    model: RootViewModel = hiltViewModel()
+    model: RootViewModel = viewModel()
 ) {
     Box(
         modifier = Modifier
@@ -36,16 +41,18 @@ private fun Content(
         // navigation sets
         NavHost(
             navController = navigationController,
-            startDestination = model.currentScreen.name
+            startDestination = model.currentState.name
         ) {
             composable(route = RootViewModel.ScreenState.LOADING.name) {
-                RootScreen.Loading.Draw()
+                Surface {
+                    LoadingBox(modifier = Modifier.fillMaxSize())
+                }
             }
             composable(route = RootViewModel.ScreenState.AUTH.name) {
-                RootScreen.Auth.Draw()
+                LoginScreen(hiltViewModel())
             }
             composable(route = RootViewModel.ScreenState.INSIDE.name) {
-                RootScreen.Sets.Draw()
+                SettingsScreen(hiltViewModel())
             }
         }
 

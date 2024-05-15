@@ -56,7 +56,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthViewModel
 import io.r3chain.features.root.model.RootViewModel
@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = viewModel()
 ) {
     Surface {
         Box(
@@ -199,7 +199,7 @@ fun LoginScreen(
             )
 
             // errrors
-            AppErrors(modifier = Modifier.padding(16.dp))
+//            AppErrors(modifier = Modifier.padding(16.dp))
         }
     }
 }
@@ -351,7 +351,7 @@ private fun PasswordField(
 @Composable
 private fun AppErrors(
     modifier: Modifier = Modifier,
-    model: RootViewModel = hiltViewModel()
+    model: RootViewModel = viewModel()
 ) {
     var showError by remember {
         mutableStateOf(false)

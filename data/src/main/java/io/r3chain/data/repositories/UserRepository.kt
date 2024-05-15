@@ -6,7 +6,7 @@ import io.r3chain.data.api.infrastructure.ApiClient
 import io.r3chain.data.api.models.AuthLoginRequestDto
 import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.services.NetworkService
-import io.r3chain.data.services.PreferencesService
+import io.r3chain.data.services.UserPrefsService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -16,7 +16,7 @@ class UserRepository @Inject constructor(
     private val networkService: NetworkService,
     private val apiClient: Lazy<ApiClient>,
     private val cacheDatabase: Lazy<CacheDatabase>,
-    private val preferencesService: Lazy<PreferencesService>
+    private val userPrefsService: Lazy<UserPrefsService>
 ) {
 
     /**
@@ -42,31 +42,43 @@ class UserRepository @Inject constructor(
                     AuthLoginRequestDto(email = email, password = password)
                 )
         }.onSuccess { response ->
-            // TODO: запомнить токен (как долго?)
-//        val token = response.body()?.sessionList?.values?.firstOrNull()?.token ?: ""
+            // save user data
             response.body()?.authList?.values?.firstOrNull()?.let {
                 cacheDatabase.get().userDao().insert(it)
             }
+            // save auth token
+            val token = response.body()?.sessionList?.values?.firstOrNull()?.token ?: ""
+            userPrefsService.get().saveAuthToken(token)
         }.onFailure {
             if (it !is IOException) throw it
         }
     }
 
+
     /**
      * Data for "remember me" option.
+     *
+     * @return True - user auth restores after app restart.
      */
-    fun getRememberMeFlow() = preferencesService.get().rememberMe
+    fun getRememberMeFlow() = userPrefsService.get().rememberMe
 
     suspend fun saveRememberMe(value: Boolean) {
-        preferencesService.get().saveRememberMe(value)
+        userPrefsService.get().saveRememberMe(value)
     }
 
+    /**
+     * Data for "remember me" option.
+     *
+     * @return Null - no authorization.
+     */
+    fun getAuthTokenFlow() = userPrefsService.get().authToken
 
 
     /**
-     * Закрыть авторизацию.
+     * Close authorization.
      */
     suspend fun exit() {
+        userPrefsService.get().saveAuthToken("")
         cacheDatabase.get().userDao().deleteAll()
     }
 
