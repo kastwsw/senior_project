@@ -59,7 +59,7 @@ open class RootViewModel @Inject constructor(
 
         // Начать отслеживать данные текущего пользователя.
         viewModelScope.launch(Dispatchers.IO) {
-            delay(3500)
+//            delay(3500)
             userRepository.getAuthTokenFlow().collectLatest {
                 withContext(Dispatchers.Main) {
                     currentState = if (it.isBlank()) ScreenState.AUTH else ScreenState.INSIDE

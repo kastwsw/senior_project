@@ -47,8 +47,9 @@ class UserRepository @Inject constructor(
                 cacheDatabase.get().userDao().insert(it)
             }
             // save auth token
-            val token = response.body()?.sessionList?.values?.firstOrNull()?.token ?: ""
-            userPrefsService.get().saveAuthToken(token)
+            userPrefsService.get().saveAuthToken(
+                response.body()?.sessionList?.values?.firstOrNull()?.token ?: ""
+            )
         }.onFailure {
             if (it !is IOException) throw it
         }
