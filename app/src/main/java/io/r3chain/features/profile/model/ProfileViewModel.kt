@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileModel @Inject constructor(
+class ProfileViewModel @Inject constructor(
     private val handle: SavedStateHandle,
     private val userRepository: UserRepository
 ) : ViewModel() {

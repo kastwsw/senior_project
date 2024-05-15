@@ -11,7 +11,6 @@ import io.r3chain.data.repositories.UserRepository
 import io.r3chain.data.services.NetworkService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class RootModel @Inject constructor(
+open class RootViewModel @Inject constructor(
     private val handle: SavedStateHandle,
     private val networkService: NetworkService,
     private val userRepository: UserRepository

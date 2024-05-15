@@ -11,7 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.r3chain.features.root.model.RootModel
+import io.r3chain.features.root.model.RootViewModel
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
@@ -23,7 +23,7 @@ fun App() {
 
 @Composable
 private fun Content(
-    model: RootModel = hiltViewModel()
+    model: RootViewModel = hiltViewModel()
 ) {
     Box(
         modifier = Modifier
@@ -38,13 +38,13 @@ private fun Content(
             navController = navigationController,
             startDestination = model.currentScreen.name
         ) {
-            composable(route = RootModel.ScreenState.LOADING.name) {
+            composable(route = RootViewModel.ScreenState.LOADING.name) {
                 RootScreen.Loading.Draw()
             }
-            composable(route = RootModel.ScreenState.AUTH.name) {
+            composable(route = RootViewModel.ScreenState.AUTH.name) {
                 RootScreen.Auth.Draw()
             }
-            composable(route = RootModel.ScreenState.INSIDE.name) {
+            composable(route = RootViewModel.ScreenState.INSIDE.name) {
                 RootScreen.Sets.Draw()
             }
         }

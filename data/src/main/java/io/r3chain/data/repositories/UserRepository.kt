@@ -6,6 +6,7 @@ import io.r3chain.data.api.infrastructure.ApiClient
 import io.r3chain.data.api.models.AuthLoginRequestDto
 import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.services.NetworkService
+import io.r3chain.data.services.PreferencesService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -14,7 +15,8 @@ import javax.inject.Inject
 class UserRepository @Inject constructor(
     private val networkService: NetworkService,
     private val apiClient: Lazy<ApiClient>,
-    private val cacheDatabase: Lazy<CacheDatabase>
+    private val cacheDatabase: Lazy<CacheDatabase>,
+    private val preferencesService: Lazy<PreferencesService>
 ) {
 
     /**
@@ -49,6 +51,17 @@ class UserRepository @Inject constructor(
             if (it !is IOException) throw it
         }
     }
+
+    /**
+     * Data for "remember me" option.
+     */
+    fun getRememberMeFlow() = preferencesService.get().rememberMe
+
+    suspend fun saveRememberMe(value: Boolean) {
+        preferencesService.get().saveRememberMe(value)
+    }
+
+
 
     /**
      * Закрыть авторизацию.

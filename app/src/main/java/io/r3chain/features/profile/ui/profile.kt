@@ -14,14 +14,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.features.profile.model.ProfileModel
-import io.r3chain.features.root.model.RootModel
+import io.r3chain.features.profile.model.ProfileViewModel
+import io.r3chain.features.root.model.RootViewModel
 import io.r3chain.ui.atoms.PrimaryButton
 
 @Composable
 fun SettingsScreen(
-    rootModel: RootModel = hiltViewModel(),
-    profileModel: ProfileModel = hiltViewModel()
+    rootModel: RootViewModel = hiltViewModel(),
+    profileModel: ProfileViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()

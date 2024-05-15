@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthViewModel
-import io.r3chain.features.root.model.RootModel
+import io.r3chain.features.root.model.RootViewModel
 import io.r3chain.ui.atoms.ErrorPlate
 import io.r3chain.ui.atoms.PrimaryButton
 import io.r3chain.ui.utils.PasswordDelayVisualTransformation
@@ -146,7 +147,7 @@ fun LoginScreen(
                         // remember me
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
-                                checked = authViewModel.isRemember,
+                                checked = authViewModel.isRemember.collectAsState(true).value,
                                 onCheckedChange = {
                                     authViewModel.changeIsRemember(it)
                                 }
@@ -350,7 +351,7 @@ private fun PasswordField(
 @Composable
 private fun AppErrors(
     modifier: Modifier = Modifier,
-    model: RootModel = hiltViewModel()
+    model: RootViewModel = hiltViewModel()
 ) {
     var showError by remember {
         mutableStateOf(false)

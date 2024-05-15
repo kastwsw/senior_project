@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,7 +27,7 @@ class AuthViewModel @Inject constructor(
     var password by mutableStateOf("test_pass")
         private set
 
-    var isRemember by mutableStateOf(true)
+    var isRemember = userRepository.getRememberMeFlow()
         private set
 
 
@@ -39,7 +40,9 @@ class AuthViewModel @Inject constructor(
     }
 
     fun changeIsRemember(value: Boolean) {
-        isRemember = value
+        viewModelScope.launch(Dispatchers.IO) {
+            userRepository.saveRememberMe(value)
+        }
     }
 
     fun signIn() {
