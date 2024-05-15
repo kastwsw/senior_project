@@ -384,34 +384,36 @@ private fun AppErrors(
 @Composable
 private fun InputPreview() {
     val bringRequester = remember { BringIntoViewRequester() }
-    Surface {
-        Column(
-            modifier = Modifier
-                .bringIntoViewRequester(bringRequester)
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            LoginField(
-                value = "",
-                bringIntoViewRequester = bringRequester
-            ) {}
-            Spacer(Modifier.height(32.dp))
-            PasswordField(
-                value = "somepass",
-                bringIntoViewRequester = bringRequester,
-                onDoneAction = {}
-            ) {}
-            Spacer(Modifier.height(16.dp))
-            // remember me
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(
-                    checked = true,
-                    onCheckedChange = {}
-                )
-                Text(
-                    text = stringResource(R.string.input_remember_label),
-                    style = MaterialTheme.typography.bodySmall
-                )
+    MaterialTheme {
+        Surface {
+            Column(
+                modifier = Modifier
+                    .bringIntoViewRequester(bringRequester)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                LoginField(
+                    value = "",
+                    bringIntoViewRequester = bringRequester
+                ) {}
+                Spacer(Modifier.height(32.dp))
+                PasswordField(
+                    value = "somepass",
+                    bringIntoViewRequester = bringRequester,
+                    onDoneAction = {}
+                ) {}
+                Spacer(Modifier.height(16.dp))
+                // remember me
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(
+                        checked = true,
+                        onCheckedChange = {}
+                    )
+                    Text(
+                        text = stringResource(R.string.input_remember_label),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
     }
