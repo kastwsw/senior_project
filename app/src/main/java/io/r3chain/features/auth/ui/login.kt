@@ -1,10 +1,5 @@
 package io.r3chain.features.auth.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -59,8 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthViewModel
-import io.r3chain.presentation.ApiViewModel
-import io.r3chain.ui.atoms.ErrorPlate
 import io.r3chain.ui.atoms.PrimaryButton
 import io.r3chain.ui.utils.PasswordDelayVisualTransformation
 import kotlinx.coroutines.Job
@@ -197,9 +189,6 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .height(4.dp)
             )
-
-            // errrors
-//            AppErrors(modifier = Modifier.padding(16.dp))
         }
     }
 }
@@ -342,40 +331,6 @@ private fun PasswordField(
         ),
         shape = MaterialTheme.shapes.small
     )
-}
-
-
-/**
- * Ошибки доступа к серверу.
- */
-@Composable
-private fun AppErrors(
-    modifier: Modifier = Modifier,
-    model: ApiViewModel = hiltViewModel()
-) {
-    var showError by remember {
-        mutableStateOf(false)
-    }
-
-    AnimatedVisibility(
-        visible = showError,
-        enter = fadeIn(animationSpec = spring(stiffness = Spring.StiffnessMedium)),
-        exit = fadeOut(animationSpec = spring(stiffness = Spring.StiffnessMedium))
-    ) {
-        ErrorPlate(
-            text = stringResource(R.string.error_no_server),
-            modifier = modifier
-        )
-    }
-
-    LaunchedEffect(model.apiErrors) {
-        model.apiErrors.collect {
-            showError = true
-            // Показываем сообщение в течение 3,5 секунд
-            delay(3500)
-            showError = false
-        }
-    }
 }
 
 

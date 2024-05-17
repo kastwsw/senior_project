@@ -7,6 +7,7 @@ import io.r3chain.data.api.models.GeneralResponseEntity
 import io.r3chain.data.exceptions.ApiCallException
 import io.r3chain.data.exceptions.AuthException
 import io.r3chain.data.exceptions.NetworkIOException
+import io.r3chain.data.exceptions.NoInternetException
 import io.r3chain.data.exceptions.SurpriseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -25,7 +26,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class ApiService @Inject constructor(
-    private val networkService: NetworkService
+    private val networkService: NetworkService,
+    private val userPrefsService: UserPrefsService
 ) {
 
     private val _exceptionsFlow = MutableSharedFlow<IOException>(
@@ -51,7 +53,7 @@ class ApiService @Inject constructor(
         // проверить доступ в интернет
         networkService.checkCurrentNetworkState()
         if (!networkService.internetAvailableFlow.value) {
-            val e = IOException("No internet connection.")
+            val e = NoInternetException()
             _exceptionsFlow.emit(e)
             Result.failure(e)
         } else {
@@ -144,11 +146,16 @@ class ApiService @Inject constructor(
             else -> null
         }.let { type ->
             val error = when (type) {
-                is AuthException.Type -> AuthException(
-                    type = type,
-                    message = message,
-                    errors = convertErrors(errorList)
-                )
+                is AuthException.Type -> {
+                    // clear token
+                    userPrefsService.saveAuthToken("")
+                    // exception
+                    AuthException(
+                        type = type,
+                        message = message,
+                        errors = convertErrors(errorList)
+                    )
+                }
                 else -> SurpriseException(message)
             }
             _exceptionsFlow.emit(error)

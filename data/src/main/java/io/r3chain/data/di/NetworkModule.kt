@@ -1,5 +1,6 @@
 package io.r3chain.data.di
 
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,5 +18,8 @@ interface NetworkModule {
         @Singleton
         @Provides
         fun provideApiClient() = ApiClient(baseUrl = BuildConfig.BASE_URL)
+            .setLogger {
+                Log.d("API Client", it)
+            }
     }
 }

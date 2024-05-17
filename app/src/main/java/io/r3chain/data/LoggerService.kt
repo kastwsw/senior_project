@@ -25,6 +25,9 @@ class LoggerService @Inject constructor(
         scope.launch {
             apiService.exceptionsFlow.collect { exception ->
                 // TODO: лог в Firebase
+//                if (exception !is NoInternetException) {
+//                    Log...
+//                }
                 Log.d(exception::class.simpleName, exception.message, exception.cause)
             }
         }
