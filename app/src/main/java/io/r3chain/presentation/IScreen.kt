@@ -1,4 +1,4 @@
-package io.r3chain.features.root.ui
+package io.r3chain.presentation
 
 import androidx.compose.runtime.Composable
 

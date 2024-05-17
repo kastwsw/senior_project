@@ -12,14 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.profile.model.ProfileViewModel
 import io.r3chain.ui.atoms.PrimaryButton
 
 @Composable
 fun SettingsScreen(
-    profileModel: ProfileViewModel = viewModel()
+    profileModel: ProfileViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()

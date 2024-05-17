@@ -56,10 +56,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthViewModel
-import io.r3chain.features.root.model.RootViewModel
+import io.r3chain.presentation.ApiViewModel
 import io.r3chain.ui.atoms.ErrorPlate
 import io.r3chain.ui.atoms.PrimaryButton
 import io.r3chain.ui.utils.PasswordDelayVisualTransformation
@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LoginScreen(
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     Surface {
         Box(
@@ -351,7 +351,7 @@ private fun PasswordField(
 @Composable
 private fun AppErrors(
     modifier: Modifier = Modifier,
-    model: RootViewModel = viewModel()
+    model: ApiViewModel = hiltViewModel()
 ) {
     var showError by remember {
         mutableStateOf(false)
@@ -371,7 +371,8 @@ private fun AppErrors(
     LaunchedEffect(model.apiErrors) {
         model.apiErrors.collect {
             showError = true
-            delay(3500)  // Показываем сообщение в течение 2 секунд
+            // Показываем сообщение в течение 3,5 секунд
+            delay(3500)
             showError = false
         }
     }

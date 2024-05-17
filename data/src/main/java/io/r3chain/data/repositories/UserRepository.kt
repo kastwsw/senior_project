@@ -5,7 +5,7 @@ import io.r3chain.data.api.apis.AuthApi
 import io.r3chain.data.api.infrastructure.ApiClient
 import io.r3chain.data.api.models.AuthLoginRequestDto
 import io.r3chain.data.db.CacheDatabase
-import io.r3chain.data.services.NetworkService
+import io.r3chain.data.services.ApiService
 import io.r3chain.data.services.UserPrefsService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.flow.map
@@ -13,7 +13,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val networkService: NetworkService,
+    private val apiService: ApiService,
     private val apiClient: Lazy<ApiClient>,
     private val cacheDatabase: Lazy<CacheDatabase>,
     private val userPrefsService: Lazy<UserPrefsService>
@@ -35,7 +35,7 @@ class UserRepository @Inject constructor(
      * @param password Пароль.
      */
     suspend fun authUser(email: String, password: String) {
-        networkService.safeApiCall {
+        apiService.safeApiCall {
             apiClient.get()
                 .createService(AuthApi::class.java)
                 .apiV1AuthLoginPost(
@@ -43,12 +43,12 @@ class UserRepository @Inject constructor(
                 )
         }.onSuccess { response ->
             // save user data
-            response.body()?.authList?.values?.firstOrNull()?.let {
+            response.authList?.values?.firstOrNull()?.let {
                 cacheDatabase.get().userDao().insert(it)
             }
             // save auth token
             userPrefsService.get().saveAuthToken(
-                response.body()?.sessionList?.values?.firstOrNull()?.token ?: ""
+                response.sessionList?.values?.firstOrNull()?.token ?: ""
             )
         }.onFailure {
             if (it !is IOException) throw it

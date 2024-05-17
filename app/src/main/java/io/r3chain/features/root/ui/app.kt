@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -28,7 +27,7 @@ fun App() {
 
 @Composable
 private fun Content(
-    model: RootViewModel = viewModel()
+    model: RootViewModel = hiltViewModel()
 ) {
     Box(
         modifier = Modifier
@@ -49,10 +48,10 @@ private fun Content(
                 }
             }
             composable(route = RootViewModel.ScreenState.AUTH.name) {
-                LoginScreen(hiltViewModel())
+                LoginScreen()
             }
             composable(route = RootViewModel.ScreenState.INSIDE.name) {
-                SettingsScreen(hiltViewModel())
+                SettingsScreen()
             }
         }
 
