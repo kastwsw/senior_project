@@ -35,8 +35,8 @@ import io.r3chain.features.auth.ui.LoginScreen
 import io.r3chain.features.profile.ui.SettingsScreen
 import io.r3chain.features.root.model.RootViewModel
 import io.r3chain.presentation.ApiViewModel
-import io.r3chain.ui.atoms.ErrorPlate
-import io.r3chain.ui.atoms.LoadingBox
+import io.r3chain.ui.components.ErrorPlate
+import io.r3chain.ui.components.LoadingBox
 import io.r3chain.ui.theme.R3Theme
 import kotlinx.coroutines.delay
 

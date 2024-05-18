@@ -4,6 +4,7 @@
     <string name="r3_slogan">Join the Circular Economy</string>
     <string name="sign_up_hint">Don\'t have an account?</string>
     <string name="sign_up_label">Sign Up</string>
+    <string name="sign_up_link" translatable="false">https://app.r3chain.io/login</string>
 
     <string name="input_email_label">Email</string>
     <string name="input_email_placeholder">your@email.com</string>

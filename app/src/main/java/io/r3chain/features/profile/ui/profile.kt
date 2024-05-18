@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.profile.model.ProfileViewModel
-import io.r3chain.ui.atoms.PrimaryButton
+import io.r3chain.ui.components.PrimaryButton
 
 @Composable
 fun SettingsScreen(

@@ -40,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,8 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.auth.model.AuthViewModel
-import io.r3chain.ui.atoms.PrimaryButton
+import io.r3chain.ui.components.CheckboxLabel
+import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.utils.PasswordDelayVisualTransformation
+import io.r3chain.ui.utils.clickableLabel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -137,17 +140,11 @@ fun LoginScreen(
                         Spacer(Modifier.height(12.dp))
 
                         // remember me
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Checkbox(
-                                checked = authViewModel.isRemember.collectAsState(true).value,
-                                onCheckedChange = {
-                                    authViewModel.changeIsRemember(it)
-                                }
-                            )
-                            Text(
-                                text = stringResource(R.string.input_remember_label),
-                                style = MaterialTheme.typography.bodySmall
-                            )
+                        CheckboxLabel(
+                            checked = authViewModel.isRemember.collectAsState(true).value,
+                            label = stringResource(R.string.input_remember_label)
+                        ) {
+                            authViewModel.changeIsRemember(it)
                         }
                         Spacer(Modifier.height(40.dp))
 
@@ -172,11 +169,15 @@ fun LoginScreen(
                                 text = stringResource(R.string.sign_up_hint),
                                 style = MaterialTheme.typography.bodyMedium
                             )
+                            val context = LocalContext.current
                             Text(
                                 text = stringResource(R.string.sign_up_label),
                                 style = MaterialTheme.typography.labelLarge,
                                 color = MaterialTheme.colorScheme.primary,
-                                textDecoration = TextDecoration.Underline
+                                textDecoration = TextDecoration.Underline,
+                                modifier = Modifier.clickableLabel {
+                                    authViewModel.signUp(context)
+                                }
                             )
                         }
                     }
