@@ -9,7 +9,6 @@ import io.r3chain.data.services.ApiService
 import io.r3chain.data.services.UserPrefsService
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.flow.map
-import java.io.IOException
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -50,8 +49,6 @@ class UserRepository @Inject constructor(
             userPrefsService.get().saveAuthToken(
                 response.sessionList?.values?.firstOrNull()?.token ?: ""
             )
-        }.onFailure {
-            if (it !is IOException) throw it
         }
     }
 
@@ -74,13 +71,28 @@ class UserRepository @Inject constructor(
      */
     fun getAuthTokenFlow() = userPrefsService.get().authToken
 
-
     /**
-     * Close authorization.
+     * Exit from the app.
      */
     suspend fun exit() {
+        apiService.safeApiCall {
+            apiClient.get()
+                .createService(AuthApi::class.java)
+                .apiV1AuthLogoutPost()
+        }
         userPrefsService.get().saveAuthToken("")
         cacheDatabase.get().userDao().deleteAll()
+    }
+
+    /**
+     * Refresh user data.
+     */
+    suspend fun refresh() {
+        apiService.safeApiCall {
+            apiClient.get()
+                .createService(AuthApi::class.java)
+                .apiV1AuthVerifyPost()
+        }
     }
 
 }

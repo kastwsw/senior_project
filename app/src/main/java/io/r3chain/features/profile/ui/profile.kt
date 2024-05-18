@@ -43,6 +43,12 @@ fun SettingsScreen(
                 ) {
                     profileModel.signOut()
                 }
+                PrimaryButton(
+                    text = "!Refresh",
+                    enabled = !profileModel.isLoading
+                ) {
+                    profileModel.refreshUserData()
+                }
             }
         }
     }

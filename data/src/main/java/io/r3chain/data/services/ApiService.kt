@@ -45,7 +45,7 @@ class ApiService @Inject constructor(
     val exceptionsFlow = _exceptionsFlow.asSharedFlow()
 
     /**
-     *
+     * Запуск обращений к API сервера с обработкой ошибок и результата ответа.
      */
     suspend fun <T> safeApiCall(
         apiCall: suspend () -> Response<T>
@@ -78,8 +78,9 @@ class ApiService @Inject constructor(
                 Result.failure(e)
             }
         }
+    }.onFailure {
+        if (it !is IOException) throw it
     }
-
 
     /**
      * Возвращает результат проверки объекта ответа API сервера.

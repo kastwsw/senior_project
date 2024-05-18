@@ -12,6 +12,7 @@ import io.r3chain.data.api.infrastructure.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -44,8 +45,10 @@ class UserPrefsService @Inject constructor(
      * Save remember me value.
      */
     suspend fun saveRememberMe(value: Boolean) {
-        context.dataStore.edit {
-            it[REMEMBER_ME_KEY] = value
+        withContext(Dispatchers.IO) {
+            context.dataStore.edit {
+                it[REMEMBER_ME_KEY] = value
+            }
         }
     }
 
@@ -58,42 +61,53 @@ class UserPrefsService @Inject constructor(
      * Flow for token data.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    val authToken = rememberMe.flatMapLatest { enabled ->
-        if (enabled) {
-            // take token from the DataStore
-            context.dataStore.data.map {
-                it[TOKEN_KEY] ?: ""
+    val authToken = rememberMe
+        .flatMapLatest { enabled ->
+            if (enabled) {
+                // take token from the DataStore
+                context.dataStore.data.map {
+                    it[TOKEN_KEY] ?: ""
+                }
+            } else {
+                // take token from the app memory
+                authTokenInMemory
             }
-        } else {
-            // take token from the app memory
-            authTokenInMemory
         }
-    }.onEach { token ->
-        Log.d("Token flow", "Flow is running on: ${Thread.currentThread().name}")
-        withContext(Dispatchers.IO) {
-            Log.d("Token flow", "Set token [$token] on: ${Thread.currentThread().name}")
-            apiClient.get().setBearerToken(token)
+        .distinctUntilChanged()
+        .onEach {
+            setTokenToApiClient(it)
         }
-    }
 
     /**
      * Save token value.
      */
     suspend fun saveAuthToken(value: String) {
-        if (rememberMe.first()) {
-            // save token by the DataStore
-            context.dataStore.edit {
-                it[TOKEN_KEY] = value
+        withContext(Dispatchers.IO) {
+            if (rememberMe.first()) {
+                // save token by the DataStore
+                context.dataStore.edit {
+                    it[TOKEN_KEY] = value
+                }
+                // clear token in memory
+                authTokenInMemory.emit("")
+            } else {
+                // save token to the app memory
+                authTokenInMemory.emit(value)
+                // clear token in the DataStore
+                context.dataStore.edit {
+                    it.remove(TOKEN_KEY)
+                }
             }
-            // clear token in memory
-            authTokenInMemory.emit("")
-        } else {
-            // save token to the app memory
-            authTokenInMemory.emit(value)
-            // clear token in the DataStore
-            context.dataStore.edit {
-                it.remove(TOKEN_KEY)
-            }
+        }
+    }
+
+    /**
+     * Set token to API client object.
+     */
+    private suspend fun setTokenToApiClient(token: String) {
+        withContext(Dispatchers.IO) {
+            Log.d("Token flow", "Set token [$token]")
+            apiClient.get().setBearerToken(token)
         }
     }
 
@@ -101,9 +115,11 @@ class UserPrefsService @Inject constructor(
      * Clear all data.
      */
     suspend fun clear() {
-        context.dataStore.edit {
-            it.remove(TOKEN_KEY)
-            it.remove(REMEMBER_ME_KEY)
+        withContext(Dispatchers.IO) {
+            context.dataStore.edit {
+                it.remove(TOKEN_KEY)
+                it.remove(REMEMBER_ME_KEY)
+            }
         }
     }
 

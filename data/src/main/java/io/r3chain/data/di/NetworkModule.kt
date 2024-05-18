@@ -17,9 +17,12 @@ interface NetworkModule {
 
         @Singleton
         @Provides
-        fun provideApiClient() = ApiClient(baseUrl = BuildConfig.BASE_URL)
-            .setLogger {
-                Log.d("API Client", it)
-            }
+        fun provideApiClient() = ApiClient(
+            baseUrl = BuildConfig.BASE_URL,
+            authName = "Bearer",
+            bearerToken = ""
+        ).setLogger {
+            Log.d("API Client", it)
+        }
     }
 }

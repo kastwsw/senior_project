@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
 import io.r3chain.data.vo.UserVO
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,9 +39,17 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun signOut() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             isLoading = true
             userRepository.exit()
+            isLoading = false
+        }
+    }
+
+    fun refreshUserData() {
+        viewModelScope.launch {
+            isLoading = true
+            userRepository.refresh()
             isLoading = false
         }
     }
