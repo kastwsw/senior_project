@@ -20,27 +20,53 @@ class AuthViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    /**
+     * Индикация процесса загрузки.
+     */
     var isLoading by mutableStateOf(false)
         private set
 
-//    var login by mutableStateOf("")
+    /**
+     * Вкл/выкл кнопки входа.
+     */
+    var isFormValid by mutableStateOf(false)
+        private set
+
+    /**
+     * Значения поля логина.
+     */
     var login by mutableStateOf("test3@example.com")
         private set
 
-//    var password by mutableStateOf("")
+    /**
+     * Значения поля пароля.
+     */
     var password by mutableStateOf("test_pass")
         private set
 
+    /**
+     * Вкл/выкл запоминать меня.
+     */
     var isRemember = userRepository.getRememberMeFlow()
         private set
 
 
+    init {
+        formValidation()
+    }
+
     fun changeLogin(value: String) {
         login = value
+        formValidation()
     }
 
     fun changePassword(value: String) {
         password = value
+        formValidation()
+    }
+
+    private fun formValidation() {
+        isFormValid = login.isNotBlank() && password.isNotBlank()
     }
 
     fun changeIsRemember(value: Boolean) {

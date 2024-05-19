@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
@@ -19,17 +20,11 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -56,6 +51,7 @@ import io.r3chain.R
 import io.r3chain.features.auth.model.AuthViewModel
 import io.r3chain.ui.components.CheckboxLabel
 import io.r3chain.ui.components.PrimaryButton
+import io.r3chain.ui.components.TextInput
 import io.r3chain.ui.utils.PasswordDelayVisualTransformation
 import io.r3chain.ui.utils.clickableLabel
 import kotlinx.coroutines.Job
@@ -83,9 +79,9 @@ fun LoginScreen(
                 // content
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .width(420.dp)
                         .padding(26.dp)
-                        .padding(bottom = 36.dp)
+                        .padding(bottom = 32.dp)
                 ) {
                     // logo & slogan
                     Image(
@@ -107,18 +103,15 @@ fun LoginScreen(
                     // управление фокусом
                     val focusManager = LocalFocusManager.current
                     // старт авторизации
-                    val loginAction = remember(focusManager) {
-                        {
-                            focusManager.clearFocus(true)
-                            authViewModel.signIn()
-                        }
-                    }
+                    val loginAction = remember(focusManager) {{
+                        focusManager.clearFocus(true)
+                        authViewModel.signIn()
+                    }}
 
                     // inputs
                     Column(
                         modifier = Modifier
                             .bringIntoViewRequester(bringRequester)
-                            .fillMaxWidth()
                     ) {
                         // login
                         LoginField(
@@ -151,7 +144,7 @@ fun LoginScreen(
                         // buttons
                         PrimaryButton(
                             text = stringResource(R.string.sign_in_label),
-                            enabled = !authViewModel.isLoading,
+                            enabled = authViewModel.isFormValid && !authViewModel.isLoading,
                             modifier = Modifier.fillMaxWidth(),
                             onClick = authViewModel::signIn
                         )
@@ -201,36 +194,18 @@ private fun LoginField(
     bringIntoViewRequester: BringIntoViewRequester,
     onValueChange: (String) -> Unit
 ) {
-    // TODO: добавить отработку bringIntoViewRequester
-    // TODO: добавить отработку autofill
-    OutlinedTextField(
+    TextInput(
         value = value,
         modifier = Modifier.fillMaxWidth(),
-        singleLine = true,
-        maxLines = 1,
-        label = {
-            Text(text = stringResource(R.string.input_email_label))
-        },
-        placeholder = {
-            CompositionLocalProvider(
-                LocalContentColor provides MaterialTheme.colorScheme.onSurface.copy(
-                    alpha = 0.62f
-                )
-            ) {
-                Text(text = stringResource(R.string.input_email_placeholder))
-            }
-        },
+        labelValue = stringResource(R.string.input_email_label),
+        placeholderValue = stringResource(R.string.input_email_placeholder),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             autoCorrect = true,
             imeAction = ImeAction.Next
         ),
-        onValueChange = onValueChange,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        ),
-        shape = MaterialTheme.shapes.small
+        bringIntoViewRequester = bringIntoViewRequester,
+        onValueChange = onValueChange
     )
 }
 
@@ -272,33 +247,16 @@ private fun PasswordField(
         }
     }
 
-    // TODO: добавить отработку bringIntoViewRequester
-    // TODO: добавить отработку autofill
-    OutlinedTextField(
+    TextInput(
         value = value,
         modifier = Modifier.fillMaxWidth(),
-        singleLine = true,
-        maxLines = 1,
-        label = {
-            Text(text = stringResource(R.string.input_password_label))
-        },
-        trailingIcon = {
-            IconButton(
-                onClick = {
-                    isHidden = !isHidden
-                }
-            ) {
-                Icon(
-                    painter = painterResource(
-                        if (isHidden) R.drawable.ic_hide
-                        else R.drawable.ic_unhide
-                    ),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface.copy(
-                        alpha = 0.62f
-                    )
-                )
-            }
+        labelValue = stringResource(R.string.input_password_label),
+        trailingPainter = painterResource(
+            if (isHidden) R.drawable.ic_hide
+            else R.drawable.ic_unhide
+        ),
+        trailingOnClick = {
+            isHidden = !isHidden
         },
         visualTransformation = currentTransformation,
         keyboardOptions = KeyboardOptions(
@@ -311,6 +269,7 @@ private fun PasswordField(
                 onDoneAction()
             }
         ),
+        bringIntoViewRequester = bringIntoViewRequester,
         onValueChange = {
             // юзер печатает, если был добавлен 1 символ
             isTyping = it.length - value.length == 1
@@ -325,12 +284,7 @@ private fun PasswordField(
             }
             // отработать
             onValueChange(it)
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-        ),
-        shape = MaterialTheme.shapes.small
+        }
     )
 }
 
