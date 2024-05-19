@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
@@ -65,9 +64,7 @@ fun LoginScreen(
 ) {
     Surface {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter
         ) {
             Box(
@@ -81,7 +78,6 @@ fun LoginScreen(
                     modifier = Modifier
                         .width(420.dp)
                         .padding(26.dp)
-                        .padding(bottom = 32.dp)
                 ) {
                     // logo & slogan
                     Image(
