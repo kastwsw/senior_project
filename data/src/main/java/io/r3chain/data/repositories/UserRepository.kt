@@ -3,12 +3,18 @@ package io.r3chain.data.repositories
 import dagger.Lazy
 import io.r3chain.data.api.apis.AuthApi
 import io.r3chain.data.api.infrastructure.ApiClient
+import io.r3chain.data.api.models.AuthDto
 import io.r3chain.data.api.models.AuthLoginRequestDto
+import io.r3chain.data.api.models.AuthResponseEntity
+import io.r3chain.data.api.models.AuthSaveRequestDto
 import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.services.ApiService
 import io.r3chain.data.services.UserPrefsService
 import io.r3chain.data.vo.UserVO
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -40,15 +46,8 @@ class UserRepository @Inject constructor(
                 .apiV1AuthLoginPost(
                     AuthLoginRequestDto(email = email, password = password)
                 )
-        }.onSuccess { response ->
-            // save user data
-            response.authList?.values?.firstOrNull()?.let {
-                cacheDatabase.get().userDao().insert(it)
-            }
-            // save auth token
-            userPrefsService.get().saveAuthToken(
-                response.sessionList?.values?.firstOrNull()?.token ?: ""
-            )
+        }.onSuccess {
+            handleAuthResult(it)
         }
     }
 
@@ -70,6 +69,36 @@ class UserRepository @Inject constructor(
      * @return Null - no authorization.
      */
     fun getAuthTokenFlow() = userPrefsService.get().authToken
+
+
+    suspend fun updateUserNotification(enabledEmail: Boolean) {
+        withContext(Dispatchers.IO) {
+            val newData: AuthDto = cacheDatabase.get().userDao().getAll().first().first().copy(
+                sendEmailNotifications = enabledEmail
+            )
+            apiService.safeApiCall {
+                apiClient.get()
+                    .createService(AuthApi::class.java)
+                    .apiV1AuthSavePost(
+                        authSaveRequestDto = AuthSaveRequestDto(newData)
+                    )
+            }.onSuccess {
+                handleAuthResult(it)
+            }
+        }
+    }
+
+    private suspend fun handleAuthResult(response: AuthResponseEntity) {
+        // save user data
+        response.authList?.values?.firstOrNull()?.let {
+            cacheDatabase.get().userDao().insert(it)
+        }
+        // save auth token
+        userPrefsService.get().saveAuthToken(
+            response.sessionList?.values?.firstOrNull()?.token ?: ""
+        )
+    }
+
 
     /**
      * Exit from the app.

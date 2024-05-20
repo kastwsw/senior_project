@@ -40,6 +40,14 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun refreshUserData() {
+        viewModelScope.launch {
+            isLoading = true
+            userRepository.refresh()
+            isLoading = false
+        }
+    }
+
     fun signOut() {
         viewModelScope.launch {
             isLoading = true
@@ -50,11 +58,9 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun refreshUserData() {
+    fun setEmailNotification(enabled: Boolean) {
         viewModelScope.launch {
-            isLoading = true
-            userRepository.refresh()
-            isLoading = false
+            userRepository.updateUserNotification(enabledEmail = enabled)
         }
     }
 

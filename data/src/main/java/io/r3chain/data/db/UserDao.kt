@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    @Query("SELECT * FROM authdto")
+    @Query("SELECT * FROM authdto LIMIT 1")
     fun getAll(): Flow<List<AuthDto>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

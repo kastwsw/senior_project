@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,42 +33,59 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inside.model.ProfileViewModel
+import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
+import io.r3chain.ui.components.SwitchPlate
 
 @Composable
 fun ProfileScreen(
     profileModel: ProfileViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(Unit) {
+        profileModel.refreshUserData()
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
+        val context = LocalContext.current
         Column(modifier = Modifier.fillMaxSize()) {
             // header
             Header(
                 backAction = profileModel::signOut
             )
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                // user
-                UserPanel(profileModel.currentUser ?: UserVO())
+            (profileModel.currentUser ?: UserVO()).also { user ->
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    // user
+                    UserPanel(user)
 
-                // settings
+                    // settings
+                    SwitchPlate(
+                        text = stringResource(R.string.notification_label),
+                        checked = user.sendEmailNotifications
+                    ) {
+                        profileModel.setEmailNotification(it)
+                    }
+                    ActionPlate(text = stringResource(R.string.help_label)) {
+                        profileModel.openHelp(context)
+                    }
+                }
             }
 
             // buttons
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val context = LocalContext.current
                 // contact
                 PrimaryButton(
                     text = stringResource(R.string.support_label),
