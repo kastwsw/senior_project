@@ -45,6 +45,7 @@ dependencies {
 
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.material3)
+    api(libs.androidx.material.icons)
 
     // Android Studio Preview support
     api(libs.androidx.ui.tooling.preview)
