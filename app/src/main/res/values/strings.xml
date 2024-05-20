@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">R3</string>
 
+    <!-- AUTH -->
+
     <string name="r3_slogan">Join the Circular Economy</string>
 
     <string name="sign_up_hint">Don\'t have an account?</string>
@@ -17,11 +19,22 @@
     <string name="sign_in_label">Sign In</string>
 
 
+    <!-- PROFILE -->
+
     <string name="profile_title">Profile</string>
 
-    <string name="contact_us_label">Contact us</string>
+    <string name="notification_label">Push notification</string>
+
+    <string name="help_label">Online help</string>
+    <string name="help_link" translatable="false">https://r3chain.io</string>
+
+    <string name="support_label">Contact us</string>
+    <string name="support_link" translatable="false">mailto:support@r3chain.io</string>
+
     <string name="sign_out_label">Log out</string>
 
+
+    <!-- OTHER -->
 
     <string name="error_no_connection">Internet connection not found</string>
     <string name="error_no_server">Oops.. Server not answered\nPlease check your internet and try again</string>

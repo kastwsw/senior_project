@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inside.model.ProfileViewModel
+import io.r3chain.ui.components.ButtonStyle
+import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
 
 @Composable
@@ -64,16 +67,17 @@ fun ProfileScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val context = LocalContext.current
                 // contact
                 PrimaryButton(
-                    text = stringResource(R.string.contact_us_label),
+                    text = stringResource(R.string.support_label),
+                    buttonStyle = ButtonStyle.SECONDARY,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // TODO: open mailto:
+                    profileModel.openSupport(context)
                 }
-
                 // sign out
-                PrimaryButton(
+                LinkButton(
                     text = stringResource(R.string.sign_out_label),
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !profileModel.isLoading,

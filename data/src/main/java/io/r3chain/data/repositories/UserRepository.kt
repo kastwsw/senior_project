@@ -73,15 +73,19 @@ class UserRepository @Inject constructor(
 
     /**
      * Exit from the app.
+     *
+     * @return True - выход, подтверждён сервером.
      */
-    suspend fun exit() {
-        apiService.safeApiCall {
+    suspend fun exit(): Boolean {
+        val result = apiService.safeApiCall {
             apiClient.get()
                 .createService(AuthApi::class.java)
                 .apiV1AuthLogoutPost()
         }
         userPrefsService.get().saveAuthToken("")
-        cacheDatabase.get().userDao().deleteAll()
+        // NOTE: удалять данные, которые не учавствуют в UI экрана пользователя
+//        cacheDatabase.get().userDao().deleteAll()
+        return result.isSuccess
     }
 
     /**
