@@ -1,4 +1,4 @@
-package io.r3chain.features.profile.model
+package io.r3chain.features.inside.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

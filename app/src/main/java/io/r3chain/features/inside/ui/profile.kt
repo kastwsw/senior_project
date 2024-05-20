@@ -1,4 +1,4 @@
-package io.r3chain.features.profile.ui
+package io.r3chain.features.inside.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import io.r3chain.R
-import io.r3chain.features.profile.model.ProfileViewModel
+import io.r3chain.features.inside.model.ProfileViewModel
 import io.r3chain.ui.components.PrimaryButton
 
 @Composable
-fun SettingsScreen(
+fun ProfileScreen(
     profileModel: ProfileViewModel = hiltViewModel()
 ) {
     Surface(
@@ -43,11 +44,13 @@ fun SettingsScreen(
                 ) {
                     profileModel.signOut()
                 }
+                val nav = rememberNavController()
                 PrimaryButton(
                     text = "!Refresh",
                     enabled = !profileModel.isLoading
                 ) {
-                    profileModel.refreshUserData()
+                    nav.popBackStack()
+//                    profileModel.refreshUserData()
                 }
             }
         }

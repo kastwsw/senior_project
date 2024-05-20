@@ -33,7 +33,7 @@ import io.r3chain.data.exceptions.NetworkIOException
 import io.r3chain.data.exceptions.NoInternetException
 import io.r3chain.data.exceptions.SurpriseException
 import io.r3chain.features.auth.ui.LoginScreen
-import io.r3chain.features.profile.ui.SettingsScreen
+import io.r3chain.features.inside.ui.ProfileScreen
 import io.r3chain.features.root.model.RootViewModel
 import io.r3chain.presentation.ApiViewModel
 import io.r3chain.ui.components.ErrorPlate
@@ -64,7 +64,8 @@ private fun Content(
         // navigation sets
         NavHost(
             navController = navigationController,
-            startDestination = model.currentState.name
+            startDestination = model.currentState.name,
+            modifier = Modifier.fillMaxSize()
         ) {
             composable(route = RootViewModel.ScreenState.LOADING.name) {
                 Surface {
@@ -75,27 +76,9 @@ private fun Content(
                 LoginScreen()
             }
             composable(route = RootViewModel.ScreenState.INSIDE.name) {
-                SettingsScreen()
+                ProfileScreen()
             }
         }
-
-        // TODO: проверить анимацию в NavHost, если она работает без принудительного navigate, то OK
-//        // navigate by state
-//        LaunchedEffect(model.screenState) {
-//            val route = navigationController.currentBackStackEntry?.destination?.route
-//            when (model.screenState) {
-//                RootModel.ScreenState.LOADING -> na
-//            }
-//            if (model.currentUser == null) {
-//                if (route != RootScreen.Auth.javaClass.name) navigationController.navigate(
-//                    RootScreen.Auth.javaClass.name
-//                )
-//            } else {
-//                if  (route != RootScreen.Sets.javaClass.name) navigationController.navigate(
-//                    RootScreen.Sets.javaClass.name
-//                )
-//            }
-//        }
 
         // errrors
         AppErrors(
