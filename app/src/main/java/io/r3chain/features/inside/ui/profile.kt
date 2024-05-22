@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -261,15 +263,23 @@ fun ImagesSelect(
     if (isVisible) {
         ModalBottomSheet(
             onDismissRequest = onClose,
-            sheetState = bottomSheetState
+            sheetState = bottomSheetState,
+            // edgeToEdge
+            windowInsets = WindowInsets(0)
         ) {
-            ActionPlate(text = "Option 1") {
-                optionSelect(1)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+                    .navigationBarsPadding()
+            ) {
+                ActionPlate(text = "Option 1") {
+                    optionSelect(1)
+                }
+                ActionPlate(text = "Option 2") {
+                    optionSelect(2)
+                }
             }
-            ActionPlate(text = "Option 2") {
-                optionSelect(2)
-            }
-            Spacer(Modifier.height(24.dp))
         }
     }
 }
