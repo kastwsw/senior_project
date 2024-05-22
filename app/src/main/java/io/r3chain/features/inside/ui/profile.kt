@@ -1,6 +1,7 @@
 package io.r3chain.features.inside.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,18 +17,28 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
@@ -38,6 +49,8 @@ import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.SwitchPlate
+import io.r3chain.ui.theme.R3Theme
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -45,6 +58,10 @@ fun ProfileScreen(
 ) {
     LaunchedEffect(Unit) {
         profileModel.refreshUserData()
+    }
+
+    var isImageSelectVisible by rememberSaveable {
+        mutableStateOf(false)
     }
 
     Surface(
@@ -64,15 +81,20 @@ fun ProfileScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     // user
-                    UserPanel(user)
+                    UserPanel(user) {
+                        isImageSelectVisible = true
+                    }
 
-                    // settings
+                    // notifications
                     SwitchPlate(
                         text = stringResource(R.string.notification_label),
-                        checked = user.sendEmailNotifications
+                        checked = user.sendEmailNotifications,
+                        enabled = !profileModel.isLoading
                     ) {
                         profileModel.setEmailNotification(it)
                     }
+
+                    // help
                     ActionPlate(text = stringResource(R.string.help_label)) {
                         profileModel.openHelp(context)
                     }
@@ -104,6 +126,16 @@ fun ProfileScreen(
             }
         }
     }
+
+    ImagesSelect(
+        isVisible = isImageSelectVisible,
+        onClose = {
+            isImageSelectVisible = false
+        },
+        onSelect = {
+            println(it)
+        }
+    )
 }
 
 
@@ -134,7 +166,10 @@ private fun Header(backAction: (() -> Unit)? = null) {
 }
 
 @Composable
-private fun UserPanel(user: UserVO) {
+private fun UserPanel(
+    user: UserVO,
+    onEditImage: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,7 +184,8 @@ private fun UserPanel(user: UserVO) {
                 .background(
                     color = MaterialTheme.colorScheme.primary,
                     shape = CircleShape
-                ),
+                )
+                .clickable(onClick = onEditImage),
             contentAlignment = Alignment.Center
         ) {
             user.firstName.getOrNull(0)?.toString()?.let {
@@ -157,6 +193,24 @@ private fun UserPanel(user: UserVO) {
                     text = it,
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(horizontal = 4.dp)
+                    .size(24.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.inverseSurface,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.inverseOnSurface
                 )
             }
         }
@@ -176,5 +230,62 @@ private fun UserPanel(user: UserVO) {
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Medium
         )
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ImagesSelect(
+    isVisible: Boolean,
+    maxAmount: Int = 1,
+    onClose: () -> Unit,
+    onSelect: (Int) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    fun optionSelect(result: Int) {
+        scope.launch {
+            bottomSheetState.hide()
+        }.invokeOnCompletion {
+            if (!bottomSheetState.isVisible) {
+                onSelect(result)
+                onClose()
+            }
+        }
+    }
+
+    if (isVisible) {
+        ModalBottomSheet(
+            onDismissRequest = onClose,
+            sheetState = bottomSheetState
+        ) {
+            ActionPlate(text = "Option 1") {
+                optionSelect(1)
+            }
+            ActionPlate(text = "Option 2") {
+                optionSelect(2)
+            }
+            Spacer(Modifier.height(24.dp))
+        }
+    }
+}
+
+
+@Preview(
+    name = "User"
+)
+@Composable
+fun UserPanelPreview() {
+    R3Theme {
+        UserPanel(
+            user = UserVO(
+                firstName = "User Name",
+                email = "john@doe.com"
+            )
+        ) {}
     }
 }

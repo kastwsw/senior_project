@@ -216,7 +216,7 @@ fun CheckboxLabel(
                 interactionSource = interactionSource,
                 indication = null,
                 enabled = enabled,
-                onClickLabel = null,
+                onClickLabel = label,
                 role = Role.Checkbox,
                 onClick = {
                     onCheckedChange(!checked)

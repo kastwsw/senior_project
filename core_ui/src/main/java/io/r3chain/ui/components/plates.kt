@@ -3,8 +3,10 @@ package io.r3chain.ui.components
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -100,7 +102,7 @@ fun ActionPlate(text: String, onClick: () -> Unit) {
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.titleMedium
         )
     }
 }
@@ -110,22 +112,29 @@ fun ActionPlate(text: String, onClick: () -> Unit) {
 fun SwitchPlate(
     text: String,
     checked: Boolean,
+    enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onCheckedChange: (Boolean) -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-//            .clickable(
-//                onClickLabel = text,
-//                role = Role.Button,
-//                onClick = onClick
-//            )
+            .clickable(
+                interactionSource = interactionSource,
+                indication = LocalIndication.current,
+                onClickLabel = text,
+                enabled = enabled,
+                role = Role.Button,
+                onClick = {
+                    onCheckedChange(!checked)
+                }
+            )
             .padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .weight(1f)
                 .padding(vertical = 20.dp)

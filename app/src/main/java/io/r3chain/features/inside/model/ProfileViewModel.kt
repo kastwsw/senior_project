@@ -60,7 +60,9 @@ class ProfileViewModel @Inject constructor(
 
     fun setEmailNotification(enabled: Boolean) {
         viewModelScope.launch {
+            isLoading = true
             userRepository.updateUserNotification(enabledEmail = enabled)
+            isLoading = false
         }
     }
 
