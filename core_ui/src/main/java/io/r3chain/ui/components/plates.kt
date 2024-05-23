@@ -205,7 +205,10 @@ private fun Demo() {
     R3Theme {
         Surface {
             Column {
-                IconActionPlate(text = "IconActionPlate", icon = Icons.Outlined.PhotoCamera) {}
+                IconActionPlate(
+                    text = "IconActionPlate",
+                    icon = Icons.Outlined.PhotoCamera
+                ) {}
                 SwitchPlate(text = "SwitchPlate", checked = true) {}
                 Column(
                     modifier = Modifier
@@ -213,9 +216,11 @@ private fun Demo() {
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    LoadingBox(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp))
+                    LoadingBox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp)
+                    )
                     ErrorPlate(text = "Have some error")
                 }
             }
