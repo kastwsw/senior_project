@@ -1,5 +1,6 @@
 package io.r3chain.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -15,7 +16,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -27,9 +31,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.r3chain.ui.theme.R3Theme
 
 @Composable
 fun ErrorPlate(
@@ -89,8 +95,13 @@ fun LoadingBox(
 
 
 @Composable
-fun ActionPlate(text: String, onClick: () -> Unit) {
-    Box(
+fun ActionPlate(
+    text: String,
+    leadingContent: @Composable (() -> Unit)? = null,
+    trailingContent: @Composable (() -> Unit)? = null,
+    onClick: () -> Unit
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
@@ -98,13 +109,36 @@ fun ActionPlate(text: String, onClick: () -> Unit) {
                 role = Role.Button,
                 onClick = onClick
             )
-            .padding(20.dp)
+            .padding(20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        if (leadingContent != null) leadingContent()
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium
         )
+        if (trailingContent != null) trailingContent()
     }
+}
+
+@Composable
+fun IconActionPlate(
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
+    ActionPlate(
+        text = text,
+        onClick = onClick,
+        leadingContent = {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    )
 }
 
 
@@ -141,29 +175,49 @@ fun SwitchPlate(
         )
         Switch(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            interactionSource = interactionSource
         )
     }
 }
 
-
 @Preview(
-    name = "Demo"
+    name = "Demo Light",
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-private fun PlatesPreview() {
-    MaterialTheme {
+private fun PlatesPreviewLight() {
+    Demo()
+}
+
+
+@Preview(
+    name = "Demo Night",
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+private fun PlatesPreviewNight() {
+    Demo()
+}
+
+@Composable
+private fun Demo() {
+    R3Theme {
         Surface {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                LoadingBox(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(80.dp))
-                ErrorPlate(text = "Have some error")
+            Column {
+                IconActionPlate(text = "IconActionPlate", icon = Icons.Outlined.PhotoCamera) {}
+                SwitchPlate(text = "SwitchPlate", checked = true) {}
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    LoadingBox(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp))
+                    ErrorPlate(text = "Have some error")
+                }
             }
         }
     }
