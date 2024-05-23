@@ -2,15 +2,21 @@ package io.r3chain.features.inside.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,6 +26,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -187,10 +195,14 @@ private fun UserPanel(
                     color = MaterialTheme.colorScheme.primary,
                     shape = CircleShape
                 )
-                .clickable(onClick = onEditImage),
+                .clickable(
+                    indication = rememberRipple(bounded = true, radius = 50.dp),
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onEditImage
+                ),
             contentAlignment = Alignment.Center
         ) {
-            user.firstName.getOrNull(0)?.toString()?.let {
+            user.firstName.firstOrNull()?.toString()?.let {
                 Text(
                     text = it,
                     style = MaterialTheme.typography.displayMedium,
@@ -236,7 +248,46 @@ private fun UserPanel(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@Composable
+fun <T> BottomSelect(
+    isVisible: Boolean,
+    onClose: () -> Unit,
+    onSelect: (T) -> Unit,
+    content: @Composable ColumnScope.(optionSelect: (T) -> Unit) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    if (isVisible) ModalBottomSheet(
+        onDismissRequest = onClose,
+        sheetState = bottomSheetState,
+        // edgeToEdge
+        windowInsets = WindowInsets(0)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp)
+                .padding(WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues())
+                .navigationBarsPadding()
+        ) {
+            content(this) { result ->
+                scope.launch {
+                    bottomSheetState.hide()
+                }.invokeOnCompletion {
+                    if (!bottomSheetState.isVisible) {
+                        onSelect(result)
+                        onClose()
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun ImagesSelect(
     isVisible: Boolean,
@@ -244,42 +295,16 @@ fun ImagesSelect(
     onClose: () -> Unit,
     onSelect: (Int) -> Unit
 ) {
-    val scope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-
-    fun optionSelect(result: Int) {
-        scope.launch {
-            bottomSheetState.hide()
-        }.invokeOnCompletion {
-            if (!bottomSheetState.isVisible) {
-                onSelect(result)
-                onClose()
-            }
+    BottomSelect(
+        isVisible = isVisible,
+        onClose = onClose,
+        onSelect = onSelect
+    ) { optionSelect ->
+        ActionPlate(text = "Camera") {
+            optionSelect(1)
         }
-    }
-
-    if (isVisible) {
-        ModalBottomSheet(
-            onDismissRequest = onClose,
-            sheetState = bottomSheetState,
-            // edgeToEdge
-            windowInsets = WindowInsets(0)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-                    .navigationBarsPadding()
-            ) {
-                ActionPlate(text = "Option 1") {
-                    optionSelect(1)
-                }
-                ActionPlate(text = "Option 2") {
-                    optionSelect(2)
-                }
-            }
+        ActionPlate(text = "Gallery") {
+            optionSelect(2)
         }
     }
 }
