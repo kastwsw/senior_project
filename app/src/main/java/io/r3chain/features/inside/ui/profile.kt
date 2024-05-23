@@ -1,12 +1,5 @@
 package io.r3chain.features.inside.ui
 
-import android.Manifest
-import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,8 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,22 +39,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inside.model.ProfileViewModel
 import io.r3chain.ui.components.ActionPlate
-import io.r3chain.ui.components.BottomSelect
 import io.r3chain.ui.components.ButtonStyle
-import io.r3chain.ui.components.IconActionPlate
+import io.r3chain.ui.components.ImageSelect
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.SwitchPlate
 import io.r3chain.ui.theme.R3Theme
-import java.io.File
-import java.io.FileOutputStream
 
 @Composable
 fun ProfileScreen(
@@ -140,7 +126,7 @@ fun ProfileScreen(
         }
     }
 
-    ImagesSelect(
+    ImageSelect(
         isVisible = isImageSelectVisible,
         onClose = {
             isImageSelectVisible = false
@@ -248,78 +234,6 @@ private fun UserPanel(
             fontWeight = FontWeight.Medium
         )
     }
-}
-
-
-@Composable
-fun ImagesSelect(
-    isVisible: Boolean,
-    maxAmount: Int = 1,
-    onClose: () -> Unit,
-    onSelect: (Uri) -> Unit
-) {
-    val context = LocalContext.current
-
-    // запуск камеры
-    val takePictureLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicturePreview()
-    ) { bitmap: Bitmap? ->
-        if (bitmap != null) onSelect(saveBitmapToFile(context, bitmap))
-    }
-
-    // разрешение для камеры
-    val requestCameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) takePictureLauncher.launch()
-    }
-
-    val onOptionSelect = remember {{ type: ImagesSelectOption ->
-        when (type) {
-            // юзер выбрал сделать фото
-            ImagesSelectOption.CAMERA -> when (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)) {
-                PermissionChecker.PERMISSION_GRANTED -> takePictureLauncher.launch()
-                else -> requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-            // юзер выбрал взять из галереи
-            ImagesSelectOption.GALLERY -> {
-                println("Gallery select")
-            }
-        }
-    }}
-
-    BottomSelect(
-        isVisible = isVisible,
-        onClose = onClose,
-        onSelect = onOptionSelect
-    ) { optionSelect ->
-        IconActionPlate(
-            text = stringResource(R.string.select_from_camera),
-            icon = Icons.Outlined.PhotoCamera
-        ) {
-            optionSelect(ImagesSelectOption.CAMERA)
-        }
-        IconActionPlate(
-            text = stringResource(R.string.select_from_gallery),
-            icon = Icons.Outlined.Image
-        ) {
-            optionSelect(ImagesSelectOption.GALLERY)
-        }
-    }
-}
-
-private enum class ImagesSelectOption {
-    CAMERA, GALLERY
-}
-
-private fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri {
-    // NOTE: пока без try/catch, чтобы посмотреть какие могут быть ошибки
-    val file = File(context.cacheDir, "camera_image_${System.currentTimeMillis()}.jpg")
-    val outputStream = FileOutputStream(file)
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-    outputStream.flush()
-    outputStream.close()
-    return Uri.fromFile(file)
 }
 
 @Preview(

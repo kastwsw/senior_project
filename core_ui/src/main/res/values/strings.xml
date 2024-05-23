@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_from_camera">Take a new photo</string>
+    <string name="select_from_gallery">Select from Gallery</string>
+</resources>
