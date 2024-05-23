@@ -26,6 +26,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -56,6 +58,7 @@ import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inside.model.ProfileViewModel
 import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.ButtonStyle
+import io.r3chain.ui.components.IconActionPlate
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.SwitchPlate
@@ -300,10 +303,16 @@ fun ImagesSelect(
         onClose = onClose,
         onSelect = onSelect
     ) { optionSelect ->
-        ActionPlate(text = "Camera") {
+        IconActionPlate(
+            text = stringResource(R.string.select_from_camera),
+            icon = Icons.Outlined.PhotoCamera
+        ) {
             optionSelect(1)
         }
-        ActionPlate(text = "Gallery") {
+        IconActionPlate(
+            text = stringResource(R.string.select_from_gallery),
+            icon = Icons.Outlined.Image
+        ) {
             optionSelect(2)
         }
     }

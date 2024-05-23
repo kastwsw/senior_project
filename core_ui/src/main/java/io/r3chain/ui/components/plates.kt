@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.r3chain.ui.theme.R3Theme
 
+
 @Composable
 fun ErrorPlate(
     text: String,
@@ -97,8 +98,10 @@ fun LoadingBox(
 @Composable
 fun ActionPlate(
     text: String,
+    enabled: Boolean = true,
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onClick: () -> Unit
 ) {
     Row(
@@ -107,6 +110,9 @@ fun ActionPlate(
             .clickable(
                 onClickLabel = text,
                 role = Role.Button,
+                enabled = enabled,
+                interactionSource = interactionSource,
+                indication = LocalIndication.current,
                 onClick = onClick
             )
             .padding(20.dp),
@@ -116,7 +122,8 @@ fun ActionPlate(
         if (leadingContent != null) leadingContent()
         Text(
             text = text,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.weight(1f)
         )
         if (trailingContent != null) trailingContent()
     }
@@ -150,35 +157,20 @@ fun SwitchPlate(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onCheckedChange: (Boolean) -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = interactionSource,
-                indication = LocalIndication.current,
-                onClickLabel = text,
-                enabled = enabled,
-                role = Role.Button,
-                onClick = {
-                    onCheckedChange(!checked)
-                }
+    ActionPlate(
+        text = text,
+        enabled = enabled,
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                interactionSource = interactionSource
             )
-            .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 20.dp)
-        )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            interactionSource = interactionSource
-        )
-    }
+        },
+        onClick = {
+            onCheckedChange(!checked)
+        }
+    )
 }
 
 @Preview(
