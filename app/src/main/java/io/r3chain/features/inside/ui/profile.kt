@@ -6,18 +6,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsIgnoringVisibility
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -29,20 +22,16 @@ import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -57,13 +46,13 @@ import io.r3chain.R
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inside.model.ProfileViewModel
 import io.r3chain.ui.components.ActionPlate
+import io.r3chain.ui.components.BottomSelect
 import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.IconActionPlate
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.SwitchPlate
 import io.r3chain.ui.theme.R3Theme
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
@@ -250,46 +239,6 @@ private fun UserPanel(
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-@Composable
-fun <T> BottomSelect(
-    isVisible: Boolean,
-    onClose: () -> Unit,
-    onSelect: (T) -> Unit,
-    content: @Composable ColumnScope.(optionSelect: (T) -> Unit) -> Unit
-) {
-    val scope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-
-    if (isVisible) ModalBottomSheet(
-        onDismissRequest = onClose,
-        sheetState = bottomSheetState,
-        // edgeToEdge
-        windowInsets = WindowInsets(0)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp)
-                .padding(WindowInsets.navigationBarsIgnoringVisibility.asPaddingValues())
-                .navigationBarsPadding()
-        ) {
-            content(this) { result ->
-                scope.launch {
-                    bottomSheetState.hide()
-                }.invokeOnCompletion {
-                    if (!bottomSheetState.isVisible) {
-                        onSelect(result)
-                        onClose()
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun ImagesSelect(
