@@ -79,8 +79,6 @@ fun <T> BottomSelect(
 }
 
 
-
-
 @Composable
 fun ImageSelect(
     isVisible: Boolean,
@@ -149,9 +147,6 @@ fun ImageSelect(
     }
 }
 
-private enum class ImagesSelectOption {
-    CAMERA, GALLERY
-}
 
 private fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri {
     // NOTE: пока без try/catch, чтобы посмотреть какие могут быть ошибки
@@ -161,4 +156,9 @@ private fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri {
     outputStream.flush()
     outputStream.close()
     return Uri.fromFile(file)
+}
+
+
+private enum class ImagesSelectOption {
+    CAMERA, GALLERY
 }
