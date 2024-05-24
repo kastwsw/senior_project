@@ -1,7 +1,11 @@
 package io.r3chain.data.repositories
 
+import android.content.Context
+import android.net.Uri
 import dagger.Lazy
+import dagger.hilt.android.qualifiers.ApplicationContext
 import io.r3chain.data.api.apis.AuthApi
+import io.r3chain.data.api.apis.UploadMediaApi
 import io.r3chain.data.api.infrastructure.ApiClient
 import io.r3chain.data.api.models.AuthDto
 import io.r3chain.data.api.models.AuthLoginRequestDto
@@ -15,9 +19,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okio.BufferedSink
+import okio.source
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
+    @ApplicationContext
+    private val context: Context,
     private val apiService: ApiService,
     private val apiClient: Lazy<ApiClient>,
     private val cacheDatabase: Lazy<CacheDatabase>,
@@ -127,5 +138,45 @@ class UserRepository @Inject constructor(
                 .apiV1AuthVerifyPost()
         }
     }
+
+    /**
+     * Upload avatar picture.
+     */
+    suspend fun uploadAvatarImage(uri: Uri) {
+        withContext(Dispatchers.IO) {
+            val fileBody = getFileMultipartBody(uri)
+            // send to server
+            apiService.safeApiCall {
+                apiClient.get()
+                    .createService(UploadMediaApi::class.java)
+                    .uploadFile(fileBody)
+            }.onSuccess {
+                // Handle successful upload
+                println("Profile picture uploaded successfully: $it")
+            }.onFailure {
+                // Handle error
+                println("Upload failed: $it")
+            }
+        }
+    }
+
+
+    /**
+     * Создаёт мальтипарт дату для отправки на сервер.
+     */
+    private fun getFileMultipartBody(uri: Uri) = MultipartBody.Part.createFormData(
+        name = "file",
+        filename = uri.lastPathSegment ?: "upload_media",
+        // чтобы не создавать лишний файл
+        body = object : RequestBody() {
+            override fun contentType() = "image/*".toMediaTypeOrNull()
+
+            override fun writeTo(sink: BufferedSink) {
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    sink.writeAll(inputStream.source())
+                }
+            }
+        }
+    )
 
 }

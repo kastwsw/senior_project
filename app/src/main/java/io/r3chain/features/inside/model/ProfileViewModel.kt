@@ -27,8 +27,14 @@ class ProfileViewModel @Inject constructor(
     var currentUser: UserVO? by mutableStateOf(null)
         private set
 
+    /**
+     * Индикатор загрузки.
+     */
     var isLoading by mutableStateOf(false)
         private set
+
+
+    var uri: Uri? by mutableStateOf(null)
 
 
     init {
@@ -84,5 +90,11 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
+    fun uploadImage(data: Uri) {
+        viewModelScope.launch {
+            userRepository.uploadAvatarImage(data)
+            uri = data
+        }
+    }
 
 }

@@ -115,7 +115,7 @@ fun ActionPlate(
                 indication = LocalIndication.current,
                 onClick = onClick
             )
-            .padding(20.dp),
+            .padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -123,7 +123,9 @@ fun ActionPlate(
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 20.dp)
         )
         if (trailingContent != null) trailingContent()
     }
