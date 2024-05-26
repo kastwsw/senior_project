@@ -13,6 +13,7 @@ import io.r3chain.data.api.models.ResourceUploadRequestDto
 import io.r3chain.data.api.models.StringStringValuesKeyValuePair
 
 import io.r3chain.data.api.models.*
+import okhttp3.MultipartBody
 
 interface ResourceApi {
     /**
@@ -51,6 +52,17 @@ interface ResourceApi {
      */
     @Multipart
     @POST("api/v1/resource/upload")
-    suspend fun apiV1ResourceUploadPost(@Query("resourceList") resourceList: kotlin.collections.List<ResourceUploadDto>? = null, @Part("fileList") fileList: kotlin.collections.List<StringStringValuesKeyValuePair>? = null): Response<ResourceResponseEntity>
+    suspend fun apiV1ResourceUploadPost(
+        @Query("resourceList") resourceList: kotlin.collections.List<ResourceUploadDto>? = null,
+        @Part("fileList") fileList: kotlin.collections.List<StringStringValuesKeyValuePair>? = null
+    ): Response<ResourceResponseEntity>
+
+
+    @Multipart
+    @POST("api/v1/resource/upload")
+    suspend fun apiV1MediaUploadPost(
+        @Part file: MultipartBody.Part,
+        @Part("requestDto") requestDto: RequestBody
+    ): Response<ResourceResponseEntity>
 
 }

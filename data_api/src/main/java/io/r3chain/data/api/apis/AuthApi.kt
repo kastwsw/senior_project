@@ -56,6 +56,6 @@ interface AuthApi {
      * @return [GeneralResponseEntity]
      */
     @POST("api/v1/auth/verify")
-    suspend fun apiV1AuthVerifyPost(): Response<GeneralResponseEntity>
+    suspend fun apiV1AuthVerifyPost(): Response<AuthResponseEntity>
 
 }

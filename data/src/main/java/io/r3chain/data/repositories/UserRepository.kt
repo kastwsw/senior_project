@@ -2,15 +2,19 @@ package io.r3chain.data.repositories
 
 import android.content.Context
 import android.net.Uri
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Lazy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.r3chain.data.api.apis.AuthApi
-import io.r3chain.data.api.apis.UploadMediaApi
+import io.r3chain.data.api.apis.ResourceApi
 import io.r3chain.data.api.infrastructure.ApiClient
 import io.r3chain.data.api.models.AuthDto
 import io.r3chain.data.api.models.AuthLoginRequestDto
 import io.r3chain.data.api.models.AuthResponseEntity
 import io.r3chain.data.api.models.AuthSaveRequestDto
+import io.r3chain.data.api.models.ResourceUploadDto
+import io.r3chain.data.api.models.ResourceUploadRequestDto
 import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.services.ApiService
 import io.r3chain.data.services.UserPrefsService
@@ -22,6 +26,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okio.BufferedSink
 import okio.source
 import javax.inject.Inject
@@ -82,23 +87,6 @@ class UserRepository @Inject constructor(
     fun getAuthTokenFlow() = userPrefsService.get().authToken
 
 
-    suspend fun updateUserNotification(enabledEmail: Boolean) {
-        withContext(Dispatchers.IO) {
-            val newData: AuthDto = cacheDatabase.get().userDao().getAll().first().first().copy(
-                sendEmailNotifications = enabledEmail
-            )
-            apiService.safeApiCall {
-                apiClient.get()
-                    .createService(AuthApi::class.java)
-                    .apiV1AuthSavePost(
-                        authSaveRequestDto = AuthSaveRequestDto(newData)
-                    )
-            }.onSuccess {
-                handleAuthResult(it)
-            }
-        }
-    }
-
     private suspend fun handleAuthResult(response: AuthResponseEntity) {
         // save user data
         response.authList?.values?.firstOrNull()?.let {
@@ -107,6 +95,47 @@ class UserRepository @Inject constructor(
         // save auth token
         userPrefsService.get().saveAuthToken(
             response.sessionList?.values?.firstOrNull()?.token ?: ""
+        )
+    }
+
+    /**
+     * Возвращает из БД текущие данные пользоватея, полученные от сервера.
+     * Предполагается, что данные там есть. Иначе будет ошибка.
+     *
+     * @return Данные из БД.
+     */
+    private suspend fun getCurrentUserDto() = withContext(Dispatchers.IO) {
+        cacheDatabase.get().userDao().getAll().first().first()
+    }
+
+    /**
+     * Обновляет данные пользователя, оптравляя запрос на сервер.
+     *
+     * @param newData Новые данные, которые заменят старые.
+     */
+    private suspend fun updateUserData(newData: AuthDto) {
+        apiService.safeApiCall {
+            apiClient.get()
+                .createService(AuthApi::class.java)
+                .apiV1AuthSavePost(
+                    authSaveRequestDto = AuthSaveRequestDto(newData)
+                )
+        }.onSuccess {
+            handleAuthResult(it)
+        }
+    }
+
+
+    /**
+     * Обноляет флаг отправки нотификаций.
+     *
+     * @param enabledEmail Отправлять или нет.
+     */
+    suspend fun updateUserNotification(enabledEmail: Boolean) {
+        updateUserData(
+            newData = getCurrentUserDto().copy(
+                sendEmailNotifications = enabledEmail
+            )
         )
     }
 
@@ -144,25 +173,32 @@ class UserRepository @Inject constructor(
      */
     suspend fun uploadAvatarImage(uri: Uri) {
         withContext(Dispatchers.IO) {
+            // file data for request
             val fileBody = getFileMultipartBody(uri)
+            // file meta for request
+            val dto = getFileDtoMultipartBody(
+                ResourceUploadRequestDto(listOf(ResourceUploadDto()))
+            )
             // send to server
             apiService.safeApiCall {
                 apiClient.get()
-                    .createService(UploadMediaApi::class.java)
-                    .uploadFile(fileBody)
-            }.onSuccess {
-                // Handle successful upload
-                println("Profile picture uploaded successfully: $it")
-            }.onFailure {
-                // Handle error
-                println("Upload failed: $it")
+                    .createService(ResourceApi::class.java)
+                    .apiV1MediaUploadPost(fileBody, dto)
+            }.onSuccess { responseEntity ->
+                responseEntity.resourceList!!.values.first().id.also { resourceId ->
+                    updateUserData(
+                        newData = getCurrentUserDto().copy(
+                            imageResourceID = resourceId
+                        )
+                    )
+                }
             }
         }
     }
 
 
     /**
-     * Создаёт мальтипарт дату для отправки на сервер.
+     * Создаёт мальтипарт дату файла для отправки на сервер.
      */
     private fun getFileMultipartBody(uri: Uri) = MultipartBody.Part.createFormData(
         name = "file",
@@ -178,5 +214,15 @@ class UserRepository @Inject constructor(
             }
         }
     )
+
+    /**
+     * Создаёт мальтипарт дату описания файла для отправки на сервер.
+     */
+    private fun getFileDtoMultipartBody(data: ResourceUploadRequestDto) = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+        .adapter(ResourceUploadRequestDto::class.java)
+        .toJson(data)
+        .toRequestBody("application/json".toMediaTypeOrNull())
 
 }
