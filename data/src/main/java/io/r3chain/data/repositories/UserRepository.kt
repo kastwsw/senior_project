@@ -18,8 +18,11 @@ import io.r3chain.data.api.models.ResourceUploadRequestDto
 import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.services.ApiService
 import io.r3chain.data.services.UserPrefsService
+import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -48,6 +51,19 @@ class UserRepository @Inject constructor(
             UserVO().createByApi(it)
         }
     }
+
+    /**
+     * Данные всех ресурсов поьзователя, которые пришли из ответа сервера.
+     */
+    private var resourcesList: List<ResourceVO>? = null
+
+    /**
+     * Flow данных файлов авторизованного пользователя.
+     */
+    fun getPictureFlow() = pictureFlow.asStateFlow()
+
+    private val pictureFlow: MutableStateFlow<ResourceVO> = MutableStateFlow(ResourceVO())
+
 
     /**
      * Авторизовать пользователя по соответствующим данным.
@@ -88,9 +104,20 @@ class UserRepository @Inject constructor(
 
 
     private suspend fun handleAuthResult(response: AuthResponseEntity) {
+        // got user's files data
+        resourcesList = response.responseResourceList?.map {
+            ResourceVO().createByApi(it.value)
+        }
         // save user data
-        response.authList?.values?.firstOrNull()?.let {
-            cacheDatabase.get().userDao().insert(it)
+        response.authList?.values?.firstOrNull()?.let { dto ->
+            // set avatar image
+            resourcesList?.find {
+                dto.imageResourceID == it.id
+            }?.also {
+                pictureFlow.emit(it)
+            }
+            // insert to db
+            cacheDatabase.get().userDao().insert(dto)
         }
         // save auth token
         userPrefsService.get().saveAuthToken(
@@ -165,6 +192,8 @@ class UserRepository @Inject constructor(
             apiClient.get()
                 .createService(AuthApi::class.java)
                 .apiV1AuthVerifyPost()
+        }.onSuccess {
+            handleAuthResult(it)
         }
     }
 

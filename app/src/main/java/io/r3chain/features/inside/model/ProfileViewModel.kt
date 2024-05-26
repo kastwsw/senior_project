@@ -38,10 +38,21 @@ class ProfileViewModel @Inject constructor(
 
 
     init {
-        // Начать отслеживать данные текущего пользователя.
+        // отслеживать данные текущего пользователя
         viewModelScope.launch {
             userRepository.getUserFlow().collectLatest {
                 currentUser = it
+            }
+        }
+
+        // отслеживать данные картинки аватара
+        viewModelScope.launch {
+            userRepository.getPictureFlow().collectLatest { data ->
+                uri = data.posterLink.takeIf {
+                    it.isNotBlank()
+                }?.let {
+                    Uri.parse(it)
+                }
             }
         }
     }
@@ -93,7 +104,6 @@ class ProfileViewModel @Inject constructor(
     fun uploadImage(data: Uri) {
         viewModelScope.launch {
             userRepository.uploadAvatarImage(data)
-            uri = data
         }
     }
 
