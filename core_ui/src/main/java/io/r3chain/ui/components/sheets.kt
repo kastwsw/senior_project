@@ -3,6 +3,8 @@ package io.r3chain.ui.components
 import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -151,13 +153,40 @@ fun ImageSelect(
 private fun saveBitmapToFile(context: Context, bitmap: Bitmap): Uri {
     // NOTE: пока без try/catch, чтобы посмотреть какие могут быть ошибки
     val file = File(context.cacheDir, "camera_image_${System.currentTimeMillis()}.jpg")
-    val outputStream = FileOutputStream(file)
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-    outputStream.flush()
-    outputStream.close()
+
+    // во временный файл
+    FileOutputStream(file).use {
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
+    }
+
+    // корректировка
+    val correctedBitmap = correctImageOrientation(file.path, bitmap)
+
+    // в итоговый файл
+    FileOutputStream(file).use {
+        correctedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, it)
+    }
+
     return Uri.fromFile(file)
 }
 
+
+private fun correctImageOrientation(imagePath: String, bitmap: Bitmap): Bitmap {
+    val orientation = ExifInterface(imagePath).getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL
+    )
+
+    val matrix = Matrix()
+    when (orientation) {
+//        ExifInterface.ORIENTATION_UNDEFINED,
+        ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+        ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+        ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+    }
+
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+}
 
 private enum class ImagesSelectOption {
     CAMERA, GALLERY

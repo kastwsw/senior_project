@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.room.paging)
     ksp(libs.room.compiler)
 
+    implementation(libs.exifinterface)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 
