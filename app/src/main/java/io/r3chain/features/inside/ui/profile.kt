@@ -1,6 +1,5 @@
 package io.r3chain.features.inside.ui
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,8 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import io.r3chain.R
+import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inside.model.ProfileViewModel
 import io.r3chain.ui.components.ActionPlate
@@ -78,7 +80,7 @@ fun ProfileScreen(
                 backAction = profileModel::signOut
             )
 
-            (profileModel.currentUser ?: UserVO()).also { user ->
+            (profileModel.currentUser.collectAsState(null).value ?: UserVO()).also { user ->
                 Column(
                     modifier = Modifier
                         .weight(1f)
@@ -87,7 +89,7 @@ fun ProfileScreen(
                     // user
                     UserPanel(
                         user = user,
-                        uri = profileModel.uri
+                        picture = profileModel.currentUserImage.collectAsState(null).value
                     ) {
                         isImageSelectVisible = true
                     }
@@ -175,7 +177,7 @@ private fun Header(backAction: (() -> Unit)? = null) {
 @Composable
 private fun UserPanel(
     user: UserVO,
-    uri: Uri? = null,
+    picture: ResourceVO? = null,
     onEditImage: () -> Unit
 ) {
     Column(
@@ -196,43 +198,46 @@ private fun UserPanel(
                 .clickable(
                     indication = rememberRipple(bounded = true, radius = 50.dp),
                     interactionSource = remember { MutableInteractionSource() },
+                    enabled = picture != null,
                     onClick = onEditImage
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (uri != null) {
-                Image(
-                    painter = rememberAsyncImagePainter(uri),
+            if (picture != null) {
+                // загрузить и отрисовать изображение (если есть) или первую букву
+                if (picture.posterLink.isNotBlank()) Image(
+                    painter = rememberAsyncImagePainter(picture.posterLink),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .matchParentSize()
                         .clip(shape = CircleShape)
-                )
-            } else user.firstName.firstOrNull()?.toString()?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.displayMedium,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(horizontal = 4.dp)
-                    .size(24.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.inverseSurface,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.inverseOnSurface
-                )
+                ) else user.firstName.firstOrNull()?.toString()?.also {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.displayMedium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+                // символ редактирования
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(horizontal = 4.dp)
+                        .size(24.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.inverseSurface,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.inverseOnSurface
+                    )
+                }
             }
         }
         Spacer(Modifier.height(16.dp))

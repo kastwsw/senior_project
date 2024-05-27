@@ -62,7 +62,7 @@ class UserRepository @Inject constructor(
      */
     fun getPictureFlow() = pictureFlow.asStateFlow()
 
-    private val pictureFlow: MutableStateFlow<ResourceVO> = MutableStateFlow(ResourceVO())
+    private val pictureFlow: MutableStateFlow<ResourceVO?> = MutableStateFlow(null)
 
 
     /**
@@ -110,12 +110,11 @@ class UserRepository @Inject constructor(
         }
         // save user data
         response.authList?.values?.firstOrNull()?.let { dto ->
-            // set avatar image
-            resourcesList?.find {
+            // set avatar image or empty object
+            val resource = resourcesList?.find {
                 dto.imageResourceID == it.id
-            }?.also {
-                pictureFlow.emit(it)
             }
+            pictureFlow.emit(resource ?: ResourceVO())
             // insert to db
             cacheDatabase.get().userDao().insert(dto)
         }

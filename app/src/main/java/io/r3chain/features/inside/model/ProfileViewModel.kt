@@ -11,8 +11,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.R
 import io.r3chain.data.repositories.UserRepository
-import io.r3chain.data.vo.UserVO
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +22,12 @@ class ProfileViewModel @Inject constructor(
     /**
      * Данные авторизованного пользователя.
      */
-    var currentUser: UserVO? by mutableStateOf(null)
-        private set
+    val currentUser = userRepository.getUserFlow()
+
+    /**
+     * Данные картинки аватара авторизованного пользователя.
+     */
+    val currentUserImage = userRepository.getPictureFlow()
 
     /**
      * Индикатор загрузки.
@@ -33,29 +35,6 @@ class ProfileViewModel @Inject constructor(
     var isLoading by mutableStateOf(false)
         private set
 
-
-    var uri: Uri? by mutableStateOf(null)
-
-
-    init {
-        // отслеживать данные текущего пользователя
-        viewModelScope.launch {
-            userRepository.getUserFlow().collectLatest {
-                currentUser = it
-            }
-        }
-
-        // отслеживать данные картинки аватара
-        viewModelScope.launch {
-            userRepository.getPictureFlow().collectLatest { data ->
-                uri = data.posterLink.takeIf {
-                    it.isNotBlank()
-                }?.let {
-                    Uri.parse(it)
-                }
-            }
-        }
-    }
 
     fun refreshUserData() {
         viewModelScope.launch {
