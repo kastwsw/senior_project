@@ -226,7 +226,7 @@ class UserRepository @Inject constructor(
 
 
     /**
-     * Создаёт мальтипарт дату файла для отправки на сервер.
+     * Создаёт мальтипарт-дата файла для отправки на сервер.
      */
     private fun getFileMultipartBody(uri: Uri) = MultipartBody.Part.createFormData(
         name = "file",
@@ -244,7 +244,7 @@ class UserRepository @Inject constructor(
     )
 
     /**
-     * Создаёт мальтипарт дату описания файла для отправки на сервер.
+     * Создаёт мальтипарт-дата описания файла для отправки на сервер.
      */
     private fun getFileDtoMultipartBody(data: ResourceUploadRequestDto) = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())

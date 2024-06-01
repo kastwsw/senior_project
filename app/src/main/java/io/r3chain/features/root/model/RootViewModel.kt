@@ -33,14 +33,14 @@ open class RootViewModel @Inject constructor(
 //            delay(3500)
             userRepository.getAuthTokenFlow().collectLatest {
                 withContext(Dispatchers.Main) {
-                    currentState = if (it.isBlank()) ScreenState.AUTH else ScreenState.INSIDE
+                    currentState = if (it.isBlank()) ScreenState.AUTH else ScreenState.INVENTORY
                 }
             }
         }
     }
 
     enum class ScreenState {
-        LOADING, AUTH, INSIDE
+        LOADING, AUTH, INVENTORY
     }
 
 }

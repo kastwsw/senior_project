@@ -1,4 +1,4 @@
-package io.r3chain.features.inside.model
+package io.r3chain.features.inventory.model
 
 import android.content.Context
 import android.content.Intent

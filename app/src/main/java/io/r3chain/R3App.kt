@@ -2,7 +2,7 @@ package io.r3chain
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import io.r3chain.data.LoggerService
+import io.r3chain.celebrity.data.LoggerService
 import javax.inject.Inject
 
 @HiltAndroidApp

@@ -34,9 +34,9 @@ import io.r3chain.data.exceptions.NetworkIOException
 import io.r3chain.data.exceptions.NoInternetException
 import io.r3chain.data.exceptions.SurpriseException
 import io.r3chain.features.auth.ui.LoginScreen
-import io.r3chain.features.inside.ui.ProfileScreen
+import io.r3chain.features.inventory.ui.ProfileScreen
 import io.r3chain.features.root.model.RootViewModel
-import io.r3chain.presentation.ApiViewModel
+import io.r3chain.features.root.model.ApiViewModel
 import io.r3chain.ui.components.ErrorPlate
 import io.r3chain.ui.components.LoadingBox
 import io.r3chain.ui.theme.R3Theme
@@ -78,7 +78,7 @@ private fun Content(
             composable(route = RootViewModel.ScreenState.AUTH.name) {
                 LoginScreen()
             }
-            composable(route = RootViewModel.ScreenState.INSIDE.name) {
+            composable(route = RootViewModel.ScreenState.INVENTORY.name) {
                 ProfileScreen()
             }
         }

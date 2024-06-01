@@ -16,11 +16,9 @@ interface DataBaseModule {
 
     companion object {
 
-        /**
-         * База для кэша обнуляется при миграции.
-         */
         @Singleton
         @Provides
+        // База для кэша обнуляется при миграции.
         fun provideCacheDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
             context = context,
             klass = CacheDatabase::class.java,

@@ -1,4 +1,4 @@
-package io.r3chain.features.inside.ui
+package io.r3chain.features.inventory.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,12 +44,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import io.r3chain.R
 import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
-import io.r3chain.features.inside.model.ProfileViewModel
+import io.r3chain.features.inventory.model.ProfileViewModel
 import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.ImageSelect

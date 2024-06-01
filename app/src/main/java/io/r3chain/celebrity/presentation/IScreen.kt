@@ -1,4 +1,4 @@
-package io.r3chain.presentation
+package io.r3chain.celebrity.presentation
 
 import androidx.compose.runtime.Composable
 

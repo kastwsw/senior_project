@@ -1,4 +1,4 @@
-package io.r3chain.data
+package io.r3chain.celebrity.data
 
 import android.util.Log
 import io.r3chain.data.services.ApiService

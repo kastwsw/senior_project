@@ -1,4 +1,4 @@
-package io.r3chain.presentation
+package io.r3chain.features.root.model
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
