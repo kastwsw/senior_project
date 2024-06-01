@@ -26,9 +26,9 @@ open class DashboardViewModel @Inject constructor(
     val currentUserImage = userRepository.getPictureFlow()
 
     /**
-     * Current screen state.
+     * Индикатор загрузки.
      */
-    var currentState by mutableStateOf(ScreenState.INVENTORY)
+    var isLoading by mutableStateOf(false)
         private set
 
 
@@ -36,10 +36,6 @@ open class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             userRepository.refresh()
         }
-    }
-
-    enum class ScreenState {
-        INVENTORY, DISPATCHED
     }
 
 }

@@ -203,7 +203,7 @@ private fun UserPanel(
     name = "User"
 )
 @Composable
-fun UserPanelPreview() {
+private fun UserPanelPreview() {
     R3Theme {
         Surface {
             UserPanel(

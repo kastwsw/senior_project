@@ -34,6 +34,17 @@
     <string name="sign_out_label">Log out</string>
 
 
+    <!-- INVENTORY -->
+
+    <string name="inventory_total_title">Total amount, kg</string>
+
+    <string name="inventory_tab_label_inventory">Inventory</string>
+    <string name="inventory_tab_label_dispatched">Dispatched</string>
+
+    <string name="inventory_tab_empty_inventory">To start managing your operations, simply tap on the (+) button to add new waste collections or received materials</string>
+    <string name="inventory_tab_empty_dispatched">To start managing your operations, simply tap on the (+) button to add new dispatched materials</string>
+
+
     <!-- OTHER -->
     <string name="on_back_press_message">Do it again to exit</string>
 
