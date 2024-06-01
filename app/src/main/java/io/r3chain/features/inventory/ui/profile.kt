@@ -48,6 +48,7 @@ import coil.compose.rememberAsyncImagePainter
 import io.r3chain.R
 import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
+import io.r3chain.features.inventory.model.InventoryViewModel
 import io.r3chain.features.inventory.model.ProfileViewModel
 import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.ButtonStyle
@@ -59,6 +60,7 @@ import io.r3chain.ui.theme.R3Theme
 
 @Composable
 fun ProfileScreen(
+    rootModel: InventoryViewModel,
     profileModel: ProfileViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
@@ -76,7 +78,7 @@ fun ProfileScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             // header
             Header(
-                backAction = profileModel::signOut
+                backAction = rootModel::navigateToHome
             )
 
             (profileModel.currentUser.collectAsState(null).value ?: UserVO()).also { user ->
