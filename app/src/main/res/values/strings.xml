@@ -35,6 +35,7 @@
 
 
     <!-- OTHER -->
+    <string name="on_back_press_message">Do it again to exit</string>
 
     <string name="error_no_connection">Internet connection not found</string>
     <string name="error_no_server">Oops.. Server not answered\nPlease check your internet and try again</string>

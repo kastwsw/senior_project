@@ -78,7 +78,7 @@ fun ProfileScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             // header
             Header(
-                backAction = rootModel::navigateToHome
+                backAction = rootModel::navigateBack
             )
 
             (profileModel.currentUser.collectAsState(null).value ?: UserVO()).also { user ->
