@@ -36,7 +36,7 @@ class ProfileViewModel @Inject constructor(
         private set
 
 
-    fun refreshUserData() {
+    init {
         viewModelScope.launch {
             isLoading = true
             userRepository.refresh()
