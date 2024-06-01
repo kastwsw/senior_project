@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.valentinilk.shimmer.shimmer
 import io.r3chain.R
 import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
@@ -239,6 +240,17 @@ private fun UserPanel(
                         tint = MaterialTheme.colorScheme.inverseOnSurface
                     )
                 }
+            } else {
+                // индикатор загрзуки
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .shimmer()
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = CircleShape
+                        )
+                )
             }
         }
         Spacer(Modifier.height(16.dp))
@@ -266,11 +278,13 @@ private fun UserPanel(
 @Composable
 fun UserPanelPreview() {
     R3Theme {
-        UserPanel(
-            user = UserVO(
-                firstName = "User Name",
-                email = "john@doe.com"
-            )
-        ) {}
+        Surface {
+            UserPanel(
+                user = UserVO(
+                    firstName = "User Name",
+                    email = "john@doe.com"
+                )
+            ) {}
+        }
     }
 }

@@ -117,7 +117,7 @@ fun ActionPlate(
             )
             .padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         if (leadingContent != null) leadingContent()
         Text(
