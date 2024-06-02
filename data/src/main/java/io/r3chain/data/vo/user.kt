@@ -7,6 +7,7 @@ data class UserVO (
     val id: Int = 0,
     val firstName: String = "",
     val email: String = "",
+    val imageResourceID: Int = 0,
     val sendEmailNotifications: Boolean = false
 ) {
 
@@ -14,6 +15,7 @@ data class UserVO (
         id = value.id,
         firstName = value.firstName,
         email = value.email,
+        imageResourceID = value.imageResourceID,
         sendEmailNotifications = value.sendEmailNotifications
     )
 }

@@ -172,9 +172,10 @@ private fun HeadCard(
                     .align(Alignment.TopEnd)
             ) {
                 UserAvatar(
-                    size = 40.dp,
                     user = user,
                     picture = picture,
+                    size = 40.dp,
+                    letterStyle = MaterialTheme.typography.titleLarge,
                     onClick = onAvatarClick
                 )
             }

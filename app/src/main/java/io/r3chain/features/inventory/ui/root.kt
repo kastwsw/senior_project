@@ -49,7 +49,7 @@ fun InventoryScreen(
         floatingActionButton = {
             FabContent {
                 // TODO: организация или нет
-                if (true) {
+                if (false) {
                     isActionsSelectVisible = true
                 } else {
                     model.navigateToAddCollect()

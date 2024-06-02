@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -29,10 +30,11 @@ import io.r3chain.data.vo.UserVO
 
 @Composable
 fun UserAvatar(
-    size: Dp,
     user: UserVO,
     picture: ResourceVO? = null,
     hasEditSymbol: Boolean = false,
+    size: Dp = 100.dp,
+    letterStyle: TextStyle = MaterialTheme.typography.displayMedium,
     onClick: () -> Unit
 ) {
     Box(
@@ -45,56 +47,63 @@ fun UserAvatar(
             .clickable(
                 indication = rememberRipple(bounded = true, radius = size / 2),
                 interactionSource = remember { MutableInteractionSource() },
-                enabled = picture != null,
                 onClick = onClick
             ),
         contentAlignment = Alignment.Center
     ) {
-        if (picture != null) {
-            // загрузить и отрисовать изображение (если есть) или первую букву
-            if (picture.posterLink.isNotBlank()) Image(
-                painter = rememberAsyncImagePainter(picture.posterLink),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .matchParentSize()
-                    .clip(shape = CircleShape)
-            ) else user.firstName.firstOrNull()?.toString()?.also {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.displayMedium,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
-            // символ редактирования
-            if (hasEditSymbol) Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(horizontal = 4.dp)
-                    .size(24.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.inverseSurface,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
+        // картинка или буква
+        if (user.imageResourceID > 0) {
+            // есть изображение
+            if (picture?.posterLink?.isNotBlank() == true) {
+                // загружено
+                Image(
+                    painter = rememberAsyncImagePainter(picture.posterLink),
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp),
-                    tint = MaterialTheme.colorScheme.inverseOnSurface
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(shape = CircleShape)
+                )
+            } else {
+                // индикатор загрузки
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .shimmer()
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = CircleShape
+                        )
                 )
             }
         } else {
-            // индикатор загрзуки
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .shimmer()
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = CircleShape
-                    )
+            // первая буква имени
+            user.firstName.firstOrNull()?.toString()?.also {
+                Text(
+                    text = it,
+                    style = letterStyle,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+        }
+
+        // символ редактирования
+        if (hasEditSymbol) Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(horizontal = 4.dp)
+                .size(24.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.inverseSurface,
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Edit,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = MaterialTheme.colorScheme.inverseOnSurface
             )
         }
     }

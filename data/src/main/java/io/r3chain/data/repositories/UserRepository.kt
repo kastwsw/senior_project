@@ -47,8 +47,12 @@ class UserRepository @Inject constructor(
      * Flow данных авторизованного пользователя.
      */
     fun getUserFlow() = cacheDatabase.get().userDao().getAll().map { list ->
-        list.firstOrNull()?.let {
-            UserVO().createByApi(it)
+        list.firstOrNull()?.let { authDto ->
+            // convert to VO
+            UserVO().createByApi(authDto).apply {
+                // refresh avatar
+                refreshAvatarImage(imageResourceID)
+            }
         }
     }
 
@@ -109,14 +113,9 @@ class UserRepository @Inject constructor(
             ResourceVO().createByApi(it.value)
         }
         // save user data
-        response.authList?.values?.firstOrNull()?.let { dto ->
-            // set avatar image or empty object
-            val resource = resourcesList?.find {
-                dto.imageResourceID == it.id
-            }
-            pictureFlow.emit(resource ?: ResourceVO())
+        response.authList?.values?.firstOrNull()?.let {
             // insert to db
-            cacheDatabase.get().userDao().insert(dto)
+            cacheDatabase.get().userDao().insert(it)
         }
         // save auth token
         userPrefsService.get().saveAuthToken(
@@ -193,6 +192,19 @@ class UserRepository @Inject constructor(
                 .apiV1AuthVerifyPost()
         }.onSuccess {
             handleAuthResult(it)
+        }
+    }
+
+    private suspend fun refreshAvatarImage(resourceId: Int) {
+        // return if not changed
+        if (pictureFlow.value?.id == resourceId) return
+        // find in memory
+        val resource = resourcesList?.find { resourceId == it.id }
+        if (resource != null) {
+            // take from memory
+            pictureFlow.emit(resource)
+        } else {
+            // get from server
         }
     }
 
