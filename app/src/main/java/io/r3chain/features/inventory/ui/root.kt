@@ -196,19 +196,21 @@ private fun WasteActionSelect(
         onSelect = onSelect
     ) { optionSelect ->
         IconActionPlate(
-            text = stringResource(R.string.inventory_add_collect_option),
+            title = stringResource(R.string.inventory_add_collect_option),
+            description = stringResource(R.string.inventory_add_collect_description),
             icon = Icons.Outlined.Add
         ) {
             optionSelect(WasteActionSelectOption.COLLECT)
         }
         IconActionPlate(
-            text = stringResource(R.string.inventory_add_receive_option),
+            title = stringResource(R.string.inventory_add_receive_option),
             icon = Icons.Outlined.Add
         ) {
             optionSelect(WasteActionSelectOption.RECEIVE)
         }
         IconActionPlate(
-            text = stringResource(R.string.inventory_add_dispatch_option),
+            title = stringResource(R.string.inventory_add_dispatch_option),
+            description = stringResource(R.string.inventory_add_dispatch_description),
             icon = Icons.Outlined.LocalShipping
         ) {
             optionSelect(WasteActionSelectOption.DISPATCH)

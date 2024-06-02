@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.LocalShipping
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -129,7 +130,8 @@ fun LoadingBox(
 
 @Composable
 fun ActionPlate(
-    text: String,
+    title: String,
+    description: String? = null,
     enabled: Boolean = true,
     leadingContent: @Composable (() -> Unit)? = null,
     trailingContent: @Composable (() -> Unit)? = null,
@@ -140,7 +142,7 @@ fun ActionPlate(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(
-                onClickLabel = text,
+                onClickLabel = title,
                 role = Role.Button,
                 enabled = enabled,
                 interactionSource = interactionSource,
@@ -152,30 +154,43 @@ fun ActionPlate(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         if (leadingContent != null) leadingContent()
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleMedium,
+        Column(
             modifier = Modifier
                 .weight(1f)
                 .padding(vertical = 20.dp)
-        )
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            description?.also {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         if (trailingContent != null) trailingContent()
     }
 }
 
 @Composable
 fun IconActionPlate(
-    text: String,
     icon: ImageVector,
+    title: String,
+    description: String? = null,
     onClick: () -> Unit
 ) {
     ActionPlate(
-        text = text,
+        title = title,
+        description = description,
         onClick = onClick,
         leadingContent = {
             Icon(
                 imageVector = icon,
-                contentDescription = text,
+                contentDescription = title,
                 tint = MaterialTheme.colorScheme.primary
             )
         }
@@ -192,7 +207,7 @@ fun SwitchPlate(
     onCheckedChange: (Boolean) -> Unit
 ) {
     ActionPlate(
-        text = text,
+        title = text,
         enabled = enabled,
         trailingContent = {
             Switch(
@@ -231,11 +246,20 @@ private fun Demo() {
     R3Theme {
         Surface {
             Column {
+                ScreenHeader(title = "Screen title") {}
+
                 IconActionPlate(
-                    text = "IconActionPlate",
+                    title = "IconActionPlate",
                     icon = Icons.Outlined.PhotoCamera
                 ) {}
+                IconActionPlate(
+                    title = "IconActionPlate",
+                    description = "Description text",
+                    icon = Icons.Outlined.LocalShipping
+                ) {}
+
                 SwitchPlate(text = "SwitchPlate", checked = true) {}
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

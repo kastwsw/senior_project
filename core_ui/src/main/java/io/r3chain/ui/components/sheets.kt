@@ -135,13 +135,13 @@ fun ImageSelect(
         onSelect = onOptionSelect
     ) { optionSelect ->
         IconActionPlate(
-            text = stringResource(R.string.select_from_camera),
+            title = stringResource(R.string.select_from_camera),
             icon = Icons.Outlined.PhotoCamera
         ) {
             optionSelect(ImagesSelectOption.CAMERA)
         }
         IconActionPlate(
-            text = stringResource(R.string.select_from_gallery),
+            title = stringResource(R.string.select_from_gallery),
             icon = Icons.Outlined.Image
         ) {
             optionSelect(ImagesSelectOption.GALLERY)

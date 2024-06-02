@@ -85,7 +85,7 @@ fun ProfileScreen(
                     }
 
                     // help
-                    ActionPlate(text = stringResource(R.string.help_label)) {
+                    ActionPlate(title = stringResource(R.string.help_label)) {
                         profileModel.openHelp(context)
                     }
                 }
