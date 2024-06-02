@@ -1,17 +1,17 @@
 package io.r3chain.features.inventory.model
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.data.repositories.UserRepository
 import javax.inject.Inject
 
 @HiltViewModel
-open class InventoryViewModel @Inject constructor(
-    private val userRepository: UserRepository
-) : ViewModel() {
+open class InventoryViewModel @Inject constructor() : ViewModel() {
 
-    var navController: NavHostController? = null
+    var navController by mutableStateOf<NavHostController?>(null)
 
 
     fun navigateBack() {
@@ -19,7 +19,9 @@ open class InventoryViewModel @Inject constructor(
     }
 
     fun navigateToProfile() {
-        navController?.navigate(ScreenState.PROFILE.name)
+        navController?.navigate(ScreenState.PROFILE.name) {
+            launchSingleTop = true
+        }
     }
 
     enum class ScreenState {
