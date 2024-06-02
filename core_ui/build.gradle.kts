@@ -50,6 +50,9 @@ dependencies {
     // shimmer effect
     api(libs.shimmer.compose)
 
+    // exif
+    api(libs.exifinterface)
+
     // Integration with activities
     api(libs.androidx.activity.compose)
 

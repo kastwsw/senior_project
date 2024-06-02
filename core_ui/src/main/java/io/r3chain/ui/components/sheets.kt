@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -34,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
+import androidx.exifinterface.media.ExifInterface
 import io.r3chain.ui.R
 import kotlinx.coroutines.launch
 import java.io.File

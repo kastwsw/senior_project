@@ -44,6 +44,17 @@
     <string name="inventory_tab_empty_inventory">To start managing your operations, simply tap on the (+) button to add new waste collections or received materials</string>
     <string name="inventory_tab_empty_dispatched">To start managing your operations, simply tap on the (+) button to add new dispatched materials</string>
 
+    <string name="inventory_add_collect_option">Add new collection</string>
+    <string name="inventory_add_collect_description">Start tracking a new collection</string>
+    <string name="inventory_add_collect_title">New collection</string>
+
+    <string name="inventory_add_receive_option">Add received material</string>
+    <string name="inventory_add_receive_title">New received material</string>
+
+    <string name="inventory_add_dispatch_option">Dispatch material</string>
+    <string name="inventory_add_dispatch_description">Supporting text</string>
+    <string name="inventory_add_dispatch_title">New material for dispatch</string>
+
 
     <!-- OTHER -->
     <string name="on_back_press_message">Do it again to exit</string>

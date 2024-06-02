@@ -38,7 +38,7 @@ import io.r3chain.R
 import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inventory.model.DashboardViewModel
-import io.r3chain.features.inventory.model.InventoryViewModel
+import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
 import io.r3chain.ui.theme.R3Theme
 import kotlinx.coroutines.launch
@@ -46,7 +46,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    rootModel: InventoryViewModel,
+    rootModel: RootViewModel,
     dashboardModel: DashboardViewModel = hiltViewModel()
 ) {
     Surface {

@@ -2,19 +2,13 @@ package io.r3chain.features.inventory.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -35,20 +29,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
-import io.r3chain.features.inventory.model.InventoryViewModel
 import io.r3chain.features.inventory.model.ProfileViewModel
+import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
 import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.ImageSelect
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
+import io.r3chain.ui.components.ScreenHeader
 import io.r3chain.ui.components.SwitchPlate
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
 fun ProfileScreen(
-    rootModel: InventoryViewModel,
+    rootModel: RootViewModel,
     profileModel: ProfileViewModel = hiltViewModel()
 ) {
     var isImageSelectVisible by rememberSaveable {
@@ -61,7 +56,8 @@ fun ProfileScreen(
         val context = LocalContext.current
         Column(modifier = Modifier.fillMaxSize()) {
             // header
-            Header(
+            ScreenHeader(
+                title = stringResource(R.string.profile_title),
                 backAction = rootModel::navigateBack
             )
 
@@ -132,32 +128,6 @@ fun ProfileScreen(
     )
 }
 
-
-@Composable
-private fun Header(backAction: (() -> Unit)? = null) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 6.dp)
-    ) {
-        IconButton(onClick = {
-            backAction?.invoke()
-        }) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-        Text(
-            text = stringResource(R.string.profile_title),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .padding(horizontal = 6.dp)
-        )
-    }
-}
 
 @Composable
 private fun UserPanel(

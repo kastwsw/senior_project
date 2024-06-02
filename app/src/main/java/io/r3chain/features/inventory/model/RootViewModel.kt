@@ -9,13 +9,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-open class InventoryViewModel @Inject constructor() : ViewModel() {
+open class RootViewModel @Inject constructor() : ViewModel() {
 
     var navController by mutableStateOf<NavHostController?>(null)
 
 
     fun navigateBack() {
-        navController?.popBackStack()
+        navController?.navigateUp()
     }
 
     fun navigateToProfile() {
@@ -24,8 +24,26 @@ open class InventoryViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun navigateToAddCollect() {
+        navController?.navigate(ScreenState.COLLECT.name) {
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToAddReceive() {
+        navController?.navigate(ScreenState.RECEIVE.name) {
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToAddDispatch() {
+        navController?.navigate(ScreenState.DISPATCH.name) {
+            launchSingleTop = true
+        }
+    }
+
     enum class ScreenState {
-        HOME, PROFILE
+        HOME, PROFILE, COLLECT, RECEIVE, DISPATCH
     }
 
 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.LocalShipping
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -21,32 +22,63 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import io.r3chain.features.inventory.model.InventoryViewModel
+import io.r3chain.R
+import io.r3chain.features.inventory.model.RootViewModel
+import io.r3chain.ui.components.BottomSelect
+import io.r3chain.ui.components.IconActionPlate
 
 @Composable
 fun InventoryScreen(
-    model: InventoryViewModel = hiltViewModel()
+    model: RootViewModel = hiltViewModel()
 ) {
+    var isActionsSelectVisible by remember {
+        mutableStateOf(false)
+    }
+
     Scaffold(
         floatingActionButton = {
-            FabContent()
+            FabContent {
+                // TODO: организация или нет
+                if (true) {
+                    isActionsSelectVisible = true
+                } else {
+                    model.navigateToAddCollect()
+                }
+            }
         }
     ) {
         NavContent(it)
     }
+
+    WasteActionSelect(
+        isVisible = isActionsSelectVisible,
+        onClose = {
+            isActionsSelectVisible = false
+        },
+        onSelect = {
+            when (it) {
+                WasteActionSelectOption.COLLECT -> model.navigateToAddCollect()
+                WasteActionSelectOption.RECEIVE -> model.navigateToAddReceive()
+                WasteActionSelectOption.DISPATCH -> model.navigateToAddDispatch()
+            }
+        }
+    )
 }
 
 @Composable
 private fun NavContent(
     paddingValues: PaddingValues,
-    model: InventoryViewModel = hiltViewModel()
+    model: RootViewModel = hiltViewModel()
 ) {
     val navigationController = rememberNavController()
     val duration = 350
@@ -57,7 +89,7 @@ private fun NavContent(
 
     NavHost(
         navController = navigationController,
-        startDestination = InventoryViewModel.ScreenState.HOME.name,
+        startDestination = RootViewModel.ScreenState.HOME.name,
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues),
@@ -94,17 +126,26 @@ private fun NavContent(
             )
         }
     ) {
-        composable(route = InventoryViewModel.ScreenState.HOME.name) {
+        composable(route = RootViewModel.ScreenState.HOME.name) {
             DashboardScreen(rootModel = model)
         }
-        composable(route = InventoryViewModel.ScreenState.PROFILE.name) {
+        composable(route = RootViewModel.ScreenState.PROFILE.name) {
             ProfileScreen(rootModel = model)
+        }
+        composable(route = RootViewModel.ScreenState.COLLECT.name) {
+            AddCollectScreen(rootModel = model)
+        }
+        composable(route = RootViewModel.ScreenState.RECEIVE.name) {
+            AddReceiveScreen(rootModel = model)
+        }
+        composable(route = RootViewModel.ScreenState.DISPATCH.name) {
+            AddDispatchScreen(rootModel = model)
         }
     }
 
     val currentBackStackEntry = navigationController.currentBackStackEntryAsState().value
     BackHandler(
-        enabled = currentBackStackEntry?.destination?.route != InventoryViewModel.ScreenState.HOME.name
+        enabled = currentBackStackEntry?.destination?.route != RootViewModel.ScreenState.HOME.name
     ) {
         navigationController.popBackStack()
     }
@@ -113,12 +154,13 @@ private fun NavContent(
 
 @Composable
 private fun FabContent(
-    model: InventoryViewModel = hiltViewModel()
+    model: RootViewModel = hiltViewModel(),
+    onClick: () -> Unit
 ) {
     val currentBackStackEntry = model.navController?.currentBackStackEntryAsState()
     val isVisible by remember(currentBackStackEntry) {
         derivedStateOf {
-            currentBackStackEntry?.value?.destination?.route == InventoryViewModel.ScreenState.HOME.name
+            currentBackStackEntry?.value?.destination?.route == RootViewModel.ScreenState.HOME.name
         }
     }
     AnimatedVisibility(
@@ -132,9 +174,7 @@ private fun FabContent(
     ) {
         FloatingActionButton(
             shape = CircleShape,
-            onClick = {
-                model.navigateToProfile()
-            }
+            onClick = onClick
         ) {
             Icon(
                 imageVector = Icons.Outlined.Add,
@@ -142,4 +182,40 @@ private fun FabContent(
             )
         }
     }
+}
+
+@Composable
+private fun WasteActionSelect(
+    isVisible: Boolean,
+    onClose: () -> Unit,
+    onSelect: (WasteActionSelectOption) -> Unit
+) {
+    BottomSelect(
+        isVisible = isVisible,
+        onClose = onClose,
+        onSelect = onSelect
+    ) { optionSelect ->
+        IconActionPlate(
+            text = stringResource(R.string.inventory_add_collect_option),
+            icon = Icons.Outlined.Add
+        ) {
+            optionSelect(WasteActionSelectOption.COLLECT)
+        }
+        IconActionPlate(
+            text = stringResource(R.string.inventory_add_receive_option),
+            icon = Icons.Outlined.Add
+        ) {
+            optionSelect(WasteActionSelectOption.RECEIVE)
+        }
+        IconActionPlate(
+            text = stringResource(R.string.inventory_add_dispatch_option),
+            icon = Icons.Outlined.LocalShipping
+        ) {
+            optionSelect(WasteActionSelectOption.DISPATCH)
+        }
+    }
+}
+
+private enum class WasteActionSelectOption {
+    COLLECT, RECEIVE, DISPATCH
 }
