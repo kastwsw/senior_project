@@ -27,12 +27,18 @@ class ProfileViewModel @Inject constructor(
     /**
      * Данные картинки аватара авторизованного пользователя.
      */
-    val currentUserImage = userRepository.getPictureFlow()
+    val currentUserExt = userRepository.getUserExtFlow()
 
     /**
-     * Индикатор загрузки.
+     * Индикатор загрузки данных.
      */
     var isLoading by mutableStateOf(false)
+        private set
+
+    /**
+     * Индикатор загрузки картинки аватара на сервер.
+     */
+    var isImageUploading by mutableStateOf(false)
         private set
 
 
@@ -82,7 +88,9 @@ class ProfileViewModel @Inject constructor(
 
     fun uploadImage(data: Uri) {
         viewModelScope.launch {
+            isImageUploading = true
             userRepository.uploadAvatarImage(data)
+            isImageUploading = false
         }
     }
 

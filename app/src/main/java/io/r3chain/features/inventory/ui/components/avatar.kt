@@ -25,13 +25,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.valentinilk.shimmer.shimmer
-import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
 
 @Composable
 fun UserAvatar(
     user: UserVO,
-    picture: ResourceVO? = null,
+    picture: String? = null,
     hasEditSymbol: Boolean = false,
     size: Dp = 100.dp,
     letterStyle: TextStyle = MaterialTheme.typography.displayMedium,
@@ -54,17 +53,7 @@ fun UserAvatar(
         // картинка или буква
         if (user.imageResourceID > 0) {
             // есть изображение
-            if (picture?.posterLink?.isNotBlank() == true) {
-                // загружено
-                Image(
-                    painter = rememberAsyncImagePainter(picture.posterLink),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .matchParentSize()
-                        .clip(shape = CircleShape)
-                )
-            } else {
+            if (picture.isNullOrBlank()) {
                 // индикатор загрузки
                 Box(
                     modifier = Modifier
@@ -74,6 +63,16 @@ fun UserAvatar(
                             color = MaterialTheme.colorScheme.primaryContainer,
                             shape = CircleShape
                         )
+                )
+            } else {
+                // загружено
+                Image(
+                    painter = rememberAsyncImagePainter(picture),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(shape = CircleShape)
                 )
             }
         } else {

@@ -35,7 +35,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inventory.model.DashboardViewModel
 import io.r3chain.features.inventory.model.RootViewModel
@@ -59,7 +58,7 @@ fun DashboardScreen(
                 HeadCard(
                     totalAmount = if (dashboardModel.isLoading) "" else "0",
                     user = user,
-                    picture = dashboardModel.currentUserImage.collectAsState(null).value,
+                    picture = dashboardModel.currentUserExt.collectAsState(null).value?.avatarLink,
                     onAvatarClick = rootModel::navigateToProfile
                 )
             }
@@ -128,7 +127,7 @@ fun DashboardScreen(
 private fun HeadCard(
     totalAmount: String,
     user: UserVO,
-    picture: ResourceVO? = null,
+    picture: String? = null,
     onAvatarClick: () -> Unit
 ) {
     OutlinedCard(

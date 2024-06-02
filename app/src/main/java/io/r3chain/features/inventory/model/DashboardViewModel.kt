@@ -23,7 +23,7 @@ open class DashboardViewModel @Inject constructor(
     /**
      * Данные картинки аватара авторизованного пользователя.
      */
-    val currentUserImage = userRepository.getPictureFlow()
+    val currentUserExt = userRepository.getUserExtFlow()
 
     /**
      * Индикатор загрузки.

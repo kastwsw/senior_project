@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.data.vo.ResourceVO
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inventory.model.ProfileViewModel
 import io.r3chain.features.inventory.model.RootViewModel
@@ -70,7 +69,9 @@ fun ProfileScreen(
                     // user
                     UserPanel(
                         user = user,
-                        picture = profileModel.currentUserImage.collectAsState(null).value
+                        picture = if (profileModel.isImageUploading) null else {
+                            profileModel.currentUserExt.collectAsState(null).value?.avatarLink
+                        }
                     ) {
                         isImageSelectVisible = true
                     }
@@ -132,7 +133,7 @@ fun ProfileScreen(
 @Composable
 private fun UserPanel(
     user: UserVO,
-    picture: ResourceVO? = null,
+    picture: String? = null,
     onEditImage: () -> Unit
 ) {
     Column(

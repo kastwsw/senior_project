@@ -19,10 +19,9 @@ import io.r3chain.data.db.CacheDatabase
 import io.r3chain.data.services.ApiService
 import io.r3chain.data.services.UserPrefsService
 import io.r3chain.data.vo.ResourceVO
+import io.r3chain.data.vo.UserExtVO
 import io.r3chain.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -49,24 +48,16 @@ class UserRepository @Inject constructor(
     fun getUserFlow() = cacheDatabase.get().userDao().getAll().map { list ->
         list.firstOrNull()?.let { authDto ->
             // convert to VO
-            UserVO().createByApi(authDto).apply {
-                // refresh avatar
-                refreshAvatarImage(imageResourceID)
-            }
+            UserVO().createByApi(authDto)
         }
     }
 
     /**
-     * Данные всех ресурсов поьзователя, которые пришли из ответа сервера.
+     * Flow дополнительных данных авторизованного пользователя.
      */
-    private var resourcesList: List<ResourceVO>? = null
-
-    /**
-     * Flow данных файлов авторизованного пользователя.
-     */
-    fun getPictureFlow() = pictureFlow.asStateFlow()
-
-    private val pictureFlow: MutableStateFlow<ResourceVO?> = MutableStateFlow(null)
+    fun getUserExtFlow() = cacheDatabase.get().userExtDao().getAll().map { list ->
+        list.firstOrNull()
+    }
 
 
     /**
@@ -83,6 +74,9 @@ class UserRepository @Inject constructor(
                     AuthLoginRequestDto(email = email, password = password)
                 )
         }.onSuccess {
+            // delete last user data
+            cacheDatabase.get().clearAllTables()
+            // handle result data
             handleAuthResult(it)
         }
     }
@@ -108,15 +102,30 @@ class UserRepository @Inject constructor(
 
 
     private suspend fun handleAuthResult(response: AuthResponseEntity) {
-        // got user's files data
-        resourcesList = response.responseResourceList?.map {
-            ResourceVO().createByApi(it.value)
-        }
         // save user data
-        response.authList?.values?.firstOrNull()?.let {
+        response.authList?.values?.firstOrNull()?.also { dto ->
             // insert to db
-            cacheDatabase.get().userDao().insert(it)
+            cacheDatabase.get().userDao().apply {
+                insert(dto)
+            }
+            // link and other
+            UserVO().createByApi(dto).also { user ->
+                UserExtVO(
+                    id = user.id,
+                    avatarLink = response.responseResourceList?.map {
+                        ResourceVO().createByApi(it.value)
+                    }?.find {
+                        it.id == user.imageResourceID
+                    }?.posterLink ?: ""
+                ).also { data ->
+                    // insert to db
+                    cacheDatabase.get().userExtDao().apply {
+                        insert(data)
+                    }
+                }
+            }
         }
+
         // save auth token
         userPrefsService.get().saveAuthToken(
             response.sessionList?.values?.firstOrNull()?.token ?: ""
@@ -192,19 +201,6 @@ class UserRepository @Inject constructor(
                 .apiV1AuthVerifyPost()
         }.onSuccess {
             handleAuthResult(it)
-        }
-    }
-
-    private suspend fun refreshAvatarImage(resourceId: Int) {
-        // return if not changed
-        if (pictureFlow.value?.id == resourceId) return
-        // find in memory
-        val resource = resourcesList?.find { resourceId == it.id }
-        if (resource != null) {
-            // take from memory
-            pictureFlow.emit(resource)
-        } else {
-            // get from server
         }
     }
 
