@@ -1,6 +1,7 @@
 package io.r3chain.features.inventory.model
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,12 @@ open class DashboardViewModel @Inject constructor(
      * Индикатор загрузки.
      */
     var isLoading by mutableStateOf(false)
+        private set
+
+    /**
+     * Общий вес.
+     */
+    var totalWeight by mutableIntStateOf(0)
         private set
 
 

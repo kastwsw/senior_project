@@ -3,13 +3,16 @@ package io.r3chain.features.inventory.ui
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -34,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valentinilk.shimmer.shimmer
 import io.r3chain.R
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inventory.model.DashboardViewModel
@@ -56,8 +60,9 @@ fun DashboardScreen(
             // card
             dashboardModel.currentUser.collectAsState(null).value?.also { user ->
                 HeadCard(
-                    totalAmount = if (dashboardModel.isLoading) "" else "0",
+                    totalAmount = dashboardModel.totalWeight.toString(),
                     user = user,
+                    isLoading = dashboardModel.isLoading,
                     picture = dashboardModel.currentUserExt.collectAsState(null).value?.avatarLink,
                     onAvatarClick = rootModel::navigateToProfile
                 )
@@ -105,7 +110,9 @@ fun DashboardScreen(
             HorizontalPager(
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
-                modifier = Modifier.fillMaxWidth().weight(1f)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
             ) { pageIndex ->
                 when (sections[pageIndex]) {
                     Sections.INVENTORY -> InventoryContent()
@@ -127,6 +134,7 @@ fun DashboardScreen(
 private fun HeadCard(
     totalAmount: String,
     user: UserVO,
+    isLoading: Boolean = false,
     picture: String? = null,
     onAvatarClick: () -> Unit
 ) {
@@ -147,7 +155,9 @@ private fun HeadCard(
                 Image(
                     painter = painterResource(R.drawable.home),
                     contentDescription = null,
-                    modifier = Modifier.width(83.dp)
+                    modifier = Modifier
+                        .width(83.dp)
+                        .offset(y = 2.dp)
                 )
                 Spacer(Modifier.width(20.dp))
                 Column {
@@ -155,10 +165,21 @@ private fun HeadCard(
                         text = stringResource(R.string.inventory_total_title),
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Spacer(Modifier.height(16.dp))
-                    totalAmount.takeIf { it.isNotBlank() }?.also {
+                    Spacer(Modifier.height(14.dp))
+                    Box(
+                        modifier = Modifier
+                            .let {
+                                if (!isLoading) it else it
+                                    .shimmer()
+                                    .background(
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        shape = MaterialTheme.shapes.small
+                                    )
+                            }
+                    ) {
                         Text(
-                            text = it,
+                            text = if (isLoading) "" else totalAmount,
+                            modifier = Modifier.defaultMinSize(minWidth = 90.dp),
                             style = MaterialTheme.typography.headlineLarge
                         )
                     }
