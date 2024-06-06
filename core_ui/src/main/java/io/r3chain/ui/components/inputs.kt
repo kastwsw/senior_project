@@ -1,5 +1,6 @@
 package io.r3chain.ui.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.Interaction
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.r3chain.ui.theme.R3Theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -239,14 +241,29 @@ fun CheckboxLabel(
     }
 }
 
-
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(
-    name = "Demo"
+    name = "Demo Light",
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-private fun InputsPreview() {
-    MaterialTheme {
+private fun PreviewLight() {
+    Demo()
+}
+
+
+@Preview(
+    name = "Demo Night",
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+private fun PreviewNight() {
+    Demo()
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun Demo() {
+    R3Theme {
         Surface {
             Column(
                 modifier = Modifier.fillMaxWidth().padding(16.dp),

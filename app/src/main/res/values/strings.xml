@@ -55,6 +55,12 @@
     <string name="inventory_add_dispatch_description">Supporting text</string>
     <string name="inventory_add_dispatch_title">New material for dispatch</string>
 
+    <string name="inventory_label_collect_details">Collection details</string>
+    <string name="inventory_label_collect_documents">Weight verification</string>
+
+    <string name="inventory_label_save_form">Save</string>
+    <string name="inventory_label_add_document">Add document</string>
+
 
     <!-- OTHER -->
     <string name="on_back_press_message">Do it again to exit</string>

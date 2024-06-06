@@ -227,7 +227,7 @@ fun SwitchPlate(
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-private fun PlatesPreviewLight() {
+private fun PreviewLight() {
     Demo()
 }
 
@@ -237,7 +237,7 @@ private fun PlatesPreviewLight() {
     uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
 )
 @Composable
-private fun PlatesPreviewNight() {
+private fun PreviewNight() {
     Demo()
 }
 

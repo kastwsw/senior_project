@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.WasteRepository
+import io.r3chain.data.vo.WasteCollectVO
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +20,13 @@ open class CollectViewModel @Inject constructor(
      * Индикатор загрузки.
      */
     var isLoading by mutableStateOf(false)
+        private set
+
+
+    /**
+     * Данные для формы.
+     */
+    var data: WasteCollectVO by mutableStateOf(WasteCollectVO())
         private set
 
 
