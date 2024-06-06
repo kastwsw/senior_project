@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class CollectViewModel @Inject constructor(
+open class DispatchViewModel @Inject constructor(
     private val wasteRepository: WasteRepository
 ) : ViewModel() {
 
@@ -33,7 +33,7 @@ open class CollectViewModel @Inject constructor(
     fun doneForm() {
         viewModelScope.launch {
             isLoading = true
-            wasteRepository.addCollect()
+//            wasteRepository.addCollect()
             isLoading = false
         }
     }

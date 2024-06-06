@@ -1,6 +1,6 @@
 package io.r3chain.data.vo
 
-data class WasteCollectVO(
+data class WasteVO(
     val id: Int = 0,
     val picturesId: List<Int> = emptyList(),
     val location: Int = 0,

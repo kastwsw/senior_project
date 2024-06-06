@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.data.vo.WasteCollectVO
+import io.r3chain.data.vo.WasteVO
 import io.r3chain.features.inventory.model.CollectViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.GroupLabel
@@ -53,7 +53,7 @@ fun AddCollectScreen(
 
 @Composable
 private fun CollectForm(
-    data: WasteCollectVO,
+    data: WasteVO,
     onAddDocument: () -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier
@@ -110,7 +110,7 @@ private fun Demo() {
     R3Theme {
         Surface {
             CollectForm(
-                data = WasteCollectVO(),
+                data = WasteVO(),
                 onAddDocument = {},
                 onDone = {}
             )

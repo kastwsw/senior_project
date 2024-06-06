@@ -18,8 +18,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.data.vo.WasteCollectVO
-import io.r3chain.features.inventory.model.CollectViewModel
+import io.r3chain.data.vo.WasteVO
+import io.r3chain.features.inventory.model.ReceiveViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.GroupLabel
 import io.r3chain.ui.components.ButtonStyle
@@ -30,7 +30,7 @@ import io.r3chain.ui.theme.R3Theme
 @Composable
 fun AddReceiveScreen(
     rootModel: RootViewModel,
-    collectViewModel: CollectViewModel = hiltViewModel()
+    receiveViewModel: ReceiveViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -43,9 +43,9 @@ fun AddReceiveScreen(
             )
             // content
             CollectForm(
-                data = collectViewModel.data,
+                data = receiveViewModel.data,
                 onAddDocument = {},
-                onDone = collectViewModel::doneForm
+                onDone = receiveViewModel::doneForm
             )
         }
     }
@@ -53,7 +53,7 @@ fun AddReceiveScreen(
 
 @Composable
 private fun CollectForm(
-    data: WasteCollectVO,
+    data: WasteVO,
     onAddDocument: () -> Unit,
     onDone: () -> Unit,
     modifier: Modifier = Modifier
@@ -110,7 +110,7 @@ private fun Demo() {
     R3Theme {
         Surface {
             CollectForm(
-                data = WasteCollectVO(),
+                data = WasteVO(),
                 onAddDocument = {},
                 onDone = {}
             )
