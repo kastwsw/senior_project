@@ -55,8 +55,21 @@
     <string name="inventory_add_dispatch_description">Supporting text</string>
     <string name="inventory_add_dispatch_title">New material for dispatch</string>
 
+    <string name="inventory_record_added">New record added</string>
+    <string name="inventory_record_undo">Undo</string>
+
     <string name="inventory_label_collect_details">Collection details</string>
     <string name="inventory_label_collect_documents">Weight verification</string>
+
+    <string name="inventory_label_materials_type">Type of collected material</string>
+
+    <string name="inventory_label_materials_type_pet">PET</string>
+    <string name="inventory_label_materials_type_hdpe">HDPE</string>
+    <string name="inventory_label_materials_type_pvc">PVC</string>
+    <string name="inventory_label_materials_type_pdpe">LDPE</string>
+    <string name="inventory_label_materials_type_pp">PP</string>
+    <string name="inventory_label_materials_type_ps">PS</string>
+    <string name="inventory_label_materials_type_other">mix</string>
 
     <string name="inventory_label_save_form">Save</string>
     <string name="inventory_label_add_document">Add document</string>
