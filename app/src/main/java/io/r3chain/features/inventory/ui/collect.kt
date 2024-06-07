@@ -1,6 +1,7 @@
 package io.r3chain.features.inventory.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.data.vo.WasteType
 import io.r3chain.data.vo.WasteVO
 import io.r3chain.features.inventory.model.CollectViewModel
 import io.r3chain.features.inventory.model.RootViewModel
@@ -29,6 +29,7 @@ import io.r3chain.features.inventory.ui.components.GroupLabel
 import io.r3chain.features.inventory.ui.components.RowLabel
 import io.r3chain.features.inventory.ui.components.WasteTypeSelect
 import io.r3chain.ui.components.ButtonStyle
+import io.r3chain.ui.components.DateInput
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.ScreenHeader
 import io.r3chain.ui.theme.R3Theme
@@ -52,7 +53,7 @@ fun AddCollectScreen(
                 data = collectViewModel.data,
                 modifier = Modifier.weight(1f),
                 enabled = !collectViewModel.isLoading,
-                onTypeChange = collectViewModel::changeMaterialType,
+                onDataChanged = collectViewModel::changeFormData,
                 onAddDocument = {},
                 onDone = collectViewModel::doneForm
             )
@@ -71,12 +72,13 @@ fun AddCollectScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CollectForm(
     data: WasteVO,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    onTypeChange: (List<WasteType>) -> Unit,
+    onDataChanged: (WasteVO) -> Unit,
     onAddDocument: () -> Unit,
     onDone: () -> Unit,
 ) {
@@ -91,9 +93,23 @@ private fun CollectForm(
         RowLabel(text = stringResource(R.string.inventory_label_materials_type))
         WasteTypeSelect(
             types = data.materialTypes,
-            onSelect = onTypeChange
+            onSelect = {
+                onDataChanged(
+                    data.copy(materialTypes = it)
+                )
+            }
         )
 
+        DateInput(
+            time = data.time,
+            onTimeChange = {
+                onDataChanged(
+                    data.copy(time = it)
+                )
+            }
+        )
+
+        Spacer(Modifier.height(32.dp))
         HorizontalDivider()
 
         GroupLabel(text = stringResource(R.string.inventory_label_collect_documents))
@@ -142,7 +158,7 @@ private fun Demo() {
         Surface {
             CollectForm(
                 data = WasteVO(),
-                onTypeChange = {},
+                onDataChanged = {},
                 onAddDocument = {},
                 onDone = {}
             )

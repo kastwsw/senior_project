@@ -48,8 +48,8 @@ fun WasteTypeSelect(
     onSelect: (List<WasteType>) -> Unit
 ) {
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-        verticalArrangement = Arrangement.spacedBy(0.dp)
+        horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.Start),
+        verticalArrangement = Arrangement.spacedBy((-2).dp)
     ) {
         WasteType.entries.forEach { type ->
             val labelId = when (type) {

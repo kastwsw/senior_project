@@ -7,10 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.WasteRepository
-import io.r3chain.data.vo.WasteType
 import io.r3chain.data.vo.WasteVO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.Instant
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +38,15 @@ open class CollectViewModel @Inject constructor(
         private set
 
 
+    init {
+        changeFormData(
+            data.copy(
+                time = Instant.now().minus(Duration.ofDays(2)).toEpochMilli()
+            )
+        )
+    }
+
+
     /**
      * Отрабатывает подтверждение пользователем заполенния формы.
      */
@@ -54,10 +64,9 @@ open class CollectViewModel @Inject constructor(
     /**
      * Изменить значение типа материала.
      */
-    fun changeMaterialType(value: List<WasteType>) {
-        data = data.copy(
-            materialTypes = value
-        )
+    fun changeFormData(value: WasteVO) {
+        // TODO: провалидировать форму (дизейблить/енейблить кнопку send)
+        data = value
     }
 
 }

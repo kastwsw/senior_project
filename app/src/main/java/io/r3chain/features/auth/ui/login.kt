@@ -192,6 +192,7 @@ private fun LoginField(
 ) {
     TextInput(
         value = value,
+        maxLength = 64,
         modifier = Modifier.fillMaxWidth(),
         labelValue = stringResource(R.string.input_email_label),
         placeholderValue = stringResource(R.string.input_email_placeholder),
@@ -245,6 +246,7 @@ private fun PasswordField(
 
     TextInput(
         value = value,
+        maxLength = 64,
         modifier = Modifier.fillMaxWidth(),
         labelValue = stringResource(R.string.input_password_label),
         trailingPainter = painterResource(

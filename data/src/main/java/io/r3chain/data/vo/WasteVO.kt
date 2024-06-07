@@ -5,7 +5,7 @@ data class WasteVO(
     val picturesId: List<Int> = emptyList(),
     val location: Int = 0,
     val materialTypes: List<WasteType> = emptyList(),
-    val date: String = "",
+    val time: Long? = null,
     val weight: String = "",
     val partner: String = "",
     val documents: List<WasteDocumentVO> = emptyList()
