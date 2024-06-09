@@ -71,8 +71,10 @@
     <string name="inventory_label_materials_type_ps">PS</string>
     <string name="inventory_label_materials_type_other">mix</string>
 
-    <string name="inventory_label_kg">kg</string>
-    <string name="inventory_label_g">g</string>
+    <string name="inventory_hint_kg">kg</string>
+    <string name="inventory_hint_g">g</string>
+
+    <string name="inventory_hint_partner">Select the partner</string>
 
     <string name="inventory_label_save_form">Save</string>
     <string name="inventory_label_add_document">Add document</string>

@@ -127,7 +127,7 @@ fun WeightInput(
                 it != 0L
             }?.toInt(),
             modifier = Modifier.weight(0.62f),
-            placeholderValue = stringResource(R.string.inventory_label_kg),
+            placeholderValue = stringResource(R.string.inventory_hint_kg),
             maxLength = 6,
             onValueChange = { value ->
                 val newKg = value ?: 0
@@ -145,7 +145,7 @@ fun WeightInput(
                 it != 0L
             }?.toInt(),
             modifier = Modifier.weight(0.38f),
-            placeholderValue = stringResource(R.string.inventory_label_g),
+            placeholderValue = stringResource(R.string.inventory_hint_g),
             maxLength = 3,
             onValueChange = { value ->
                 val newG = value ?: 0

@@ -17,7 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -124,12 +124,13 @@ private fun CollectForm(
         Spacer(Modifier.height(24.dp))
 
         var partnerIndex by remember(data) {
-            mutableIntStateOf(0)
+            mutableStateOf<Int?>(null)
         }
         RowLabel(text = stringResource(R.string.inventory_label_materials_type))
         SelectableInput(
             options = listOf("Partner 1", "Partner 2", "Partner 3", "Partner 4"),
-            selectedIndex = partnerIndex
+            selectedIndex = partnerIndex,
+            placeholderValue = stringResource(R.string.inventory_hint_partner)
         ) {
             partnerIndex = it
         }

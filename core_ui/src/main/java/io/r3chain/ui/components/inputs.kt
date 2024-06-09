@@ -466,58 +466,42 @@ fun DropDownInput(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SelectableInput(
     options: List<String>,
-    selectedIndex: Int,
     modifier: Modifier = Modifier,
+    selectedIndex: Int? = null,
+    placeholderValue: String? = null,
     onOptionSelect: (Int) -> Unit
 ) {
     var expanded by remember {
         mutableStateOf(false)
     }
-    // We want to react on tap/press on TextField to show menu
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it },
-        modifier = Modifier.then(modifier)
-    ) {
-        OutlinedTextField(
-            value = options[selectedIndex],
-            onValueChange = { },
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor(),
-            readOnly = true,
-            trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(
-                    expanded = expanded
-                )
-            },
-            shape = MaterialTheme.shapes.small,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
-            )
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = {
-                expanded = false
-            },
-            modifier = Modifier.exposedDropdownSize(true)
-        ) {
-            options.forEachIndexed { index, option ->
-                DropdownMenuItem(
-                    text = {
-                        Text(text = option)
-                    },
-                    onClick = {
-                        onOptionSelect(index)
-                        expanded = false
-                    }
-                )
+
+    TextInput(
+        value = if (selectedIndex == null) "" else options[selectedIndex],
+        modifier = modifier,
+        placeholderValue = placeholderValue,
+        onClick = {
+            expanded = true
+        },
+        onValueChange = {}
+    )
+
+    BottomSelect(
+        isVisible = expanded,
+        onClose = {
+            expanded = false
+        },
+        onSelect = {
+            expanded = false
+            onOptionSelect(it)
+        }
+    ) { optionSelect ->
+        options.forEachIndexed { index, option ->
+            ActionPlate(title = option) {
+                optionSelect(index)
             }
         }
     }
@@ -554,7 +538,9 @@ private fun Demo() {
     R3Theme {
         Surface {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 // email
