@@ -6,7 +6,7 @@ data class WasteVO(
     val location: Int = 0,
     val materialTypes: List<WasteType> = emptyList(),
     val time: Long? = null,
-    val weight: Long? = null,
+    val grams: Long? = null,
     val partner: String = "",
     val documents: List<WasteDocumentVO> = emptyList()
 )

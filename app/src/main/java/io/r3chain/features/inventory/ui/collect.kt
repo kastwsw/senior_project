@@ -32,7 +32,7 @@ import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.GroupLabel
 import io.r3chain.features.inventory.ui.components.RowLabel
 import io.r3chain.features.inventory.ui.components.WasteTypeSelect
-import io.r3chain.features.inventory.ui.components.WeightGramsInput
+import io.r3chain.features.inventory.ui.components.WeightInput
 import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.DateInput
 import io.r3chain.ui.components.PrimaryButton
@@ -73,7 +73,7 @@ fun AddCollectScreen(
                 rootModel.recordAdded(it)
             }
             ?.onFailure {
-                // TODO: выдать ошибку?
+                // TODO: выдать ошибку
             }
     }
 }
@@ -108,10 +108,9 @@ private fun CollectForm(
         Spacer(Modifier.height(24.dp))
 
         RowLabel(text = stringResource(R.string.inventory_label_materials_type))
-        WeightGramsInput(grams = data.weight) {
-            println(it)
+        WeightInput(grams = data.grams) {
             onDataChanged(
-                data.copy(weight = it)
+                data.copy(grams = it)
             )
         }
         Spacer(Modifier.height(24.dp))

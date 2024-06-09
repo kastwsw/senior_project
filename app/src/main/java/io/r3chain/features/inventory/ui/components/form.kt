@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilterChip
@@ -95,24 +97,65 @@ fun WasteTypeSelect(
 
 
 /**
- * Поле ввода веса в граммах.
+ * Поле ввода веса.
  *
  * @param grams Исходное значение в граммах.
  * @param modifier Модификатор.
  * @param onGramsChange Колбэк полученного значения.
  */
 @Composable
-fun WeightGramsInput(
+fun WeightInput(
     grams: Long?,
     modifier: Modifier = Modifier,
     onGramsChange: (Long?) -> Unit
 ) {
-    // NOTE: можно сделать два поля: для кг и для граммов
-    IntegerInput(
-        value = grams,
-        modifier = modifier,
-        onValueChange = onGramsChange
-    )
+    fun getKg(weight: Long) = weight / 1000
+
+    fun getGrams(weight: Long) = weight % 1000
+
+    Row(
+        modifier = Modifier
+            .then(modifier)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        // kg
+        IntegerInput(
+            value = grams?.let {
+                getKg(it)
+            }?.takeIf {
+                it != 0L
+            }?.toInt(),
+            modifier = Modifier.weight(0.62f),
+            placeholderValue = stringResource(R.string.inventory_label_kg),
+            maxLength = 6,
+            onValueChange = { value ->
+                val newKg = value ?: 0
+                val g = grams?.let {
+                    getGrams(it)
+                } ?: 0L
+                onGramsChange(newKg * 1000 + g)
+            }
+        )
+        // g
+        IntegerInput(
+            value = grams?.let {
+                getGrams(it)
+            }?.takeIf {
+                it != 0L
+            }?.toInt(),
+            modifier = Modifier.weight(0.38f),
+            placeholderValue = stringResource(R.string.inventory_label_g),
+            maxLength = 3,
+            onValueChange = { value ->
+                val newG = value ?: 0
+                val kg = grams?.let {
+                    getKg(it)
+                } ?: 0L
+                onGramsChange(kg * 1000 + newG)
+            }
+        )
+    }
 }
 
 

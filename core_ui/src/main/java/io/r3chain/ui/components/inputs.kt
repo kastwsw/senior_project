@@ -51,7 +51,6 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
@@ -236,9 +235,6 @@ fun TextInput(
             FocusRequester()
         }
     }
-    val focusManager = onClick?.let {
-        LocalFocusManager.current
-    }
 
     Box(modifier = Modifier.then(modifier)) {
         OutlinedTextField(
@@ -255,7 +251,7 @@ fun TextInput(
                     if (bringIntoViewRequester == null) it else it.onFocusEvent { focusState ->
                         if (focusState.isFocused) coroutineScope?.launch {
                             // задержка с поправкой на изменение компоновки под клавиатуру
-                            delay(500L)
+                            delay(350L)
                             bringIntoViewRequester.bringIntoView()
                         }
                     }
@@ -293,8 +289,8 @@ fun TextInput(
                         onClickLabel = placeholderValue,
                         role = Role.Button,
                         onClick = {
-                            onClick()
                             focusRequester?.requestFocus()
+                            onClick()
                         }
                     )
             )
@@ -313,20 +309,22 @@ fun TextInput(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IntegerInput(
-    value: Long?,
+    value: Int?,
     modifier: Modifier = Modifier,
-    maxLength: Int = 12,
-    onValueChange: (Long?) -> Unit
+    placeholderValue: String? = null,
+    maxLength: Int = 8,
+    onValueChange: (Int?) -> Unit
 ) {
     TextInput(
         value = value?.toString() ?: "",
         modifier = modifier,
+        placeholderValue = placeholderValue,
         maxLength = maxLength,
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number
         ),
         onValueChange = {
-            onValueChange(it.replace(Regex("[^0-9]"), "").toLongOrNull())
+            onValueChange(it.replace(Regex("[^0-9]"), "").toIntOrNull())
         }
     )
 }
