@@ -38,6 +38,7 @@ import io.r3chain.ui.components.DateInput
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.ScreenHeader
 import io.r3chain.ui.components.SelectableInput
+import io.r3chain.ui.components.TextInput
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
@@ -104,6 +105,17 @@ private fun CollectForm(
                     data.copy(materialTypes = it)
                 )
             }
+        )
+        Spacer(Modifier.height(24.dp))
+
+        RowLabel(text = stringResource(R.string.inventory_label_materials_type))
+        TextInput(
+            value = data.geoLatLong?.toString() ?: "",
+            onClick = {
+                // TODO: открыть карту
+                onDataChanged(data.copy(geoLatLong = 12.09 to 48.111))
+            },
+            onValueChange = {}
         )
         Spacer(Modifier.height(24.dp))
 
