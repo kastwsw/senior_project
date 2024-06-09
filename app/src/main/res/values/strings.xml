@@ -61,7 +61,19 @@
     <string name="inventory_label_collect_details">Collection details</string>
     <string name="inventory_label_collect_documents">Weight verification</string>
 
+    <string name="inventory_label_photos">Photo</string>
+    <string name="inventory_label_geo">Collection Location</string>
     <string name="inventory_label_materials_type">Type of collected material</string>
+    <string name="inventory_label_date">Collection Date</string>
+    <string name="inventory_label_weight">Weight</string>
+    <string name="inventory_label_partner">Destination Partner</string>
+
+    <string-array name="inventory_verifications_types">
+        <item>Weight slip</item>
+        <item>Photo</item>
+        <item>Certificate</item>
+        <item>Invoice</item>
+    </string-array>
 
     <string name="inventory_label_materials_type_pet">PET</string>
     <string name="inventory_label_materials_type_hdpe">HDPE</string>

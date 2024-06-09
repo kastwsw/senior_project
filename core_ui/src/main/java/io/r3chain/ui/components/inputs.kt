@@ -51,6 +51,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
@@ -483,6 +484,10 @@ fun SelectableInput(
         value = if (selectedIndex == null) "" else options[selectedIndex],
         modifier = modifier,
         placeholderValue = placeholderValue,
+        trailingPainter = painterResource(
+            if (expanded) R.drawable.ic_arrow_drop_up
+            else R.drawable.ic_arrow_drop_down
+        ),
         onClick = {
             expanded = true
         },
