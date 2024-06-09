@@ -2,6 +2,7 @@ package io.r3chain.features.inventory.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
@@ -120,41 +121,49 @@ fun WeightInput(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // kg
-        IntegerInput(
-            value = grams?.let {
-                getKg(it)
-            }?.takeIf {
-                it != 0L
-            }?.toInt(),
-            modifier = Modifier.weight(0.62f),
-            placeholderValue = stringResource(R.string.inventory_hint_kg),
-            maxLength = 6,
-            onValueChange = { value ->
-                val newKg = value ?: 0
-                val g = grams?.let {
-                    getGrams(it)
-                } ?: 0L
-                onGramsChange(newKg * 1000 + g)
-            }
-        )
-        // g
-        IntegerInput(
-            value = grams?.let {
-                getGrams(it)
-            }?.takeIf {
-                it != 0L
-            }?.toInt(),
-            modifier = Modifier.weight(0.38f),
-            placeholderValue = stringResource(R.string.inventory_hint_g),
-            maxLength = 3,
-            onValueChange = { value ->
-                val newG = value ?: 0
-                val kg = grams?.let {
+        Column(
+            modifier = Modifier.weight(0.62f)
+        ) {
+            RowLabel(text = stringResource(R.string.inventory_label_weight))
+            IntegerInput(
+                value = grams?.let {
                     getKg(it)
-                } ?: 0L
-                onGramsChange(kg * 1000 + newG)
-            }
-        )
+                }?.takeIf {
+                    it != 0L
+                }?.toInt(),
+                placeholderValue = stringResource(R.string.inventory_hint_kg),
+                maxLength = 6,
+                onValueChange = { value ->
+                    val newKg = value ?: 0
+                    val g = grams?.let {
+                        getGrams(it)
+                    } ?: 0L
+                    onGramsChange(newKg * 1000 + g)
+                }
+            )
+        }
+        // g
+        Column(
+            modifier = Modifier.weight(0.38f)
+        ) {
+            RowLabel(text = stringResource(R.string.inventory_label_weight_grams))
+            IntegerInput(
+                value = grams?.let {
+                    getGrams(it)
+                }?.takeIf {
+                    it != 0L
+                }?.toInt(),
+                placeholderValue = stringResource(R.string.inventory_hint_g),
+                maxLength = 3,
+                onValueChange = { value ->
+                    val newG = value ?: 0
+                    val kg = grams?.let {
+                        getKg(it)
+                    } ?: 0L
+                    onGramsChange(kg * 1000 + newG)
+                }
+            )
+        }
     }
 }
 

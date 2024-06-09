@@ -65,7 +65,8 @@
     <string name="inventory_label_geo">Collection Location</string>
     <string name="inventory_label_materials_type">Type of collected material</string>
     <string name="inventory_label_date">Collection Date</string>
-    <string name="inventory_label_weight">Weight</string>
+    <string name="inventory_label_weight">Weight, kg</string>
+    <string name="inventory_label_weight_grams">grams</string>
     <string name="inventory_label_partner">Destination Partner</string>
 
     <string-array name="inventory_verifications_types">
@@ -90,6 +91,7 @@
 
     <string name="inventory_label_save_form">Save</string>
     <string name="inventory_label_add_document">Add document</string>
+    <string name="inventory_label_add_image">Add image</string>
 
 
     <!-- OTHER -->

@@ -41,6 +41,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -417,7 +418,7 @@ fun DropDownInput(
     modifier: Modifier = Modifier,
     onOptionSelect: (Int) -> Unit
 ) {
-    var expanded by remember {
+    var expanded by rememberSaveable {
         mutableStateOf(false)
     }
     // We want to react on tap/press on TextField to show menu
@@ -476,7 +477,7 @@ fun SelectableInput(
     placeholderValue: String? = null,
     onOptionSelect: (Int) -> Unit
 ) {
-    var expanded by remember {
+    var expanded by rememberSaveable {
         mutableStateOf(false)
     }
 
