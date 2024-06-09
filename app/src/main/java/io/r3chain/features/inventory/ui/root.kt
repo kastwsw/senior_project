@@ -72,7 +72,7 @@ fun InventoryScreen(
                 }
             }
         },
-        floatingActionButtonPosition = FabPosition.Center
+        floatingActionButtonPosition = FabPosition.End
     ) {
         NavContent(it)
     }

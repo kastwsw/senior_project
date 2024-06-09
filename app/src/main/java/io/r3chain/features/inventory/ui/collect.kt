@@ -16,6 +16,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,14 +29,15 @@ import io.r3chain.R
 import io.r3chain.data.vo.WasteVO
 import io.r3chain.features.inventory.model.CollectViewModel
 import io.r3chain.features.inventory.model.RootViewModel
-import io.r3chain.features.inventory.ui.components.DateInput
 import io.r3chain.features.inventory.ui.components.GroupLabel
 import io.r3chain.features.inventory.ui.components.RowLabel
 import io.r3chain.features.inventory.ui.components.WasteTypeSelect
 import io.r3chain.features.inventory.ui.components.WeightGramsInput
 import io.r3chain.ui.components.ButtonStyle
+import io.r3chain.ui.components.DateInput
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.ScreenHeader
+import io.r3chain.ui.components.SelectableInput
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
@@ -116,6 +121,18 @@ private fun CollectForm(
             onDataChanged(
                 data.copy(time = it)
             )
+        }
+        Spacer(Modifier.height(24.dp))
+
+        var partnerIndex by remember(data) {
+            mutableIntStateOf(0)
+        }
+        RowLabel(text = stringResource(R.string.inventory_label_materials_type))
+        SelectableInput(
+            options = listOf("Partner 1", "Partner 2", "Partner 3", "Partner 4"),
+            selectedIndex = partnerIndex
+        ) {
+            partnerIndex = it
         }
         Spacer(Modifier.height(24.dp))
 

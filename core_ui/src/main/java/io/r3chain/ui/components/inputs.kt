@@ -1,6 +1,7 @@
 package io.r3chain.ui.components
 
 import android.content.res.Configuration
+import android.text.format.DateFormat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.Interaction
@@ -17,33 +18,54 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.r3chain.ui.R
 import io.r3chain.ui.theme.R3Theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.LocalDate
+import java.util.Date
 
 
 /**
@@ -153,10 +175,6 @@ fun TextInput(
     onClick: (() -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
-    val coroutineScope = bringIntoViewRequester?.let {
-        rememberCoroutineScope()
-    }
-
     val labelSlot: (@Composable () -> Unit)? = remember(labelValue) {
         labelValue?.let {
             @Composable {
@@ -209,6 +227,19 @@ fun TextInput(
         }
     }
 
+    val coroutineScope = bringIntoViewRequester?.let {
+        rememberCoroutineScope()
+    }
+
+    val focusRequester = remember {
+        onClick?.let {
+            FocusRequester()
+        }
+    }
+    val focusManager = onClick?.let {
+        LocalFocusManager.current
+    }
+
     Box(modifier = Modifier.then(modifier)) {
         OutlinedTextField(
             value = value,
@@ -221,16 +252,20 @@ fun TextInput(
                 .fillMaxWidth()
                 // если нужно сместиться к определённому вью, то дополнить модификатор
                 .let {
-                    if (bringIntoViewRequester == null) it
-                    else it.onFocusEvent { focusState ->
+                    if (bringIntoViewRequester == null) it else it.onFocusEvent { focusState ->
                         if (focusState.isFocused) coroutineScope?.launch {
                             // задержка с поправкой на изменение компоновки под клавиатуру
                             delay(500L)
                             bringIntoViewRequester.bringIntoView()
                         }
                     }
+                }
+                // если нужна работа с фокусом
+                .let {
+                    if (focusRequester == null) it else it.focusRequester(focusRequester)
                 },
             enabled = enabled,
+            readOnly = onClick != null,
             label = labelSlot,
             placeholder = placeholderSlot,
             leadingIcon = leadingIconSlot,
@@ -257,9 +292,235 @@ fun TextInput(
                     .clickable(
                         onClickLabel = placeholderValue,
                         role = Role.Button,
-                        onClick = onClick
+                        onClick = {
+                            onClick()
+                            focusRequester?.requestFocus()
+                        }
                     )
             )
+        }
+    }
+}
+
+
+/**
+ * Поле ввода целых чисел.
+ *
+ * @param value Исходное значение в граммах.
+ * @param modifier Модификатор.
+ * @param onValueChange Колбэк полученного значения.
+ */
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun IntegerInput(
+    value: Long?,
+    modifier: Modifier = Modifier,
+    maxLength: Int = 12,
+    onValueChange: (Long?) -> Unit
+) {
+    TextInput(
+        value = value?.toString() ?: "",
+        modifier = modifier,
+        maxLength = maxLength,
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Number
+        ),
+        onValueChange = {
+            onValueChange(it.replace(Regex("[^0-9]"), "").toLongOrNull())
+        }
+    )
+}
+
+
+/**
+ * Поле ввода даты через соответствующий диалог.
+ *
+ * @param time Исходное значение в миллесекундах.
+ * @param modifier Модификатор.
+ * @param onTimeChange Колбэк полученного значения.
+ */
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun DateInput(
+    time: Long?,
+    modifier: Modifier = Modifier,
+    onTimeChange: (Long) -> Unit
+) {
+    var hasDialog by remember {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current
+    val formatter = remember(context) {
+        DateFormat.getDateFormat(context)
+    }
+
+    TextInput(
+        value = if (time == null) "" else formatter.format(Date(time)),
+        modifier = modifier,
+        leadingVector = Icons.Outlined.Today,
+        onClick = {
+            hasDialog = true
+        },
+        onValueChange = {}
+    )
+
+    if (hasDialog) {
+        val datePickerState = rememberDatePickerState(
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis <= Instant.now().toEpochMilli()
+                }
+
+                override fun isSelectableYear(year: Int): Boolean {
+                    return year <= LocalDate.now().year
+                }
+            }
+        )
+        val confirmEnabled by remember {
+            derivedStateOf {
+                datePickerState.selectedDateMillis != null
+            }
+        }
+        DatePickerDialog(
+            onDismissRequest = {
+                hasDialog = false
+            },
+            confirmButton = {
+                PrimaryButton(
+                    text = stringResource(R.string.select_date_done),
+                    enabled = confirmEnabled
+                ) {
+                    hasDialog = false
+                    // данные из диалога
+                    onTimeChange(datePickerState.selectedDateMillis!!)
+                }
+            },
+            dismissButton = {
+                LinkButton(
+                    text = stringResource(R.string.select_date_cancel)
+                ) {
+                    hasDialog = false
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropDownInput(
+    options: List<String>,
+    selectedIndex: Int,
+    modifier: Modifier = Modifier,
+    onOptionSelect: (Int) -> Unit
+) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    // We want to react on tap/press on TextField to show menu
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = Modifier.then(modifier)
+    ) {
+        OutlinedTextField(
+            value = options[selectedIndex],
+            onValueChange = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+            readOnly = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded
+                )
+            },
+            shape = MaterialTheme.shapes.small,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+            )
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+            modifier = Modifier.exposedDropdownSize(true)
+        ) {
+            options.forEachIndexed { index, option ->
+                DropdownMenuItem(
+                    text = {
+                        Text(text = option)
+                    },
+                    onClick = {
+                        onOptionSelect(index)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SelectableInput(
+    options: List<String>,
+    selectedIndex: Int,
+    modifier: Modifier = Modifier,
+    onOptionSelect: (Int) -> Unit
+) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    // We want to react on tap/press on TextField to show menu
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = Modifier.then(modifier)
+    ) {
+        OutlinedTextField(
+            value = options[selectedIndex],
+            onValueChange = { },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+            readOnly = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(
+                    expanded = expanded
+                )
+            },
+            shape = MaterialTheme.shapes.small,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerLowest
+            )
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+            modifier = Modifier.exposedDropdownSize(true)
+        ) {
+            options.forEachIndexed { index, option ->
+                DropdownMenuItem(
+                    text = {
+                        Text(text = option)
+                    },
+                    onClick = {
+                        onOptionSelect(index)
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }
