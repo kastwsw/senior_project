@@ -86,8 +86,8 @@ data class ResourceDto (
     @Json(name = "longitude")
     val longitude: kotlin.Double? = null,
 
-//    @Json(name = "at")
-//    val at: java.time.OffsetDateTime? = null,
+    @Json(name = "at")
+    val at: java.time.OffsetDateTime? = null,
 
     @Json(name = "locationID")
     val locationID: kotlin.Int? = null

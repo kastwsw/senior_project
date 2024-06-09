@@ -25,11 +25,12 @@ import io.r3chain.R
 import io.r3chain.data.vo.WasteVO
 import io.r3chain.features.inventory.model.CollectViewModel
 import io.r3chain.features.inventory.model.RootViewModel
+import io.r3chain.features.inventory.ui.components.DateInput
 import io.r3chain.features.inventory.ui.components.GroupLabel
 import io.r3chain.features.inventory.ui.components.RowLabel
 import io.r3chain.features.inventory.ui.components.WasteTypeSelect
+import io.r3chain.features.inventory.ui.components.WeightGramsInput
 import io.r3chain.ui.components.ButtonStyle
-import io.r3chain.ui.components.DateInput
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.ScreenHeader
 import io.r3chain.ui.theme.R3Theme
@@ -99,17 +100,25 @@ private fun CollectForm(
                 )
             }
         )
+        Spacer(Modifier.height(24.dp))
 
-        DateInput(
-            time = data.time,
-            onTimeChange = {
-                onDataChanged(
-                    data.copy(time = it)
-                )
-            }
-        )
+        RowLabel(text = stringResource(R.string.inventory_label_materials_type))
+        WeightGramsInput(grams = data.weight) {
+            println(it)
+            onDataChanged(
+                data.copy(weight = it)
+            )
+        }
+        Spacer(Modifier.height(24.dp))
 
-        Spacer(Modifier.height(32.dp))
+        RowLabel(text = stringResource(R.string.inventory_label_materials_type))
+        DateInput(time = data.time) {
+            onDataChanged(
+                data.copy(time = it)
+            )
+        }
+        Spacer(Modifier.height(24.dp))
+
         HorizontalDivider()
 
         GroupLabel(text = stringResource(R.string.inventory_label_collect_documents))

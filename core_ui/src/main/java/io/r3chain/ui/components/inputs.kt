@@ -1,7 +1,6 @@
 package io.r3chain.ui.components
 
 import android.content.res.Configuration
-import android.text.format.DateFormat
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.Interaction
@@ -18,9 +17,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -29,34 +25,25 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.r3chain.ui.R
 import io.r3chain.ui.theme.R3Theme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Date
 
 
 /**
@@ -273,72 +260,6 @@ fun TextInput(
                         onClick = onClick
                     )
             )
-        }
-    }
-}
-
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
-@Composable
-fun DateInput(
-    time: Long?,
-    onTimeChange: (Long) -> Unit
-) {
-    var hasDialog by remember {
-        mutableStateOf(false)
-    }
-
-    val context = LocalContext.current
-    val formatter = remember(context) {
-        DateFormat.getDateFormat(context)
-    }
-    var text by remember {
-        mutableStateOf(
-            if (time == null) "" else formatter.format(Date(time))
-        )
-    }
-
-    TextInput(
-        value = text,
-        leadingVector = Icons.Outlined.Today,
-        onClick = {
-            hasDialog = true
-        },
-        onValueChange = {}
-    )
-
-    if (hasDialog) {
-        val datePickerState = rememberDatePickerState()
-        val confirmEnabled by remember {
-            derivedStateOf {
-                datePickerState.selectedDateMillis != null
-            }
-        }
-        DatePickerDialog(
-            onDismissRequest = {
-                hasDialog = false
-            },
-            confirmButton = {
-                PrimaryButton(
-                    text = stringResource(R.string.select_date_done),
-                    enabled = confirmEnabled
-                ) {
-                    hasDialog = false
-                    // данные из диалога
-                    val result = datePickerState.selectedDateMillis!!
-                    text = formatter.format(Date(result))
-                    onTimeChange(result)
-                }
-            },
-            dismissButton = {
-                LinkButton(
-                    text = stringResource(R.string.select_date_cancel)
-                ) {
-                    hasDialog = false
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
         }
     }
 }
