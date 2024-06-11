@@ -9,7 +9,8 @@ data class ResourceVO(
     val posterHeight: Int = 0,
     val uiId: String? = null,
     val latitude: Double? = null,
-    val longitude: Double? = null
+    val longitude: Double? = null,
+    val time: Long? = null
 ) {
 
     fun createByApi(value: ResourceDto) = copy(
@@ -19,6 +20,7 @@ data class ResourceVO(
         posterHeight = value.posterHeight,
         uiId = value.uiId ?: "",
         latitude = value.latitude,
-        longitude = value.longitude
+        longitude = value.longitude,
+        time = value.at?.toInstant()?.toEpochMilli()
     )
 }

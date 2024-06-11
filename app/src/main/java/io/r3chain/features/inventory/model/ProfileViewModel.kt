@@ -1,7 +1,5 @@
 package io.r3chain.features.inventory.model
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.R
 import io.r3chain.data.repositories.UserRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,24 +63,6 @@ class ProfileViewModel @Inject constructor(
             userRepository.updateUserNotification(enabledEmail = enabled)
             isLoading = false
         }
-    }
-
-    fun openHelp(context: Context) {
-        context.startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(context.getString(R.string.help_link))
-            )
-        )
-    }
-
-    fun openSupport(context: Context) {
-        context.startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(context.getString(R.string.support_link))
-            )
-        )
     }
 
     fun uploadImage(data: Uri) {

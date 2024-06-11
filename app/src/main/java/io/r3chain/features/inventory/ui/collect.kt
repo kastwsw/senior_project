@@ -1,15 +1,22 @@
 package io.r3chain.features.inventory.ui
 
 import android.content.res.Configuration
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,6 +28,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -42,7 +52,10 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import io.r3chain.R
+import io.r3chain.celebrity.presentation.openLink
+import io.r3chain.data.vo.FileAttachVO
 import io.r3chain.data.vo.WasteVO
 import io.r3chain.features.inventory.model.CollectViewModel
 import io.r3chain.features.inventory.model.RootViewModel
@@ -54,7 +67,7 @@ import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.BottomSelect
 import io.r3chain.ui.components.ButtonStyle
 import io.r3chain.ui.components.DateInput
-import io.r3chain.ui.components.ImageSelect
+import io.r3chain.ui.components.ImagesSelect
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.ScreenHeader
 import io.r3chain.ui.components.SelectableInput
@@ -80,6 +93,7 @@ fun AddCollectScreen(
                 data = collectViewModel.data,
                 modifier = Modifier.weight(1f),
                 enabled = !collectViewModel.isLoading,
+                onUriSelected = collectViewModel::uploadImages,
                 onDataChanged = collectViewModel::changeFormData,
                 onAddDocument = {},
                 onDone = collectViewModel::doneForm
@@ -105,6 +119,7 @@ private fun CollectForm(
     data: WasteVO,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    onUriSelected: (List<Uri>) -> Unit,
     onDataChanged: (WasteVO) -> Unit,
     onAddDocument: () -> Unit,
     onDone: () -> Unit,
@@ -119,31 +134,40 @@ private fun CollectForm(
 
         // photos
         RowLabel(text = stringResource(R.string.inventory_label_photos))
-        PhotosRow()
-        Spacer(Modifier.height(28.dp))
-
-        // geo
-        // TODO: показывать если есть фото
-        RowLabel(text = stringResource(R.string.inventory_label_geo))
-        TextInput(
-            value = data.geoLatLong?.toString() ?: "",
-            leadingVector = Icons.Outlined.Map,
-            onClick = {
-                // TODO: открыть карту
-                onDataChanged(data.copy(geoLatLong = 12.09 to 48.111))
-            },
-            onValueChange = {}
+        PhotosRow(
+            data = data.files,
+            onUriSelected = onUriSelected
         )
         Spacer(Modifier.height(28.dp))
 
-        // date
-        RowLabel(text = stringResource(R.string.inventory_label_date))
-        DateInput(time = data.time) {
-            onDataChanged(
-                data.copy(time = it)
+        // geo
+        data.geoLatLong?.also { cords ->
+            val context = LocalContext.current
+            RowLabel(text = stringResource(R.string.inventory_label_geo))
+            TextInput(
+                value = cords.toString(),
+                leadingVector = Icons.Outlined.Map,
+                onClick = {
+                    // открыть карту
+                    context.openLink(
+                        "geo:${cords.first},${cords.second}?q=${cords.first},${cords.second}"
+                    )
+                },
+                onValueChange = {}
             )
+            Spacer(Modifier.height(28.dp))
         }
-        Spacer(Modifier.height(28.dp))
+
+        // date
+        data.time?.also { time ->
+            RowLabel(text = stringResource(R.string.inventory_label_date))
+            DateInput(time = time) {
+                onDataChanged(
+                    data.copy(time = it)
+                )
+            }
+            Spacer(Modifier.height(28.dp))
+        }
 
         // type
         RowLabel(text = stringResource(R.string.inventory_label_materials_type))
@@ -196,17 +220,108 @@ private fun CollectForm(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PhotosRow() {
+fun PhotosRow(
+    data: List<FileAttachVO>,
+    onUriSelected: (List<Uri>) -> Unit
+) {
     var isImageSelectVisible by rememberSaveable {
         mutableStateOf(false)
     }
 
-    // TODO: grid max 4
+    // 4 colums grid
+    val columnsAmount = 4
+    val shape = RoundedCornerShape(8.dp)
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        maxItemsInEachRow = 4,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // фотки
+        data.forEach { file ->
+            if (file.isLoading) {
+                // загружается
+                FileBox(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(36.dp),
+                        strokeWidth = 4.dp,
+                        strokeCap = StrokeCap.Round
+                    )
+                }
+            } else {
+                // загружено
+                file.resource?.also { vo ->
+                    Image(
+                        painter = rememberAsyncImagePainter(vo.posterLink),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                            .clip(shape = shape)
+                    )
+                }
+                // TODO: если ошибка
+                // TODO: возможность удалить
+            }
+        }
+        // кнопка добавить
+        FileBox(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(
+                    onClickLabel = stringResource(R.string.inventory_label_add_image),
+                    role = Role.Button,
+                    onClick = {
+                        isImageSelectVisible = true
+                    }
+                )
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Add,
+                modifier = Modifier.size(20.dp),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+        // добивает для ровной строки
+        ((data.size + 1) % columnsAmount).takeIf {
+            it != 0
+        }?.also {
+            repeat(columnsAmount - it) {
+                Spacer(Modifier.weight(1f).aspectRatio(1f))
+            }
+        }
+    }
+
+    ImagesSelect(
+        isVisible = isImageSelectVisible,
+        maxSelect = 8,
+        onClose = {
+            isImageSelectVisible = false
+        },
+        onSelect = {
+            onUriSelected(it)
+        }
+    )
+}
+
+
+@Composable
+fun FileBox(
+    modifier: Modifier = Modifier,
+    content: @Composable BoxScope.() -> Unit
+) {
     val shape = RoundedCornerShape(8.dp)
     Box(
         modifier = Modifier
-            .size(76.dp)
+            .then(modifier)
+            .aspectRatio(1f)
             .background(
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = shape
@@ -216,36 +331,14 @@ fun PhotosRow() {
                 color = MaterialTheme.colorScheme.primary,
                 shape = shape
             )
-            .clickable(
-                onClickLabel = stringResource(R.string.inventory_label_add_image),
-                role = Role.Button,
-                onClick = {
-                    isImageSelectVisible = true
-                }
-            )
             .clip(
                 shape = shape
             ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Add,
-            modifier = Modifier.size(20.dp),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
-        )
-    }
-
-    ImageSelect(
-        isVisible = isImageSelectVisible,
-        onClose = {
-            isImageSelectVisible = false
-        },
-        onSelect = {
-            // TODO: обработать ответ
-        }
+        contentAlignment = Alignment.Center,
+        content = content
     )
 }
+
 
 @Composable
 fun VerificationDocuments(
@@ -292,17 +385,6 @@ fun VerificationDocuments(
             }
         }
     }
-
-}
-
-
-@Preview(
-    name = "Demo Light",
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-private fun PreviewLight() {
-    Demo()
 }
 
 
@@ -315,12 +397,25 @@ private fun PreviewNight() {
     Demo()
 }
 
+@Preview(
+    name = "Demo Light",
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+private fun PreviewLight() {
+    Demo()
+}
+
 @Composable
 private fun Demo() {
     R3Theme {
         Surface {
             CollectForm(
-                data = WasteVO(),
+                data = WasteVO(
+                    geoLatLong = 0.0 to 0.0,
+                    time = 0
+                ),
+                onUriSelected = {},
                 onDataChanged = {},
                 onAddDocument = {},
                 onDone = {}

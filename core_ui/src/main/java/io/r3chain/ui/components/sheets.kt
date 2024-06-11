@@ -82,10 +82,11 @@ fun <T> BottomSelect(
 
 
 @Composable
-fun ImageSelect(
+fun ImagesSelect(
     isVisible: Boolean,
     onClose: () -> Unit,
-    onSelect: (Uri) -> Unit
+    maxSelect: Int = 1,
+    onSelect: (List<Uri>) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -93,7 +94,7 @@ fun ImageSelect(
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap: Bitmap? ->
-        if (bitmap != null) onSelect(saveBitmapToFile(context, bitmap))
+        if (bitmap != null) onSelect(listOf(saveBitmapToFile(context, bitmap)))
     }
 
     // разрешение для камеры
@@ -104,10 +105,20 @@ fun ImageSelect(
     }
 
     // выбор с диска
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) onSelect(uri)
+    val imagePickerLauncher = if (maxSelect > 1) {
+        // можно выбрать несколько
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickMultipleVisualMedia(maxSelect)
+        ) { list ->
+            if (list.isNotEmpty()) onSelect(list)
+        }
+    } else {
+        // можно выбрать 1
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia()
+        ) { uri ->
+            if (uri != null) onSelect(listOf(uri))
+        }
     }
 
     val onOptionSelect = remember {

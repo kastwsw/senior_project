@@ -69,7 +69,7 @@ fun UserAvatar(
                 Image(
                     painter = rememberAsyncImagePainter(picture),
                     contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .matchParentSize()
                         .clip(shape = CircleShape)

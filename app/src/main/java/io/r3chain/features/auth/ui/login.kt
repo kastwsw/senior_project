@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
+import io.r3chain.celebrity.presentation.openLink
 import io.r3chain.features.auth.model.AuthViewModel
 import io.r3chain.ui.components.CheckboxLabel
 import io.r3chain.ui.components.PrimaryButton
@@ -165,7 +166,9 @@ fun LoginScreen(
                                 color = MaterialTheme.colorScheme.primary,
                                 textDecoration = TextDecoration.Underline,
                                 modifier = Modifier.clickableLabel {
-                                    authViewModel.signUp(context)
+                                    context.openLink(
+                                        context.getString(R.string.sign_up_link)
+                                    )
                                 }
                             )
                         }

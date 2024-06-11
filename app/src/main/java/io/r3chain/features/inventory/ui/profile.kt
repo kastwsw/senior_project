@@ -27,13 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
+import io.r3chain.celebrity.presentation.openLink
 import io.r3chain.data.vo.UserVO
 import io.r3chain.features.inventory.model.ProfileViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
 import io.r3chain.ui.components.ActionPlate
 import io.r3chain.ui.components.ButtonStyle
-import io.r3chain.ui.components.ImageSelect
+import io.r3chain.ui.components.ImagesSelect
 import io.r3chain.ui.components.LinkButton
 import io.r3chain.ui.components.PrimaryButton
 import io.r3chain.ui.components.ScreenHeader
@@ -87,7 +88,9 @@ fun ProfileScreen(
 
                     // help
                     ActionPlate(title = stringResource(R.string.help_label)) {
-                        profileModel.openHelp(context)
+                        context.openLink(
+                            context.getString(R.string.help_link)
+                        )
                     }
                 }
             }
@@ -105,7 +108,9 @@ fun ProfileScreen(
                     buttonStyle = ButtonStyle.SECONDARY,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    profileModel.openSupport(context)
+                    context.openLink(
+                        context.getString(R.string.support_link)
+                    )
                 }
                 // sign out
                 LinkButton(
@@ -118,13 +123,13 @@ fun ProfileScreen(
         }
     }
 
-    ImageSelect(
+    ImagesSelect(
         isVisible = isImageSelectVisible,
         onClose = {
             isImageSelectVisible = false
         },
         onSelect = {
-            profileModel.uploadImage(it)
+            profileModel.uploadImage(it.first())
         }
     )
 }

@@ -34,7 +34,7 @@ import java.util.Locale
 @Composable
 fun GroupLabel(
     text: String = "",
-    paddingValues: PaddingValues = PaddingValues(horizontal = 0.dp, vertical = 12.dp)
+    paddingValues: PaddingValues = PaddingValues(bottom = 12.dp)
 ) {
     Text(
         text = text,
