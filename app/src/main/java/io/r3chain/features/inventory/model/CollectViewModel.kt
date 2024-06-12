@@ -44,6 +44,11 @@ open class CollectViewModel @Inject constructor(
     var doneResult: Result<WasteVO>? by mutableStateOf(null)
         private set
 
+    /**
+     * Текущий тип верификации.
+     */
+    var currentVerificationType: Int? = null
+
 
     init {
         viewModelScope.launch {

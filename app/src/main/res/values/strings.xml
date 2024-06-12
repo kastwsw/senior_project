@@ -69,6 +69,8 @@
     <string name="inventory_label_weight_grams">grams</string>
     <string name="inventory_label_partner">Destination Partner</string>
 
+    <string name="inventory_verifications_title">Weight verification</string>
+    <string name="inventory_verifications_type_label">Document type</string>
     <string-array name="inventory_verifications_types">
         <item>Weight slip</item>
         <item>Photo</item>

@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import io.r3chain.R
 import io.r3chain.features.inventory.model.RootViewModel
@@ -162,23 +163,57 @@ private fun NavContent(
             )
         }
     ) {
+        // home dashboard
         composable(route = RootViewModel.ScreenState.HOME.name) {
             DashboardScreen(rootModel = model)
         }
+        // user profile
         composable(route = RootViewModel.ScreenState.PROFILE.name) {
             ProfileScreen(rootModel = model)
         }
-        composable(route = RootViewModel.ScreenState.COLLECT.name) {
-            AddCollectScreen(rootModel = model)
+        // add collect
+        navigation(
+            startDestination = RootViewModel.ScreenStateCollect.FORM.name,
+            route = RootViewModel.ScreenState.COLLECT.name
+        ) {
+            // collect form
+            composable(route = RootViewModel.ScreenStateCollect.FORM.name) {
+                AddCollectScreen(
+                    rootModel = model,
+                    collectViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.COLLECT.name
+                            )
+                        }
+                    )
+                )
+            }
+            // document verification
+            composable(route = RootViewModel.ScreenStateCollect.DOC.name) {
+                AddCollectDocScreen(
+                    rootModel = model,
+                    collectViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.COLLECT.name
+                            )
+                        }
+                    )
+                )
+            }
         }
+        // add receive
         composable(route = RootViewModel.ScreenState.RECEIVE.name) {
             AddReceiveScreen(rootModel = model)
         }
+        // add dispatch
         composable(route = RootViewModel.ScreenState.DISPATCH.name) {
             AddDispatchScreen(rootModel = model)
         }
     }
 
+    // back action support
     val currentBackStackEntry = navigationController.currentBackStackEntryAsState().value
     BackHandler(
         enabled = currentBackStackEntry?.destination?.route != RootViewModel.ScreenState.HOME.name

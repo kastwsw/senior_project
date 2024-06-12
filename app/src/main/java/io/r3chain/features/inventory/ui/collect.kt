@@ -2,7 +2,6 @@ package io.r3chain.features.inventory.ui
 
 import android.content.res.Configuration
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -95,7 +94,10 @@ fun AddCollectScreen(
                 enabled = !collectViewModel.isLoading,
                 onUriSelected = collectViewModel::uploadImages,
                 onDataChanged = collectViewModel::changeFormData,
-                onAddDocument = {},
+                onAddDocument = {
+                    collectViewModel.currentVerificationType = it
+                    rootModel.navigateToAddCollectDoc()
+                },
                 onDone = collectViewModel::doneForm
             )
         }
@@ -121,7 +123,7 @@ private fun CollectForm(
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
     onDataChanged: (WasteVO) -> Unit,
-    onAddDocument: () -> Unit,
+    onAddDocument: (Int) -> Unit,
     onDone: () -> Unit,
 ) {
     Column(
@@ -342,7 +344,7 @@ fun FileBox(
 
 @Composable
 fun VerificationDocuments(
-    onAddDocument: () -> Unit
+    onAddDocument: (Int) -> Unit
 ) {
     var expanded by rememberSaveable {
         mutableStateOf(false)
@@ -362,7 +364,6 @@ fun VerificationDocuments(
         }
     )
 
-    val context = LocalContext.current
     val options = stringArrayResource(R.array.inventory_verifications_types)
 
     BottomSelect(
@@ -372,11 +373,7 @@ fun VerificationDocuments(
         },
         onSelect = {
             expanded = false
-            // TODO: какая-то логика
-            onAddDocument()
-            Toast
-                .makeText(context, options[it], Toast.LENGTH_SHORT)
-                .show()
+            onAddDocument(it)
         }
     ) { optionSelect ->
         options.forEachIndexed { index, option ->

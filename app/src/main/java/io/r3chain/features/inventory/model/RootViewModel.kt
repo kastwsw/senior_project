@@ -36,6 +36,12 @@ open class RootViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun navigateToAddCollectDoc() {
+        navController?.navigate(ScreenStateCollect.DOC.name) {
+            launchSingleTop = true
+        }
+    }
+
     fun navigateToAddReceive() {
         navController?.navigate(ScreenState.RECEIVE.name) {
             launchSingleTop = true
@@ -73,6 +79,10 @@ open class RootViewModel @Inject constructor() : ViewModel() {
 
     enum class ScreenState {
         HOME, PROFILE, COLLECT, RECEIVE, DISPATCH
+    }
+
+    enum class ScreenStateCollect {
+        FORM, DOC
     }
 
 }
