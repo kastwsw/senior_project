@@ -4,8 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
@@ -15,9 +17,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SecondaryTabRow
@@ -33,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +47,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import io.r3chain.R
 import io.r3chain.data.vo.UserVO
+import io.r3chain.data.vo.WasteVO
 import io.r3chain.features.inventory.model.DashboardViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
@@ -115,8 +123,19 @@ fun DashboardScreen(
                     .weight(1f)
             ) { pageIndex ->
                 when (sections[pageIndex]) {
-                    Sections.INVENTORY -> InventoryContent()
-                    Sections.DISPATCHED -> DispatchedContent()
+                    Sections.INVENTORY -> InventoryContent(
+                        data = dashboardModel.inventoryList.collectAsState(
+                            emptyList()
+                        ).value,
+                        onItemClick = rootModel::navigateToWasteDetails
+                    )
+
+                    Sections.DISPATCHED -> DispatchedContent(
+                        data = dashboardModel.dispatchedList.collectAsState(
+                            emptyList()
+                        ).value,
+                        onItemClick = rootModel::navigateToWasteDetails
+                    )
                 }
             }
 
@@ -205,43 +224,122 @@ private fun HeadCard(
 
 
 @Composable
-private fun InventoryContent() {
+private fun InventoryContent(
+    data: List<WasteVO>,
+    onItemClick: (WasteVO) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
+            .padding(vertical = 24.dp)
     ) {
-        EmptyListText(
-            text = stringResource(R.string.inventory_tab_empty_inventory)
+        if (data.isEmpty()) EmptyListText(
+            text = stringResource(R.string.inventory_tab_empty_inventory),
+            modifier = Modifier.align(Alignment.Center)
+        ) else RecordsList(
+            data = data,
+            onClick = onItemClick
         )
     }
 }
 
 
 @Composable
-private fun DispatchedContent() {
+private fun DispatchedContent(
+    data: List<WasteVO>,
+    onItemClick: (WasteVO) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
+            .padding(vertical = 24.dp)
     ) {
-        EmptyListText(
-            text = stringResource(R.string.inventory_tab_empty_dispatched)
+        if (data.isEmpty()) EmptyListText(
+            text = stringResource(R.string.inventory_tab_empty_dispatched),
+            modifier = Modifier.align(Alignment.Center)
+        ) else RecordsList(
+            data = data,
+            onClick = onItemClick
         )
     }
 }
 
 
 @Composable
-private fun EmptyListText(text: String) {
+private fun EmptyListText(
+    text: String,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = text,
         style = MaterialTheme.typography.bodyLarge,
         textAlign = TextAlign.Center,
-        modifier = Modifier.padding(32.dp)
+        modifier = Modifier
+            .then(modifier)
+            .padding(56.dp)
     )
+}
+
+
+@Composable
+private fun RecordsList(
+    data: List<WasteVO>,
+    onClick: (WasteVO) -> Unit
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = "Filters",
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            contentPadding = PaddingValues(bottom = 32.dp),
+        ) {
+            items(
+                items = data,
+                key = { it.id }
+            ) { item ->
+                WasteItem(
+                    data = item,
+                    onClick = onClick
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun WasteItem(
+    data: WasteVO,
+    onClick: (WasteVO) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+                onClick = {
+                    onClick(data)
+                },
+                onClickLabel = data.id.toString(),
+                role = Role.Button
+            )
+    ) {
+        Text(
+            text = data.id.toString(),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(16.dp)
+        )
+        HorizontalDivider()
+    }
 }
 
 

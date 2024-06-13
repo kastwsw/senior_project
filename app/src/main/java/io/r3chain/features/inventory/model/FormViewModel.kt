@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.ResourcesGateway
-import io.r3chain.data.repositories.WasteInMemoryRepository
+import io.r3chain.data.repositories.WasteMockRepository
 import io.r3chain.data.vo.FileAttachVO
 import io.r3chain.data.vo.WasteVO
 import kotlinx.coroutines.delay
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class FormViewModel @Inject constructor(
-    private val wasteRepository: WasteInMemoryRepository,
+    private val wasteRepository: WasteMockRepository,
     private val resourcesGateway: ResourcesGateway
 ) : ViewModel() {
 
@@ -126,9 +126,10 @@ open class FormViewModel @Inject constructor(
             isLoading = true
             delay(300)
             // TODO: по параметрам data определить куда её передавать
-            wasteRepository.addWaste(data)
-            // TODO: передать с успехом новые данные, которые вернул сервер
-            doneResult = Result.success(data)
+            wasteRepository.addWaste(data).also {
+                // TODO: передать с успехом новые данные, которые вернул сервер
+                doneResult = Result.success(it)
+            }
         }
     }
 

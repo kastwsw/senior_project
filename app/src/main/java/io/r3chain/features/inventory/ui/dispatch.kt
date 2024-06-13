@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,6 +61,17 @@ fun AddDispatchScreen(
                 onDone = formViewModel::doneForm
             )
         }
+    }
+
+    // обработка результата
+    LaunchedEffect(formViewModel.doneResult) {
+        formViewModel.doneResult
+            ?.onSuccess {
+                rootModel.recordAdded(it)
+            }
+            ?.onFailure {
+                // TODO: выдать ошибку
+            }
     }
 }
 

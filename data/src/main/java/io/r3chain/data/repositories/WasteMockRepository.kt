@@ -4,7 +4,7 @@ import io.r3chain.data.services.DataInMemory
 import io.r3chain.data.vo.WasteVO
 import javax.inject.Inject
 
-class WasteInMemoryRepository @Inject constructor(
+class WasteMockRepository @Inject constructor(
     private val service: DataInMemory
 ) {
 
@@ -19,10 +19,15 @@ class WasteInMemoryRepository @Inject constructor(
     fun getDispatched() = service.dispatched
 
 
-    suspend fun addWaste(value: WasteVO) {
+    suspend fun addWaste(value: WasteVO): WasteVO {
         // TODO: по параметрам value определить куда её передавать
-        service.addToInventory(value)
 //        service.addToDispatched(value)
+        return service.addToInventory(value)
+    }
+
+    suspend fun removeWaste(value: WasteVO) {
+        // TODO: по параметрам value определить откуда её убирать
+        service.removeFromInventory(value)
     }
 
 }

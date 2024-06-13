@@ -96,7 +96,7 @@ fun InventoryScreen(
 
     // создавать снеки при появлении новых записей
     LaunchedEffect(Unit) {
-        model.newRecords.collectLatest {
+        model.newRecords.collectLatest { record ->
             val result = snackHostState.showSnackbar(
                 message = context.getString(R.string.inventory_record_added),
                 actionLabel = context.getString(R.string.inventory_record_undo),
@@ -104,7 +104,8 @@ fun InventoryScreen(
             )
             when (result) {
                 SnackbarResult.ActionPerformed -> {
-                    // TODO: отменить/удалить запись
+                    // отменить/удалить запись
+                    model.undoRecordAdded(record)
                 }
                 SnackbarResult.Dismissed -> {}
             }

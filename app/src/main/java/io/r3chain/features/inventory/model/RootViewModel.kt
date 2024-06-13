@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.r3chain.data.repositories.WasteMockRepository
 import io.r3chain.data.vo.WasteVO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +16,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class RootViewModel @Inject constructor() : ViewModel() {
+open class RootViewModel @Inject constructor(
+    private val wasteRepository: WasteMockRepository
+) : ViewModel() {
 
     var navController by mutableStateOf<NavHostController?>(null)
 
@@ -66,6 +69,10 @@ open class RootViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun navigateToWasteDetails(record: WasteVO) {
+        println(record.id)
+    }
+
 
     private val _newRecords = MutableSharedFlow<WasteVO>(
         // 0 - новые подписчики не получат предыдущие ошибки
@@ -86,6 +93,12 @@ open class RootViewModel @Inject constructor() : ViewModel() {
             _newRecords.emit(data)
         }
         navigateBack()
+    }
+
+    fun undoRecordAdded(data: WasteVO) {
+        viewModelScope.launch {
+            wasteRepository.removeWaste(data)
+        }
     }
 
 

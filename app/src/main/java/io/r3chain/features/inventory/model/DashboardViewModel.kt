@@ -8,14 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.UserRepository
-import io.r3chain.data.repositories.WasteInMemoryRepository
+import io.r3chain.data.repositories.WasteMockRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 open class DashboardViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val wasteRepository: WasteInMemoryRepository
+    private val wasteRepository: WasteMockRepository
 ) : ViewModel() {
 
     /**
@@ -41,11 +41,18 @@ open class DashboardViewModel @Inject constructor(
         private set
 
 
+    // NOTE: пока мок в памяти
+    val inventoryList = wasteRepository.getInventory()
+
+    // NOTE: пока мок в памяти
+    val dispatchedList = wasteRepository.getDispatched()
+
+
     init {
         viewModelScope.launch {
             isLoading = true
             userRepository.refresh()
-            wasteRepository.getInventory()
+//            wasteRepository.getInventory()
             isLoading = false
         }
     }
