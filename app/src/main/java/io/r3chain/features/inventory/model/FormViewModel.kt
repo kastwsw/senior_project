@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.data.repositories.ResourcesGateway
-import io.r3chain.data.repositories.WasteRepository
+import io.r3chain.data.repositories.WasteInMemoryRepository
 import io.r3chain.data.vo.FileAttachVO
 import io.r3chain.data.vo.WasteVO
 import kotlinx.coroutines.delay
@@ -16,8 +16,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class CollectViewModel @Inject constructor(
-    private val wasteRepository: WasteRepository,
+open class FormViewModel @Inject constructor(
+    private val wasteRepository: WasteInMemoryRepository,
     private val resourcesGateway: ResourcesGateway
 ) : ViewModel() {
 
@@ -124,9 +124,9 @@ open class CollectViewModel @Inject constructor(
     fun doneForm() {
         viewModelScope.launch {
             isLoading = true
-            delay(500)
-//            wasteRepository.addCollect()
-//            isLoading = false
+            delay(300)
+            // TODO: по параметрам data определить куда её передавать
+            wasteRepository.addWaste(data)
             // TODO: передать с успехом новые данные, которые вернул сервер
             doneResult = Result.success(data)
         }
@@ -134,7 +134,10 @@ open class CollectViewModel @Inject constructor(
 
 
     /**
-     * Изменить значение типа материала.
+     * Изменить значения формы.
+     *
+     * @param value Основной объект данных.
+     * @param isByFile True - данные из файлов имеют больший приоритет (оверрайдят данные value).
      */
     fun changeFormData(value: WasteVO, isByFile: Boolean = false) {
         val newData = if (!isByFile) value else value.copy(

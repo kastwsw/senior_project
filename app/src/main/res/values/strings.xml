@@ -59,7 +59,9 @@
     <string name="inventory_record_undo">Undo</string>
 
     <string name="inventory_label_collect_details">Collection details</string>
-    <string name="inventory_label_collect_documents">Weight verification</string>
+    <string name="inventory_label_receive_details">Material Details</string>
+    <string name="inventory_label_dispatch_details">Material Details</string>
+    <string name="inventory_label_documents">Weight verification</string>
 
     <string name="inventory_label_photos">Photo</string>
     <string name="inventory_label_geo">Collection Location</string>

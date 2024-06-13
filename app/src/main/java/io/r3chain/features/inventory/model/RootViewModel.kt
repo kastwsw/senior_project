@@ -36,8 +36,8 @@ open class RootViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun navigateToAddCollectDoc() {
-        navController?.navigate(ScreenStateCollect.DOC.name) {
+    fun navigateToCollectDoc() {
+        navController?.navigate(ScreenState.COLLECT.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }
     }
@@ -48,8 +48,20 @@ open class RootViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun navigateToReceiveDoc() {
+        navController?.navigate(ScreenState.RECEIVE.name + ScreenStateWaste.DOC.name) {
+            launchSingleTop = true
+        }
+    }
+
     fun navigateToAddDispatch() {
         navController?.navigate(ScreenState.DISPATCH.name) {
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToDispatchDoc() {
+        navController?.navigate(ScreenState.DISPATCH.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }
     }
@@ -81,7 +93,7 @@ open class RootViewModel @Inject constructor() : ViewModel() {
         HOME, PROFILE, COLLECT, RECEIVE, DISPATCH
     }
 
-    enum class ScreenStateCollect {
+    enum class ScreenStateWaste {
         FORM, DOC
     }
 

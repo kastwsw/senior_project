@@ -18,15 +18,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.features.inventory.model.CollectViewModel
+import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.ui.components.ScreenHeader
 import io.r3chain.ui.theme.R3Theme
 
 @Composable
-fun AddCollectDocScreen(
+fun AddDocScreen(
     rootModel: RootViewModel,
-    collectViewModel: CollectViewModel = hiltViewModel()
+    formViewModel: FormViewModel = hiltViewModel()
 ) {
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -37,7 +37,7 @@ fun AddCollectDocScreen(
                 title = stringResource(R.string.inventory_verifications_title),
                 backAction = rootModel::navigateBack
             )
-            collectViewModel.currentVerificationType?.also { index ->
+            formViewModel.currentVerificationType?.also { index ->
                 Column(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())

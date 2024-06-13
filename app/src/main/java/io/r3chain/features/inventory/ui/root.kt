@@ -167,20 +167,24 @@ private fun NavContent(
         composable(route = RootViewModel.ScreenState.HOME.name) {
             DashboardScreen(rootModel = model)
         }
+
         // user profile
         composable(route = RootViewModel.ScreenState.PROFILE.name) {
             ProfileScreen(rootModel = model)
         }
+
         // add collect
         navigation(
-            startDestination = RootViewModel.ScreenStateCollect.FORM.name,
-            route = RootViewModel.ScreenState.COLLECT.name
+            route = RootViewModel.ScreenState.COLLECT.name,
+            startDestination = RootViewModel.ScreenState.COLLECT.name + RootViewModel.ScreenStateWaste.FORM.name
         ) {
-            // collect form
-            composable(route = RootViewModel.ScreenStateCollect.FORM.name) {
+            // form
+            composable(
+                route = RootViewModel.ScreenState.COLLECT.name + RootViewModel.ScreenStateWaste.FORM.name
+            ) {
                 AddCollectScreen(
                     rootModel = model,
-                    collectViewModel = hiltViewModel(
+                    formViewModel = hiltViewModel(
                         remember(it) {
                             navigationController.getBackStackEntry(
                                 route = RootViewModel.ScreenState.COLLECT.name
@@ -190,10 +194,12 @@ private fun NavContent(
                 )
             }
             // document verification
-            composable(route = RootViewModel.ScreenStateCollect.DOC.name) {
-                AddCollectDocScreen(
+            composable(
+                route = RootViewModel.ScreenState.COLLECT.name + RootViewModel.ScreenStateWaste.DOC.name
+            ) {
+                AddDocScreen(
                     rootModel = model,
-                    collectViewModel = hiltViewModel(
+                    formViewModel = hiltViewModel(
                         remember(it) {
                             navigationController.getBackStackEntry(
                                 route = RootViewModel.ScreenState.COLLECT.name
@@ -203,13 +209,79 @@ private fun NavContent(
                 )
             }
         }
+
         // add receive
-        composable(route = RootViewModel.ScreenState.RECEIVE.name) {
-            AddReceiveScreen(rootModel = model)
+        navigation(
+            route = RootViewModel.ScreenState.RECEIVE.name,
+            startDestination = RootViewModel.ScreenState.RECEIVE.name + RootViewModel.ScreenStateWaste.FORM.name,
+        ) {
+            // form
+            composable(
+                route = RootViewModel.ScreenState.RECEIVE.name + RootViewModel.ScreenStateWaste.FORM.name
+            ) {
+                AddReceiveScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.RECEIVE.name
+                            )
+                        }
+                    )
+                )
+            }
+            // document verification
+            composable(
+                route = RootViewModel.ScreenState.RECEIVE.name + RootViewModel.ScreenStateWaste.DOC.name
+            ) {
+                AddDocScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.RECEIVE.name
+                            )
+                        }
+                    )
+                )
+            }
         }
+
         // add dispatch
-        composable(route = RootViewModel.ScreenState.DISPATCH.name) {
-            AddDispatchScreen(rootModel = model)
+        navigation(
+            route = RootViewModel.ScreenState.DISPATCH.name,
+            startDestination = RootViewModel.ScreenState.DISPATCH.name + RootViewModel.ScreenStateWaste.FORM.name
+        ) {
+            // form
+            composable(
+                route = RootViewModel.ScreenState.DISPATCH.name + RootViewModel.ScreenStateWaste.FORM.name
+            ) {
+                AddDispatchScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.DISPATCH.name
+                            )
+                        }
+                    )
+                )
+            }
+            // document verification
+            composable(
+                route = RootViewModel.ScreenState.DISPATCH.name + RootViewModel.ScreenStateWaste.DOC.name
+            ) {
+                AddDocScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.DISPATCH.name
+                            )
+                        }
+                    )
+                )
+            }
         }
     }
 
