@@ -284,6 +284,11 @@ private fun NavContent(
                 )
             }
         }
+
+        // waste details
+        composable(route = RootViewModel.ScreenState.DETAILS.name) {
+            WasteDetailsScreen(rootModel = model)
+        }
     }
 
     // back action support

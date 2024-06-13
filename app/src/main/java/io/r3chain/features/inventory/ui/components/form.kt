@@ -213,7 +213,7 @@ fun WeightKgInput(
     val formatter = remember {
         NumberFormat.getInstance(Locale.getDefault()).apply {
             minimumFractionDigits = 0
-            maximumFractionDigits = 2
+            maximumFractionDigits = 3
         }
     }
 

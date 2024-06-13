@@ -97,6 +97,8 @@
     <string name="inventory_label_add_document">Add document</string>
     <string name="inventory_label_add_image">Add image</string>
 
+    <string name="inventory_details_weight">%s kg</string>
+
 
     <!-- OTHER -->
     <string name="on_back_press_message">Do it again to exit</string>

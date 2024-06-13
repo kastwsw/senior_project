@@ -20,6 +20,9 @@ open class RootViewModel @Inject constructor(
     private val wasteRepository: WasteMockRepository
 ) : ViewModel() {
 
+    var intentDetails: WasteVO? = null
+        private set
+
     var navController by mutableStateOf<NavHostController?>(null)
 
 
@@ -70,7 +73,10 @@ open class RootViewModel @Inject constructor(
     }
 
     fun navigateToWasteDetails(record: WasteVO) {
-        println(record.id)
+        intentDetails = record
+        navController?.navigate(ScreenState.DETAILS.name) {
+            launchSingleTop = true
+        }
     }
 
 
@@ -103,7 +109,7 @@ open class RootViewModel @Inject constructor(
 
 
     enum class ScreenState {
-        HOME, PROFILE, COLLECT, RECEIVE, DISPATCH
+        HOME, PROFILE, COLLECT, RECEIVE, DISPATCH, DETAILS
     }
 
     enum class ScreenStateWaste {

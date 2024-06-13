@@ -30,7 +30,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Данные для формы.
      */
-    var data: WasteVO by mutableStateOf(WasteVO())
+    var data by mutableStateOf(WasteVO())
         private set
 
     /**
