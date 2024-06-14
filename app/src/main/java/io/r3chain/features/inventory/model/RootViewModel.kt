@@ -20,13 +20,20 @@ open class RootViewModel @Inject constructor(
     private val wasteRepository: WasteMockRepository
 ) : ViewModel() {
 
-    var intentDetails: WasteVO? = null
+    /**
+     * Запись-намерение расшаренная по UI.
+     */
+    var intentWaste: WasteVO? = null
         private set
 
+    /**
+     * Текущий объект навигации.
+     */
     var navController by mutableStateOf<NavHostController?>(null)
 
 
     fun navigateBack() {
+        intentWaste = null
         navController?.navigateUp()
     }
 
@@ -73,8 +80,15 @@ open class RootViewModel @Inject constructor(
     }
 
     fun navigateToWasteDetails(record: WasteVO) {
-        intentDetails = record
+        intentWaste = record
         navController?.navigate(ScreenState.DETAILS.name) {
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToWasteEdit(record: WasteVO) {
+        intentWaste = record
+        navController?.navigate(ScreenState.EDIT.name) {
             launchSingleTop = true
         }
     }
@@ -95,10 +109,10 @@ open class RootViewModel @Inject constructor(
     val newRecords = _newRecords.asSharedFlow()
 
     fun recordAdded(data: WasteVO) {
+        navigateBack()
         viewModelScope.launch {
             _newRecords.emit(data)
         }
-        navigateBack()
     }
 
     fun undoRecordAdded(data: WasteVO) {
@@ -107,9 +121,16 @@ open class RootViewModel @Inject constructor(
         }
     }
 
+    fun deleteRecord(data: WasteVO) {
+        navigateBack()
+        viewModelScope.launch {
+            wasteRepository.removeWaste(data)
+        }
+    }
+
 
     enum class ScreenState {
-        HOME, PROFILE, COLLECT, RECEIVE, DISPATCH, DETAILS
+        HOME, PROFILE, COLLECT, RECEIVE, DISPATCH, DETAILS, EDIT
     }
 
     enum class ScreenStateWaste {

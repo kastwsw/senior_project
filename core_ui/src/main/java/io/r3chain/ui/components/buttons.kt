@@ -1,6 +1,7 @@
 package io.r3chain.ui.components
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -51,13 +53,46 @@ fun PrimaryButton(
     }
     Button(
         modifier = Modifier
+            .then(modifier)
             .defaultMinSize(minWidth = 160.dp)
-            .height(60.dp)
-            .then(modifier),
+            .height(60.dp),
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
             contentColor = colors.first,
             containerColor = colors.second
+        ),
+        onClick = onClick
+    ) {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(Modifier.width(8.dp))
+        }
+        Text(text = text)
+    }
+}
+
+
+@Composable
+fun AlterButton(
+    text: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    icon: ImageVector? = null,
+    onClick: () -> Unit
+) {
+    OutlinedButton(
+        modifier = Modifier
+            .then(modifier)
+            .defaultMinSize(minWidth = 160.dp)
+            .height(60.dp),
+        enabled = enabled,
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.primary
         ),
         onClick = onClick
     ) {
@@ -124,6 +159,7 @@ private fun Demo() {
             ) {
                 PrimaryButton(text = "Primary") {}
                 PrimaryButton(text = "Secondary", buttonStyle = ButtonStyle.SECONDARY) {}
+                AlterButton(text = "Alter") {}
                 PrimaryButton(
                     text = "Add something",
                     buttonStyle = ButtonStyle.SECONDARY,

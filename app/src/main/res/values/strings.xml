@@ -96,8 +96,11 @@
     <string name="inventory_label_save_form">Save</string>
     <string name="inventory_label_add_document">Add document</string>
     <string name="inventory_label_add_image">Add image</string>
+    <string name="inventory_label_edit_waste">Edit</string>
+    <string name="inventory_label_delete_waste">Delete</string>
 
     <string name="inventory_details_weight">%s kg</string>
+    <string name="inventory_edit_id">Waste N%s</string>
 
 
     <!-- OTHER -->

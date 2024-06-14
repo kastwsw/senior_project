@@ -40,6 +40,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import io.r3chain.R
+import io.r3chain.features.inventory.model.DetailsViewModel
+import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.ui.components.BottomSelect
 import io.r3chain.ui.components.IconActionPlate
@@ -285,9 +287,30 @@ private fun NavContent(
             }
         }
 
+        // waste edit
+        composable(route = RootViewModel.ScreenState.EDIT.name) {
+            EditWasteScreen(
+                rootModel = model,
+                formViewModel = hiltViewModel<FormViewModel>().apply {
+                    // положить начальные данные
+                    model.intentWaste?.also {
+                        changeFormData(it)
+                    }
+                }
+            )
+        }
+
         // waste details
         composable(route = RootViewModel.ScreenState.DETAILS.name) {
-            WasteDetailsScreen(rootModel = model)
+            WasteDetailsScreen(
+                rootModel = model,
+                detailsViewModel = hiltViewModel<DetailsViewModel>().apply {
+                    // положить начальные данные
+                    model.intentWaste?.also {
+                        initData(it)
+                    }
+                }
+            )
         }
     }
 

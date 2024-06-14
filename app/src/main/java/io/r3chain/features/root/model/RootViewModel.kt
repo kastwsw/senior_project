@@ -3,7 +3,6 @@ package io.r3chain.features.root.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class RootViewModel @Inject constructor(
-    private val handle: SavedStateHandle,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
