@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,14 +15,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SecondaryTabRow
@@ -39,7 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -301,7 +300,9 @@ private fun RecordsList(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            contentPadding = PaddingValues(bottom = 32.dp),
+            contentPadding = PaddingValues(
+                start = 16.dp, top = 16.dp, end = 16.dp, bottom = 32.dp
+            ),
         ) {
             items(
                 items = data,
@@ -322,23 +323,31 @@ private fun WasteItem(
     data: WasteVO,
     onClick: (WasteVO) -> Unit
 ) {
-    Column(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                onClick = {
-                    onClick(data)
-                },
-                onClickLabel = data.id.toString(),
-                role = Role.Button
-            )
+            .padding(bottom = 12.dp),
+        shape = RoundedCornerShape(12.dp),
+        onClick = {
+            onClick(data)
+        }
     ) {
-        Text(
-            text = data.id.toString(),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(16.dp)
-        )
-        HorizontalDivider()
+        Row(
+            modifier = Modifier
+                .padding(vertical = 12.dp, horizontal = 16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .background(color = MaterialTheme.colorScheme.outlineVariant)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = data.id.toString(),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
     }
 }
 
