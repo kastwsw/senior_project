@@ -20,8 +20,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
-import io.r3chain.ui.components.ScreenHeader
-import io.r3chain.ui.theme.R3Theme
+import io.r3chain.core.ui.components.ScreenHeader
+import io.r3chain.core.ui.theme.R3Theme
 
 @Composable
 fun AddDocScreen(

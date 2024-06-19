@@ -7,8 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.data.repositories.UserRepository
-import io.r3chain.data.repositories.WasteMockRepository
+import io.r3chain.core.data.repositories.UserRepository
+import io.r3chain.core.data.repositories.WasteMockRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

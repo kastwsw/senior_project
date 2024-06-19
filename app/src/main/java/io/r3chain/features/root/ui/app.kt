@@ -29,17 +29,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import io.r3chain.R
-import io.r3chain.data.exceptions.AuthException
-import io.r3chain.data.exceptions.NetworkIOException
-import io.r3chain.data.exceptions.NoInternetException
-import io.r3chain.data.exceptions.SurpriseException
+import io.r3chain.core.data.exceptions.AuthException
+import io.r3chain.core.data.exceptions.NetworkIOException
+import io.r3chain.core.data.exceptions.NoInternetException
+import io.r3chain.core.data.exceptions.SurpriseException
 import io.r3chain.features.auth.ui.LoginScreen
 import io.r3chain.features.inventory.ui.InventoryScreen
 import io.r3chain.features.root.model.RootViewModel
 import io.r3chain.features.root.model.ApiViewModel
-import io.r3chain.ui.components.ErrorPlate
-import io.r3chain.ui.components.LoadingBox
-import io.r3chain.ui.theme.R3Theme
+import io.r3chain.core.ui.components.ErrorPlate
+import io.r3chain.core.ui.components.LoadingBox
+import io.r3chain.core.ui.theme.R3Theme
 import kotlinx.coroutines.delay
 
 @Composable

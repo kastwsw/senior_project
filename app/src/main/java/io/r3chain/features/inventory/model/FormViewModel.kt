@@ -8,10 +8,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.data.repositories.ResourcesGateway
-import io.r3chain.data.repositories.WasteMockRepository
-import io.r3chain.data.vo.FileAttachVO
-import io.r3chain.data.vo.WasteVO
+import io.r3chain.core.data.repositories.ResourcesGateway
+import io.r3chain.core.data.repositories.WasteMockRepository
+import io.r3chain.core.data.vo.FileAttachVO
+import io.r3chain.core.data.vo.WasteVO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject

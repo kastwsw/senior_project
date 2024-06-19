@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.data.services.ApiService
-import io.r3chain.data.services.NetworkService
+import io.r3chain.core.data.services.ApiService
+import io.r3chain.core.data.services.NetworkService
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged

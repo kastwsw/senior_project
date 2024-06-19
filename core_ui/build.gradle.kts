@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "io.r3chain.ui"
+    namespace = "io.r3chain.core.ui"
     compileSdk = 34
 
     defaultConfig {

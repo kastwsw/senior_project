@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.data.repositories.WasteMockRepository
-import io.r3chain.data.vo.WasteVO
+import io.r3chain.core.data.repositories.WasteMockRepository
+import io.r3chain.core.data.vo.WasteVO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow

@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.data.vo.WasteVO
+import io.r3chain.core.data.vo.WasteVO
 import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.GroupLabel
@@ -29,9 +29,9 @@ import io.r3chain.features.inventory.ui.components.RowLabel
 import io.r3chain.features.inventory.ui.components.VerificationDocuments
 import io.r3chain.features.inventory.ui.components.WasteTypeSelect
 import io.r3chain.features.inventory.ui.components.WeightInput
-import io.r3chain.ui.components.PrimaryButton
-import io.r3chain.ui.components.ScreenHeader
-import io.r3chain.ui.theme.R3Theme
+import io.r3chain.core.ui.components.PrimaryButton
+import io.r3chain.core.ui.components.ScreenHeader
+import io.r3chain.core.ui.theme.R3Theme
 
 @Composable
 fun AddDispatchScreen(

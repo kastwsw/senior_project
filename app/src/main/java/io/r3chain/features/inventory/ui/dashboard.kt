@@ -45,12 +45,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import io.r3chain.R
-import io.r3chain.data.vo.UserVO
-import io.r3chain.data.vo.WasteVO
+import io.r3chain.core.data.vo.UserVO
+import io.r3chain.core.data.vo.WasteVO
 import io.r3chain.features.inventory.model.DashboardViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
-import io.r3chain.ui.theme.R3Theme
+import io.r3chain.core.ui.theme.R3Theme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)

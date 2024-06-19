@@ -43,8 +43,8 @@ import io.r3chain.R
 import io.r3chain.features.inventory.model.DetailsViewModel
 import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
-import io.r3chain.ui.components.BottomSelect
-import io.r3chain.ui.components.IconActionPlate
+import io.r3chain.core.ui.components.BottomSelect
+import io.r3chain.core.ui.components.IconActionPlate
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

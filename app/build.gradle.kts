@@ -82,7 +82,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":core_ui"))
-    implementation(project(":data"))
+    implementation(project(":core"))
 }
 
 hilt {

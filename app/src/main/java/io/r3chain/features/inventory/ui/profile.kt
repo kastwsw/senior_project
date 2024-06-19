@@ -27,19 +27,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
-import io.r3chain.celebrity.presentation.openLink
-import io.r3chain.data.vo.UserVO
+import io.r3chain.core.presentation.openLink
+import io.r3chain.core.data.vo.UserVO
 import io.r3chain.features.inventory.model.ProfileViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
-import io.r3chain.ui.components.ActionPlate
-import io.r3chain.ui.components.ButtonStyle
-import io.r3chain.ui.components.ImagesSelect
-import io.r3chain.ui.components.LinkButton
-import io.r3chain.ui.components.PrimaryButton
-import io.r3chain.ui.components.ScreenHeader
-import io.r3chain.ui.components.SwitchPlate
-import io.r3chain.ui.theme.R3Theme
+import io.r3chain.core.ui.components.ActionPlate
+import io.r3chain.core.ui.components.ButtonStyle
+import io.r3chain.core.ui.components.ImagesSelect
+import io.r3chain.core.ui.components.LinkButton
+import io.r3chain.core.ui.components.PrimaryButton
+import io.r3chain.core.ui.components.ScreenHeader
+import io.r3chain.core.ui.components.SwitchPlate
+import io.r3chain.core.ui.theme.R3Theme
 
 @Composable
 fun ProfileScreen(

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.valentinilk.shimmer.shimmer
-import io.r3chain.data.vo.UserVO
+import io.r3chain.core.data.vo.UserVO
 
 @Composable
 fun UserAvatar(
