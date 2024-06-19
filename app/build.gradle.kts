@@ -13,8 +13,8 @@ android {
         applicationId = "io.r3chain"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1000005
-        versionName = "1.0.5"
+        versionCode = 1000006
+        versionName = "1.0.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
