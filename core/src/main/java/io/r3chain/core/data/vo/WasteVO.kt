@@ -8,6 +8,8 @@ data class WasteVO(
     val time: Long? = null,
     val grams: Long? = null,
     val partner: String = "",
+    val venue: String = "",
+    val recipient: String = "",
     val documents: List<WasteDocumentVO> = emptyList(),
     val files: List<FileAttachVO> = emptyList()
 )

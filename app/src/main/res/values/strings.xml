@@ -58,18 +58,30 @@
     <string name="inventory_record_added">New record added</string>
     <string name="inventory_record_undo">Undo</string>
 
-    <string name="inventory_label_collect_details">Collection details</string>
-    <string name="inventory_label_receive_details">Material Details</string>
-    <string name="inventory_label_dispatch_details">Material Details</string>
+    <string name="inventory_collect_details_label">Collection details</string>
+    <string name="inventory_collect_date_label">Collection Date</string>
+    <string name="inventory_collect_partner_label">Destination Partner</string>
+    <string name="inventory_collect_partner_hint">Select the partner</string>
+
+    <string name="inventory_receive_details_label">Material Details</string>
+    <string name="inventory_receive_date_label">Date Received</string>
+    <string name="inventory_receive_recipient_label">Recipient (Company Facility)</string>
+    <string name="inventory_receive_recipient_hint">Facility that receive this material</string>
+    <string name="inventory_receive_venue_label">Venue</string>
+    <string name="inventory_receive_venue_hint">Collection venue or partner</string>
+
+    <string name="inventory_dispatch_details_label">Material Details</string>
+    <string name="inventory_dispatch_date_label">Date</string>
+    <string name="inventory_dispatch_partner_label">Dispatch to Destination Partner</string>
+    <string name="inventory_dispatch_partner_hint">Select your partner</string>
+
     <string name="inventory_label_documents">Weight verification</string>
 
     <string name="inventory_label_photos">Photo</string>
     <string name="inventory_label_geo">Collection Location</string>
     <string name="inventory_label_materials_type">Type of collected material</string>
-    <string name="inventory_label_date">Collection Date</string>
     <string name="inventory_label_weight">Weight, kg</string>
     <string name="inventory_label_weight_grams">grams</string>
-    <string name="inventory_label_partner">Destination Partner</string>
 
     <string name="inventory_verifications_title">Weight verification</string>
     <string name="inventory_verifications_type_label">Document type</string>
@@ -90,8 +102,6 @@
 
     <string name="inventory_hint_kg">kg</string>
     <string name="inventory_hint_g">g</string>
-
-    <string name="inventory_hint_partner">Select the partner</string>
 
     <string name="inventory_label_save_form">Save</string>
     <string name="inventory_label_add_document">Add document</string>

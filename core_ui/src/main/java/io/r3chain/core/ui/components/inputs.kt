@@ -337,6 +337,7 @@ fun IntegerInput(
  *
  * @param time Исходное значение в миллесекундах.
  * @param modifier Модификатор.
+ * @param enabled Активен или нет.
  * @param onTimeChange Колбэк полученного значения.
  */
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -344,6 +345,7 @@ fun IntegerInput(
 fun DateInput(
     time: Long?,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onTimeChange: (Long) -> Unit
 ) {
     var hasDialog by remember {
@@ -358,6 +360,7 @@ fun DateInput(
     TextInput(
         value = if (time == null) "" else formatter.format(Date(time)),
         modifier = modifier,
+        enabled = enabled,
         leadingVector = Icons.Outlined.Today,
         onClick = {
             hasDialog = true

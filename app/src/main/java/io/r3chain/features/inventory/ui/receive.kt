@@ -14,6 +14,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.ui.components.DateInput
 import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.GroupLabel
@@ -31,6 +33,7 @@ import io.r3chain.features.inventory.ui.components.WasteTypeSelect
 import io.r3chain.features.inventory.ui.components.WeightInput
 import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.ScreenHeader
+import io.r3chain.core.ui.components.SelectableInput
 import io.r3chain.core.ui.theme.R3Theme
 
 @Composable
@@ -91,7 +94,7 @@ private fun ReceiveForm(
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
-        GroupLabel(text = stringResource(R.string.inventory_label_receive_details))
+        GroupLabel(text = stringResource(R.string.inventory_receive_details_label))
 
         // photos
         RowLabel(text = stringResource(R.string.inventory_label_photos))
@@ -99,6 +102,33 @@ private fun ReceiveForm(
             data = data.files,
             onUriSelected = onUriSelected
         )
+        Spacer(Modifier.height(28.dp))
+
+        // date
+        data.time?.also { time ->
+            RowLabel(text = stringResource(R.string.inventory_receive_date_label))
+            DateInput(time = time) {
+                onDataChanged(
+                    data.copy(time = it)
+                )
+            }
+            Spacer(Modifier.height(28.dp))
+        }
+
+        // venue
+        val venueOptions = remember {
+            listOf("Venue 1", "Venue 2", "Venue 3")
+        }
+        RowLabel(text = stringResource(R.string.inventory_receive_venue_label))
+        SelectableInput(
+            options = venueOptions,
+            selectedIndex = venueOptions.indexOf(data.venue).takeIf { it >= 0 },
+            placeholderValue = stringResource(R.string.inventory_receive_venue_hint)
+        ) {
+            onDataChanged(
+                data.copy(venue = venueOptions[it])
+            )
+        }
         Spacer(Modifier.height(28.dp))
 
         // type
@@ -120,6 +150,21 @@ private fun ReceiveForm(
             )
         }
         Spacer(Modifier.height(28.dp))
+
+        // venue
+        val recipientOptions = remember {
+            listOf("Recipient 1", "Recipient 2", "Recipient 3", "Recipient 4", "Recipient 5")
+        }
+        RowLabel(text = stringResource(R.string.inventory_receive_recipient_label))
+        SelectableInput(
+            options = recipientOptions,
+            selectedIndex = recipientOptions.indexOf(data.venue).takeIf { it >= 0 },
+            placeholderValue = stringResource(R.string.inventory_receive_recipient_hint)
+        ) {
+            onDataChanged(
+                data.copy(recipient = venueOptions[it])
+            )
+        }
 
         HorizontalDivider(modifier = Modifier.padding(top = 52.dp, bottom = 46.dp))
 

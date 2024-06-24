@@ -14,6 +14,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.ui.components.DateInput
+import io.r3chain.core.ui.components.PrimaryButton
+import io.r3chain.core.ui.components.ScreenHeader
+import io.r3chain.core.ui.components.SelectableInput
+import io.r3chain.core.ui.theme.R3Theme
 import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.GroupLabel
@@ -29,9 +35,6 @@ import io.r3chain.features.inventory.ui.components.RowLabel
 import io.r3chain.features.inventory.ui.components.VerificationDocuments
 import io.r3chain.features.inventory.ui.components.WasteTypeSelect
 import io.r3chain.features.inventory.ui.components.WeightInput
-import io.r3chain.core.ui.components.PrimaryButton
-import io.r3chain.core.ui.components.ScreenHeader
-import io.r3chain.core.ui.theme.R3Theme
 
 @Composable
 fun AddDispatchScreen(
@@ -80,6 +83,7 @@ private fun DispatchForm(
     data: WasteVO,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isEdit: Boolean = false,
     onUriSelected: (List<Uri>) -> Unit,
     onDataChanged: (WasteVO) -> Unit,
     onAddDocument: (Int) -> Unit,
@@ -91,7 +95,7 @@ private fun DispatchForm(
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
-        GroupLabel(text = stringResource(R.string.inventory_label_dispatch_details))
+        GroupLabel(text = stringResource(R.string.inventory_dispatch_details_label))
 
         // photos
         RowLabel(text = stringResource(R.string.inventory_label_photos))
@@ -99,6 +103,36 @@ private fun DispatchForm(
             data = data.files,
             onUriSelected = onUriSelected
         )
+        Spacer(Modifier.height(28.dp))
+
+        // date
+        data.time?.also { time ->
+            RowLabel(text = stringResource(R.string.inventory_dispatch_date_label))
+            DateInput(
+                time = time,
+                enabled = !isEdit
+            ) {
+                onDataChanged(
+                    data.copy(time = it)
+                )
+            }
+            Spacer(Modifier.height(28.dp))
+        }
+
+        // partner
+        val partnerOptions = remember {
+            listOf("Partner 1", "Partner 2", "Partner 3", "Partner 4")
+        }
+        RowLabel(text = stringResource(R.string.inventory_dispatch_partner_label))
+        SelectableInput(
+            options = partnerOptions,
+            selectedIndex = partnerOptions.indexOf(data.venue).takeIf { it >= 0 },
+            placeholderValue = stringResource(R.string.inventory_dispatch_partner_hint)
+        ) {
+            onDataChanged(
+                data.copy(venue = partnerOptions[it])
+            )
+        }
         Spacer(Modifier.height(28.dp))
 
         // type

@@ -17,10 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -104,7 +101,7 @@ private fun CollectForm(
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
-        GroupLabel(text = stringResource(R.string.inventory_label_collect_details))
+        GroupLabel(text = stringResource(R.string.inventory_collect_details_label))
 
         // photos
         RowLabel(text = stringResource(R.string.inventory_label_photos))
@@ -134,7 +131,7 @@ private fun CollectForm(
 
         // date
         data.time?.also { time ->
-            RowLabel(text = stringResource(R.string.inventory_label_date))
+            RowLabel(text = stringResource(R.string.inventory_collect_date_label))
             DateInput(time = time) {
                 onDataChanged(
                     data.copy(time = it)
@@ -164,16 +161,18 @@ private fun CollectForm(
         Spacer(Modifier.height(28.dp))
 
         // partner
-        var partnerIndex by remember(data) {
-            mutableStateOf<Int?>(null)
+        val partnerOptions = remember {
+            listOf("Partner 1", "Partner 2", "Partner 3", "Partner 4")
         }
-        RowLabel(text = stringResource(R.string.inventory_label_partner))
+        RowLabel(text = stringResource(R.string.inventory_dispatch_partner_label))
         SelectableInput(
-            options = listOf("Partner 1", "Partner 2", "Partner 3", "Partner 4"),
-            selectedIndex = partnerIndex,
-            placeholderValue = stringResource(R.string.inventory_hint_partner)
+            options = partnerOptions,
+            selectedIndex = partnerOptions.indexOf(data.venue).takeIf { it >= 0 },
+            placeholderValue = stringResource(R.string.inventory_dispatch_partner_hint)
         ) {
-            partnerIndex = it
+            onDataChanged(
+                data.copy(venue = partnerOptions[it])
+            )
         }
 
         HorizontalDivider(modifier = Modifier.padding(top = 52.dp, bottom = 46.dp))
