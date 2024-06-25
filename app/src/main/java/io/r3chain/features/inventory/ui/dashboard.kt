@@ -46,7 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinilk.shimmer.shimmer
 import io.r3chain.R
 import io.r3chain.core.data.vo.UserVO
-import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.features.inventory.model.DashboardViewModel
 import io.r3chain.features.inventory.model.RootViewModel
 import io.r3chain.features.inventory.ui.components.UserAvatar
@@ -224,8 +224,8 @@ private fun HeadCard(
 
 @Composable
 private fun InventoryContent(
-    data: List<WasteVO>,
-    onItemClick: (WasteVO) -> Unit
+    data: List<WasteEntity>,
+    onItemClick: (WasteEntity) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -245,8 +245,8 @@ private fun InventoryContent(
 
 @Composable
 private fun DispatchedContent(
-    data: List<WasteVO>,
-    onItemClick: (WasteVO) -> Unit
+    data: List<WasteEntity>,
+    onItemClick: (WasteEntity) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -282,8 +282,8 @@ private fun EmptyListText(
 
 @Composable
 private fun RecordsList(
-    data: List<WasteVO>,
-    onClick: (WasteVO) -> Unit
+    data: List<WasteEntity>,
+    onClick: (WasteEntity) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -320,8 +320,8 @@ private fun RecordsList(
 
 @Composable
 private fun WasteItem(
-    data: WasteVO,
-    onClick: (WasteVO) -> Unit
+    data: WasteEntity,
+    onClick: (WasteEntity) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier

@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ open class DetailsViewModel @Inject constructor() : ViewModel() {
     /**
      * Данные записи.
      */
-    var data by mutableStateOf(WasteVO())
+    var data by mutableStateOf(WasteEntity())
         private set
 
 
@@ -35,7 +35,7 @@ open class DetailsViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun initData(value: WasteVO) {
+    fun initData(value: WasteEntity) {
         data = value
     }
 

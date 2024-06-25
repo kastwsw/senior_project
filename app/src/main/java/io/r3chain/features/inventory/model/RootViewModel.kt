@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.WasteMockRepository
 import io.r3chain.core.data.vo.WasteRecordType
-import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,7 +24,7 @@ open class RootViewModel @Inject constructor(
     /**
      * Запись-намерение расшаренная по UI.
      */
-    var intentWaste: WasteVO? = null
+    var intentWaste: WasteEntity? = null
         private set
 
     /**
@@ -44,7 +44,7 @@ open class RootViewModel @Inject constructor(
         }
     }
 
-    fun navigateToWasteEdit(record: WasteVO) {
+    fun navigateToWasteEdit(record: WasteEntity) {
         intentWaste = record
         navController?.navigate(ScreenState.EDIT.name) {
             launchSingleTop = true
@@ -52,25 +52,25 @@ open class RootViewModel @Inject constructor(
     }
 
     fun navigateToAddCollect() {
-        navigateToWasteEdit(WasteVO(recordType = WasteRecordType.COLLECT))
+        navigateToWasteEdit(WasteEntity(recordType = WasteRecordType.COLLECT))
     }
 
     fun navigateToAddReceive() {
-        navigateToWasteEdit(WasteVO(recordType = WasteRecordType.RECEIVE))
+        navigateToWasteEdit(WasteEntity(recordType = WasteRecordType.RECEIVE))
     }
 
     fun navigateToAddDispatch() {
-        navigateToWasteEdit(WasteVO(recordType = WasteRecordType.DISPATCH))
+        navigateToWasteEdit(WasteEntity(recordType = WasteRecordType.DISPATCH))
     }
 
-    fun navigateToWasteEditDocs(record: WasteVO) {
+    fun navigateToWasteEditDocs(record: WasteEntity) {
         intentWaste = record
         navController?.navigate(ScreenState.EDIT.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }
     }
 
-    fun navigateToWasteDetails(record: WasteVO) {
+    fun navigateToWasteDetails(record: WasteEntity) {
         intentWaste = record
         navController?.navigate(ScreenState.DETAILS.name) {
             launchSingleTop = true
@@ -78,7 +78,7 @@ open class RootViewModel @Inject constructor(
     }
 
 
-    private val _newRecords = MutableSharedFlow<WasteVO>(
+    private val _newRecords = MutableSharedFlow<WasteEntity>(
         // 0 - новые подписчики не получат предыдущие ошибки
         replay = 0,
         // хранить не более 10 ошибок
@@ -92,20 +92,20 @@ open class RootViewModel @Inject constructor(
      */
     val newRecords = _newRecords.asSharedFlow()
 
-    fun recordAdded(data: WasteVO) {
+    fun recordAdded(data: WasteEntity) {
         navigateBack()
         viewModelScope.launch {
             _newRecords.emit(data)
         }
     }
 
-    fun undoRecordAdded(data: WasteVO) {
+    fun undoRecordAdded(data: WasteEntity) {
         viewModelScope.launch {
             wasteRepository.removeWaste(data)
         }
     }
 
-    fun deleteRecord(data: WasteVO) {
+    fun deleteRecord(data: WasteEntity) {
         navigateBack()
         viewModelScope.launch {
             wasteRepository.removeWaste(data)

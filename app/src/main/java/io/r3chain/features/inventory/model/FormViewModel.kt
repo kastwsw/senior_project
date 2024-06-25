@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.ResourcesGateway
 import io.r3chain.core.data.repositories.WasteMockRepository
 import io.r3chain.core.data.vo.FileAttachVO
-import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,7 +30,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Данные для формы.
      */
-    var data by mutableStateOf(WasteVO())
+    var data by mutableStateOf(WasteEntity())
         private set
 
     /**
@@ -41,7 +41,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Результат обработки формы.
      */
-    var doneResult: Result<WasteVO>? by mutableStateOf(null)
+    var doneResult: Result<WasteEntity>? by mutableStateOf(null)
         private set
 
     /**
@@ -140,7 +140,7 @@ open class FormViewModel @Inject constructor(
      * @param value Основной объект данных.
      * @param isByFile True - данные из файлов имеют больший приоритет (оверрайдят данные value).
      */
-    fun changeFormData(value: WasteVO, isByFile: Boolean = false) {
+    fun changeFormData(value: WasteEntity, isByFile: Boolean = false) {
         // взять время и локацию из файла, если необходимо
         val newData = if (!isByFile) value else value.copy(
             // первое попавшееся время

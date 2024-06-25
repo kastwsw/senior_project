@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.R
 import io.r3chain.core.data.vo.WasteRecordType
-import io.r3chain.core.data.vo.WasteVO
+import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.presentation.openLink
 import io.r3chain.core.ui.components.DateInput
 import io.r3chain.core.ui.components.PrimaryButton
@@ -100,12 +100,12 @@ fun WasteFormScreen(
 
 @Composable
 private fun WasteForm(
-    data: WasteVO,
+    data: WasteEntity,
     isNew: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
-    onDataChanged: (WasteVO) -> Unit,
+    onDataChanged: (WasteEntity) -> Unit,
     onAddDocument: (Int) -> Unit,
     onDone: () -> Unit
 ) {
@@ -162,9 +162,9 @@ private fun WasteForm(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CollectInputs(
-    data: WasteVO,
+    data: WasteEntity,
     isNew: Boolean,
-    onDataChanged: (WasteVO) -> Unit
+    onDataChanged: (WasteEntity) -> Unit
 ) {
     // geo
     data.geoLatLong?.also { cords ->
@@ -234,9 +234,9 @@ private fun CollectInputs(
 
 @Composable
 private fun ReceiveInputs(
-    data: WasteVO,
+    data: WasteEntity,
     isNew: Boolean,
-    onDataChanged: (WasteVO) -> Unit
+    onDataChanged: (WasteEntity) -> Unit
 ) {
     // date
     data.time?.also { time ->
@@ -303,9 +303,9 @@ private fun ReceiveInputs(
 
 @Composable
 private fun DispatchInputs(
-    data: WasteVO,
+    data: WasteEntity,
     isNew: Boolean,
-    onDataChanged: (WasteVO) -> Unit,
+    onDataChanged: (WasteEntity) -> Unit,
 ) {
     // date
     data.time?.also { time ->
@@ -379,7 +379,7 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteForm(
-                data = WasteVO(
+                data = WasteEntity(
                     recordType = WasteRecordType.COLLECT,
                     geoLatLong = 0.0 to 0.0,
                     time = 0

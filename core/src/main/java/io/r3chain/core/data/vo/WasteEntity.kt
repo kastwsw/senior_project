@@ -1,6 +1,6 @@
 package io.r3chain.core.data.vo
 
-data class WasteVO(
+data class WasteEntity(
     val recordType: WasteRecordType = WasteRecordType.COLLECT,
     val id: Int = 0,
     val location: Int = 0,
