@@ -5,13 +5,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-open class DetailsViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel(assistedFactory = DetailsViewModel.ViewModelFactory::class)
+class DetailsViewModel @AssistedInject constructor(
+    @Assisted
+    private val entity: WasteEntity
+) : ViewModel() {
+
+    @AssistedFactory
+    interface ViewModelFactory {
+        fun create(entity: WasteEntity): DetailsViewModel
+    }
 
     /**
      * Индикатор загрузки.
@@ -22,7 +32,7 @@ open class DetailsViewModel @Inject constructor() : ViewModel() {
     /**
      * Данные записи.
      */
-    var data by mutableStateOf(WasteEntity())
+    var data by mutableStateOf(entity)
         private set
 
 
@@ -33,10 +43,6 @@ open class DetailsViewModel @Inject constructor() : ViewModel() {
 //            data = wasteRepository.getWaste()
             isLoading = false
         }
-    }
-
-    fun initData(value: WasteEntity) {
-        data = value
     }
 
 }

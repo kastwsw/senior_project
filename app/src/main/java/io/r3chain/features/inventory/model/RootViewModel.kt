@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.WasteMockRepository
-import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.data.vo.WasteEntity
+import io.r3chain.core.data.vo.WasteRecordType
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class RootViewModel @Inject constructor(
+class RootViewModel @Inject constructor(
     private val wasteRepository: WasteMockRepository
 ) : ViewModel() {
 

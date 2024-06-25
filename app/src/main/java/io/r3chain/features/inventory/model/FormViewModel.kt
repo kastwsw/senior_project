@@ -6,20 +6,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.ResourcesGateway
 import io.r3chain.core.data.repositories.WasteMockRepository
-import io.r3chain.core.data.vo.FileAttachVO
+import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-open class FormViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = FormViewModel.ViewModelFactory::class)
+class FormViewModel @AssistedInject constructor(
+    @Assisted
+    private val entity: WasteEntity,
     private val wasteRepository: WasteMockRepository,
     private val resourcesGateway: ResourcesGateway
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface ViewModelFactory {
+        fun create(entity: WasteEntity): FormViewModel
+    }
 
     /**
      * Индикатор загрузки.
@@ -30,7 +39,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Данные для формы.
      */
-    var data by mutableStateOf(WasteEntity())
+    var data by mutableStateOf(entity)
         private set
 
     /**
@@ -71,7 +80,7 @@ open class FormViewModel @Inject constructor(
         viewModelScope.launch {
             // сформировать данные добавленных файлов
             val addedFiles = images.map {
-                FileAttachVO(uri = it, isLoading = true)
+                FileAttachEntity(uri = it, isLoading = true)
             }
             // передать их в стейт формы
             changeFormData(
@@ -89,7 +98,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Обновить данные прикрепляемого файла.
      */
-    private fun updateAttach(file: FileAttachVO) {
+    private fun updateAttach(file: FileAttachEntity) {
         val newList = data.files.indexOfFirst {
             it.uri == file.uri
         }.takeIf {
@@ -109,7 +118,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Убрать прикрепляемый файл.
      */
-    private fun removeAttach(file: FileAttachVO) {
+    private fun removeAttach(file: FileAttachEntity) {
         // список без file
         changeFormData(
             value = data.copy(files = data.files.filter { it != file }),

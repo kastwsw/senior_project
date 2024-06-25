@@ -1,8 +1,11 @@
 package io.r3chain.core.data.vo
 
+import android.os.Parcelable
 import io.r3chain.core.api.models.ResourceDto
+import kotlinx.parcelize.Parcelize
 
-data class ResourceVO(
+@Parcelize
+data class ResourceEntity(
     val id: Int = 0,
     val posterLink: String = "",
     val posterWidth: Int = 0,
@@ -11,7 +14,7 @@ data class ResourceVO(
     val latitude: Double? = null,
     val longitude: Double? = null,
     val time: Long? = null
-) {
+) : Parcelable {
 
     fun createByApi(value: ResourceDto) = copy(
         id = value.id,

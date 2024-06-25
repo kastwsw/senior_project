@@ -46,7 +46,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import io.r3chain.R
-import io.r3chain.core.data.vo.FileAttachVO
+import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.WasteType
 import io.r3chain.core.ui.components.ActionPlate
 import io.r3chain.core.ui.components.BottomSelect
@@ -248,7 +248,7 @@ fun WeightKgInput(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PhotosRow(
-    data: List<FileAttachVO>,
+    data: List<FileAttachEntity>,
     onUriSelected: (List<Uri>) -> Unit
 ) {
     var isImageSelectVisible by rememberSaveable {

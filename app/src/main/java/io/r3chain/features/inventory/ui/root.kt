@@ -184,23 +184,21 @@ private fun NavContent(
             // form
             composable(
                 route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.FORM.name
-            ) {
-                WasteFormScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel<FormViewModel>(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.EDIT.name
-                            )
-                        }
-                    ).apply {
-                        // положить начальные данные
-                        model.intentWaste?.also { data ->
-                            changeFormData(data)
-                        }
+            ) { backStackEntry ->
+                // собрать модель данных
+                val formViewModel = hiltViewModel<FormViewModel, FormViewModel.ViewModelFactory>(
+                    remember(backStackEntry) {
+                        navigationController.getBackStackEntry(
+                            route = RootViewModel.ScreenState.EDIT.name
+                        )
                     }
-                )
+                ) { factory ->
+                    factory.create(model.intentWaste!!)
+                }
+                // отрисовать
+                WasteFormScreen(rootModel = model, formViewModel = formViewModel)
             }
+
             // document verification
             composable(
                 route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.DOC.name
@@ -222,11 +220,8 @@ private fun NavContent(
         composable(route = RootViewModel.ScreenState.DETAILS.name) {
             WasteDetailsScreen(
                 rootModel = model,
-                detailsViewModel = hiltViewModel<DetailsViewModel>().apply {
-                    // положить начальные данные
-                    model.intentWaste?.also {
-                        initData(it)
-                    }
+                detailsViewModel = hiltViewModel<DetailsViewModel, DetailsViewModel.ViewModelFactory> { factory ->
+                    factory.create(model.intentWaste!!)
                 }
             )
         }

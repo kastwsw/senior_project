@@ -5,13 +5,12 @@ import android.net.Uri
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.hilt.android.qualifiers.ApplicationContext
-import io.r3chain.core.api.apis.ResourceApi
 import io.r3chain.core.api.infrastructure.ApiClient
 import io.r3chain.core.api.models.ResourceUploadDto
 import io.r3chain.core.api.models.ResourceUploadRequestDto
 import io.r3chain.core.data.services.ApiService
-import io.r3chain.core.data.vo.FileAttachVO
-import io.r3chain.core.data.vo.ResourceVO
+import io.r3chain.core.data.vo.FileAttachEntity
+import io.r3chain.core.data.vo.ResourceEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,7 +38,7 @@ class ResourcesGateway @Inject constructor(
     /**
      * Данные отправляемых на сервер файлов.
      */
-    private val uploadMap: MutableMap<String, Pair<FileAttachVO, Job?>> = mutableMapOf()
+    private val uploadMap: MutableMap<String, Pair<FileAttachEntity, Job?>> = mutableMapOf()
 
 
     private val _events = MutableSharedFlow<FileEvent>()
@@ -53,7 +52,7 @@ class ResourcesGateway @Inject constructor(
     /**
      * Запускает процесс загрузки файла.
      */
-    suspend fun startUploadFile(file: FileAttachVO) {
+    suspend fun startUploadFile(file: FileAttachEntity) {
         withContext(Dispatchers.IO) {
             val key = makeFileKey(file)
 
@@ -75,7 +74,7 @@ class ResourcesGateway @Inject constructor(
                 // TODO: убрать этот mock
                 delay(2000)
                 newFile = newFile.copy(
-                    resource = ResourceVO(
+                    resource = ResourceEntity(
                         id = (0..100).random(),
                         posterLink = file.uri.toString(),
                         latitude = 37.7749,
@@ -96,7 +95,7 @@ class ResourcesGateway @Inject constructor(
     /**
      * Открепляет файл.
      */
-    suspend fun removeFile(file: FileAttachVO) {
+    suspend fun removeFile(file: FileAttachEntity) {
         withContext(Dispatchers.IO) {
             val key = makeFileKey(file)
 
@@ -116,13 +115,13 @@ class ResourcesGateway @Inject constructor(
     /**
      * Получает данные файла по ключу.
      */
-    fun getActualFileData(file: FileAttachVO) = uploadMap[makeFileKey(file)]?.first
+    fun getActualFileData(file: FileAttachEntity) = uploadMap[makeFileKey(file)]?.first
 
 
     /**
      * Отправляет файл на сервер.
      */
-    suspend fun sendFile(uri: Uri): Result<ResourceVO> {
+    suspend fun sendFile(uri: Uri): Result<ResourceEntity> {
         // file data for request
         val fileBody = getFileMultipartBody(uri)
         // file meta for request
@@ -135,7 +134,7 @@ class ResourcesGateway @Inject constructor(
                 .createService(io.r3chain.core.api.apis.ResourceApi::class.java)
                 .apiV1MediaUploadPost(fileBody, dto)
         }.map {
-            ResourceVO().createByApi(
+            ResourceEntity().createByApi(
                 it.resourceList!!.values.first()
             )
         }
@@ -175,11 +174,11 @@ class ResourcesGateway @Inject constructor(
     /**
      * Возвращает ключ для файла.
      */
-    private fun makeFileKey(file: FileAttachVO) = file.uri.toString()
+    private fun makeFileKey(file: FileAttachEntity) = file.uri.toString()
 
 
     data class FileEvent(
-        val file: FileAttachVO,
+        val file: FileAttachEntity,
         val type: FileEventType
     )
 

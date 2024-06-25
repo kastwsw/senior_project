@@ -2,16 +2,14 @@ package io.r3chain.core.data.repositories
 
 import android.net.Uri
 import dagger.Lazy
-import io.r3chain.core.api.apis.AuthApi
 import io.r3chain.core.api.infrastructure.ApiClient
 import io.r3chain.core.api.models.AuthDto
 import io.r3chain.core.api.models.AuthLoginRequestDto
 import io.r3chain.core.api.models.AuthResponseEntity
 import io.r3chain.core.api.models.AuthSaveRequestDto
-import io.r3chain.core.data.db.CacheDatabase
 import io.r3chain.core.data.services.ApiService
 import io.r3chain.core.data.services.UserPrefsService
-import io.r3chain.core.data.vo.ResourceVO
+import io.r3chain.core.data.vo.ResourceEntity
 import io.r3chain.core.data.vo.UserExtVO
 import io.r3chain.core.data.vo.UserVO
 import kotlinx.coroutines.Dispatchers
@@ -102,7 +100,7 @@ class UserRepository @Inject constructor(
                     UserExtVO(
                         id = user.id,
                         avatarLink = response.responseResourceList?.map {
-                            ResourceVO().createByApi(it.value)
+                            ResourceEntity().createByApi(it.value)
                         }?.find {
                             it.id == user.imageResourceID
                         }?.posterLink ?: ""

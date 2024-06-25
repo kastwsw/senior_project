@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class DashboardViewModel @Inject constructor(
+class DashboardViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val wasteRepository: WasteMockRepository
 ) : ViewModel() {
