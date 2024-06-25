@@ -1,6 +1,7 @@
 package io.r3chain.core.data.vo
 
 data class WasteVO(
+    val recordType: WasteRecordType = WasteRecordType.COLLECT,
     val id: Int = 0,
     val location: Int = 0,
     val geoLatLong: Pair<Double, Double>? = null,

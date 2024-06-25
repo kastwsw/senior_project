@@ -40,11 +40,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import io.r3chain.R
+import io.r3chain.core.ui.components.BottomSelect
+import io.r3chain.core.ui.components.IconActionPlate
 import io.r3chain.features.inventory.model.DetailsViewModel
 import io.r3chain.features.inventory.model.FormViewModel
 import io.r3chain.features.inventory.model.RootViewModel
-import io.r3chain.core.ui.components.BottomSelect
-import io.r3chain.core.ui.components.IconActionPlate
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -176,128 +176,46 @@ private fun NavContent(
             ProfileScreen(rootModel = model)
         }
 
-        // add collect
-        navigation(
-            route = RootViewModel.ScreenState.COLLECT.name,
-            startDestination = RootViewModel.ScreenState.COLLECT.name + RootViewModel.ScreenStateWaste.FORM.name
-        ) {
-            // form
-            composable(
-                route = RootViewModel.ScreenState.COLLECT.name + RootViewModel.ScreenStateWaste.FORM.name
-            ) {
-                AddCollectScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.COLLECT.name
-                            )
-                        }
-                    )
-                )
-            }
-            // document verification
-            composable(
-                route = RootViewModel.ScreenState.COLLECT.name + RootViewModel.ScreenStateWaste.DOC.name
-            ) {
-                AddDocScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.COLLECT.name
-                            )
-                        }
-                    )
-                )
-            }
-        }
-
-        // add receive
-        navigation(
-            route = RootViewModel.ScreenState.RECEIVE.name,
-            startDestination = RootViewModel.ScreenState.RECEIVE.name + RootViewModel.ScreenStateWaste.FORM.name,
-        ) {
-            // form
-            composable(
-                route = RootViewModel.ScreenState.RECEIVE.name + RootViewModel.ScreenStateWaste.FORM.name
-            ) {
-                AddReceiveScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.RECEIVE.name
-                            )
-                        }
-                    )
-                )
-            }
-            // document verification
-            composable(
-                route = RootViewModel.ScreenState.RECEIVE.name + RootViewModel.ScreenStateWaste.DOC.name
-            ) {
-                AddDocScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.RECEIVE.name
-                            )
-                        }
-                    )
-                )
-            }
-        }
-
-        // add dispatch
-        navigation(
-            route = RootViewModel.ScreenState.DISPATCH.name,
-            startDestination = RootViewModel.ScreenState.DISPATCH.name + RootViewModel.ScreenStateWaste.FORM.name
-        ) {
-            // form
-            composable(
-                route = RootViewModel.ScreenState.DISPATCH.name + RootViewModel.ScreenStateWaste.FORM.name
-            ) {
-                AddDispatchScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.DISPATCH.name
-                            )
-                        }
-                    )
-                )
-            }
-            // document verification
-            composable(
-                route = RootViewModel.ScreenState.DISPATCH.name + RootViewModel.ScreenStateWaste.DOC.name
-            ) {
-                AddDocScreen(
-                    rootModel = model,
-                    formViewModel = hiltViewModel(
-                        remember(it) {
-                            navigationController.getBackStackEntry(
-                                route = RootViewModel.ScreenState.DISPATCH.name
-                            )
-                        }
-                    )
-                )
-            }
-        }
-
         // waste edit
-        composable(route = RootViewModel.ScreenState.EDIT.name) {
-            EditWasteScreen(
-                rootModel = model,
-                formViewModel = hiltViewModel<FormViewModel>().apply {
-                    // положить начальные данные
-                    model.intentWaste?.also {
-                        changeFormData(it)
+        navigation(
+            route = RootViewModel.ScreenState.EDIT.name,
+            startDestination = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.FORM.name
+        ) {
+            // form
+            composable(
+                route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.FORM.name
+            ) {
+                WasteFormScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel<FormViewModel>(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.EDIT.name
+                            )
+                        }
+                    ).apply {
+                        // положить начальные данные
+                        model.intentWaste?.also { data ->
+                            changeFormData(data)
+                        }
                     }
-                }
-            )
+                )
+            }
+            // document verification
+            composable(
+                route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.DOC.name
+            ) {
+                AddDocScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.EDIT.name
+                            )
+                        }
+                    )
+                )
+            }
         }
 
         // waste details

@@ -3,7 +3,6 @@ package io.r3chain.features.inventory.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,9 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-open class DetailsViewModel @Inject constructor(
-    private val handle: SavedStateHandle
-) : ViewModel() {
+open class DetailsViewModel @Inject constructor() : ViewModel() {
 
     /**
      * Индикатор загрузки.
@@ -25,11 +22,7 @@ open class DetailsViewModel @Inject constructor(
     /**
      * Данные записи.
      */
-    var data by mutableStateOf(
-        WasteVO().copy(
-            id = handle["waste_id"] ?: 0
-        )
-    )
+    var data by mutableStateOf(WasteVO())
         private set
 
 
@@ -43,7 +36,6 @@ open class DetailsViewModel @Inject constructor(
     }
 
     fun initData(value: WasteVO) {
-        handle["waste_id"] = value.id
         data = value
     }
 

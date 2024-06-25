@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class FormViewModel @Inject constructor(
-    private val handle: SavedStateHandle,
     private val wasteRepository: WasteMockRepository,
     private val resourcesGateway: ResourcesGateway
 ) : ViewModel() {
@@ -32,11 +30,7 @@ open class FormViewModel @Inject constructor(
     /**
      * Данные для формы.
      */
-    var data by mutableStateOf(
-        WasteVO().copy(
-            id = handle["waste_id"] ?: 0
-        )
-    )
+    var data by mutableStateOf(WasteVO())
         private set
 
     /**
@@ -147,6 +141,7 @@ open class FormViewModel @Inject constructor(
      * @param isByFile True - данные из файлов имеют больший приоритет (оверрайдят данные value).
      */
     fun changeFormData(value: WasteVO, isByFile: Boolean = false) {
+        // взять время и локацию из файла, если необходимо
         val newData = if (!isByFile) value else value.copy(
             // первое попавшееся время
             time = value.files.find {
@@ -165,7 +160,6 @@ open class FormViewModel @Inject constructor(
         )
 
         // TODO: провалидировать форму (дизейблить/энейблить кнопку send)
-        handle["waste_id"] = newData.id
         data = newData
     }
 

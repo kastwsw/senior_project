@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.WasteMockRepository
+import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.data.vo.WasteVO
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -43,38 +44,28 @@ open class RootViewModel @Inject constructor(
         }
     }
 
-    fun navigateToAddCollect() {
-        navController?.navigate(ScreenState.COLLECT.name) {
+    fun navigateToWasteEdit(record: WasteVO) {
+        intentWaste = record
+        navController?.navigate(ScreenState.EDIT.name) {
             launchSingleTop = true
         }
     }
 
-    fun navigateToCollectDoc() {
-        navController?.navigate(ScreenState.COLLECT.name + ScreenStateWaste.DOC.name) {
-            launchSingleTop = true
-        }
+    fun navigateToAddCollect() {
+        navigateToWasteEdit(WasteVO(recordType = WasteRecordType.COLLECT))
     }
 
     fun navigateToAddReceive() {
-        navController?.navigate(ScreenState.RECEIVE.name) {
-            launchSingleTop = true
-        }
-    }
-
-    fun navigateToReceiveDoc() {
-        navController?.navigate(ScreenState.RECEIVE.name + ScreenStateWaste.DOC.name) {
-            launchSingleTop = true
-        }
+        navigateToWasteEdit(WasteVO(recordType = WasteRecordType.RECEIVE))
     }
 
     fun navigateToAddDispatch() {
-        navController?.navigate(ScreenState.DISPATCH.name) {
-            launchSingleTop = true
-        }
+        navigateToWasteEdit(WasteVO(recordType = WasteRecordType.DISPATCH))
     }
 
-    fun navigateToDispatchDoc() {
-        navController?.navigate(ScreenState.DISPATCH.name + ScreenStateWaste.DOC.name) {
+    fun navigateToWasteEditDocs(record: WasteVO) {
+        intentWaste = record
+        navController?.navigate(ScreenState.EDIT.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }
     }
@@ -82,13 +73,6 @@ open class RootViewModel @Inject constructor(
     fun navigateToWasteDetails(record: WasteVO) {
         intentWaste = record
         navController?.navigate(ScreenState.DETAILS.name) {
-            launchSingleTop = true
-        }
-    }
-
-    fun navigateToWasteEdit(record: WasteVO) {
-        intentWaste = record
-        navController?.navigate(ScreenState.EDIT.name) {
             launchSingleTop = true
         }
     }
@@ -130,7 +114,7 @@ open class RootViewModel @Inject constructor(
 
 
     enum class ScreenState {
-        HOME, PROFILE, COLLECT, RECEIVE, DISPATCH, DETAILS, EDIT
+        HOME, PROFILE, EDIT, DETAILS
     }
 
     enum class ScreenStateWaste {
