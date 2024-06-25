@@ -21,7 +21,7 @@ interface DataBaseModule {
         // База для кэша обнуляется при миграции.
         fun provideCacheDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
             context = context,
-            klass = io.r3chain.core.data.db.CacheDatabase::class.java,
+            klass = CacheDatabase::class.java,
             name = "cache_api"
         ).fallbackToDestructiveMigration().build()
     }

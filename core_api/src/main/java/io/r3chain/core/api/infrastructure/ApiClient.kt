@@ -1,7 +1,5 @@
 package io.r3chain.core.api.infrastructure
 
-import io.r3chain.core.api.auth.HttpBearerAuth
-
 import okhttp3.Call
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,6 +9,7 @@ import retrofit2.Converter
 import retrofit2.CallAdapter
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import com.squareup.moshi.Moshi
+import io.r3chain.core.api.auth.HttpBearerAuth
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 
@@ -67,7 +66,7 @@ class ApiClient(
     ) : this(baseUrl, okHttpClientBuilder, serializerBuilder) {
         authNames.forEach { authName ->
             val auth: Interceptor? = when (authName) { 
-                "Bearer" -> io.r3chain.core.api.auth.HttpBearerAuth("bearer")
+                "Bearer" -> HttpBearerAuth("bearer")
                 
                 else -> throw RuntimeException("auth name $authName not found in available auth names")
             }
@@ -88,7 +87,7 @@ class ApiClient(
     }
 
     fun setBearerToken(bearerToken: String): ApiClient {
-        apiAuthorizations.values.runOnFirst<Interceptor, io.r3chain.core.api.auth.HttpBearerAuth> {
+        apiAuthorizations.values.runOnFirst<Interceptor, HttpBearerAuth> {
             this.bearerToken = bearerToken
         }
         return this
