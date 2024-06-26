@@ -9,7 +9,7 @@ import javax.inject.Inject
 class R3App : Application() {
 
     @Inject
-    lateinit var loggerService: io.r3chain.core.data.LoggerService
+    lateinit var loggerService: LoggerService
 
     override fun onTerminate() {
         super.onTerminate()

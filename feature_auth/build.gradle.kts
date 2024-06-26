@@ -66,7 +66,3 @@ dependencies {
     implementation(project(":core_ui"))
     implementation(project(":core"))
 }
-
-hilt {
-    enableAggregatingTask = true
-}

@@ -82,6 +82,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     implementation(project(":feature_auth"))
+    implementation(project(":feature_inventory"))
 
     implementation(project(":core_ui"))
     implementation(project(":core"))

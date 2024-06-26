@@ -39,9 +39,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import io.r3chain.R
 import io.r3chain.core.ui.components.BottomSelect
 import io.r3chain.core.ui.components.IconActionPlate
+import io.r3chain.feature.inventory.R
 import io.r3chain.feature.inventory.model.DetailsViewModel
 import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel

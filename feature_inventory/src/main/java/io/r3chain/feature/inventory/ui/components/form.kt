@@ -45,7 +45,6 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import io.r3chain.R
 import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.WasteType
 import io.r3chain.core.ui.components.ActionPlate
@@ -55,6 +54,7 @@ import io.r3chain.core.ui.components.ImagesSelect
 import io.r3chain.core.ui.components.IntegerInput
 import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.TextInput
+import io.r3chain.feature.inventory.R
 import java.text.NumberFormat
 import java.text.ParseException
 import java.util.Locale

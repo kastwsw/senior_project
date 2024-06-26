@@ -1,0 +1,96 @@
+<resources>
+
+    <!-- PROFILE -->
+
+    <string name="profile_title">Profile</string>
+
+    <string name="notification_label">Push notification</string>
+
+    <string name="help_label">Online help</string>
+    <string name="help_link" translatable="false">https://r3chain.io</string>
+
+    <string name="support_label">Contact us</string>
+    <string name="support_link" translatable="false">mailto:support@r3chain.io</string>
+
+    <string name="sign_out_label">Log out</string>
+
+
+    <!-- INVENTORY -->
+
+    <string name="inventory_total_title">Total amount, kg</string>
+
+    <string name="inventory_tab_label_inventory">Inventory</string>
+    <string name="inventory_tab_label_dispatched">Dispatched</string>
+
+    <string name="inventory_tab_empty_inventory">To start managing your operations, simply tap on the (+) button to add new waste collections or received materials</string>
+    <string name="inventory_tab_empty_dispatched">To start managing your operations, simply tap on the (+) button to add new dispatched materials</string>
+
+    <string name="inventory_add_collect_option">Add new collection</string>
+    <string name="inventory_add_collect_description">Start tracking a new collection</string>
+    <string name="inventory_add_collect_title">New collection</string>
+
+    <string name="inventory_add_receive_option">Add received material</string>
+    <string name="inventory_add_receive_title">New received material</string>
+
+    <string name="inventory_add_dispatch_option">Dispatch material</string>
+    <string name="inventory_add_dispatch_description">Supporting text</string>
+    <string name="inventory_add_dispatch_title">New material for dispatch</string>
+
+    <string name="inventory_record_added">New record added</string>
+    <string name="inventory_record_undo">Undo</string>
+
+    <string name="inventory_collect_details_label">Collection details</string>
+    <string name="inventory_collect_date_label">Collection Date</string>
+    <string name="inventory_collect_partner_label">Destination Partner</string>
+    <string name="inventory_collect_partner_hint">Select the partner</string>
+
+    <string name="inventory_receive_details_label">Material Details</string>
+    <string name="inventory_receive_date_label">Date Received</string>
+    <string name="inventory_receive_recipient_label">Recipient (Company Facility)</string>
+    <string name="inventory_receive_recipient_hint">Facility that receive this material</string>
+    <string name="inventory_receive_venue_label">Venue</string>
+    <string name="inventory_receive_venue_hint">Collection venue or partner</string>
+
+    <string name="inventory_dispatch_details_label">Material Details</string>
+    <string name="inventory_dispatch_date_label">Date</string>
+    <string name="inventory_dispatch_partner_label">Dispatch to Destination Partner</string>
+    <string name="inventory_dispatch_partner_hint">Select your partner</string>
+
+    <string name="inventory_label_documents">Weight verification</string>
+
+    <string name="inventory_label_photos">Photo</string>
+    <string name="inventory_label_geo">Collection Location</string>
+    <string name="inventory_label_materials_type">Type of collected material</string>
+    <string name="inventory_label_weight">Weight, kg</string>
+    <string name="inventory_label_weight_grams">grams</string>
+
+    <string name="inventory_verifications_title">Weight verification</string>
+    <string name="inventory_verifications_type_label">Document type</string>
+    <string-array name="inventory_verifications_types">
+        <item>Weight slip</item>
+        <item>Photo</item>
+        <item>Certificate</item>
+        <item>Invoice</item>
+    </string-array>
+
+    <string name="inventory_label_materials_type_pet">PET</string>
+    <string name="inventory_label_materials_type_hdpe">HDPE</string>
+    <string name="inventory_label_materials_type_pvc">PVC</string>
+    <string name="inventory_label_materials_type_pdpe">LDPE</string>
+    <string name="inventory_label_materials_type_pp">PP</string>
+    <string name="inventory_label_materials_type_ps">PS</string>
+    <string name="inventory_label_materials_type_other">mix</string>
+
+    <string name="inventory_hint_kg">kg</string>
+    <string name="inventory_hint_g">g</string>
+
+    <string name="inventory_label_save_form">Save</string>
+    <string name="inventory_label_add_document">Add document</string>
+    <string name="inventory_label_add_image">Add image</string>
+    <string name="inventory_label_edit_waste">Edit</string>
+    <string name="inventory_label_delete_waste">Delete</string>
+
+    <string name="inventory_details_weight">%s kg</string>
+    <string name="inventory_edit_id">Waste N%s</string>
+
+</resources>

@@ -26,12 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.r3chain.R
-import io.r3chain.core.presentation.openLink
 import io.r3chain.core.data.vo.UserVO
-import io.r3chain.feature.inventory.model.ProfileViewModel
-import io.r3chain.feature.inventory.model.RootViewModel
-import io.r3chain.feature.inventory.ui.components.UserAvatar
+import io.r3chain.core.presentation.openLink
 import io.r3chain.core.ui.components.ActionPlate
 import io.r3chain.core.ui.components.ButtonStyle
 import io.r3chain.core.ui.components.ImagesSelect
@@ -40,6 +36,10 @@ import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.ScreenHeader
 import io.r3chain.core.ui.components.SwitchPlate
 import io.r3chain.core.ui.theme.R3Theme
+import io.r3chain.feature.inventory.R
+import io.r3chain.feature.inventory.model.ProfileViewModel
+import io.r3chain.feature.inventory.model.RootViewModel
+import io.r3chain.feature.inventory.ui.components.UserAvatar
 
 @Composable
 fun ProfileScreen(

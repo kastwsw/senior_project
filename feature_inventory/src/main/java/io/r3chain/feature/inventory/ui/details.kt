@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.r3chain.R
-import io.r3chain.feature.inventory.model.DetailsViewModel
-import io.r3chain.feature.inventory.model.RootViewModel
 import io.r3chain.core.ui.components.AlterButton
 import io.r3chain.core.ui.components.LinkButton
 import io.r3chain.core.ui.components.ScreenHeader
+import io.r3chain.feature.inventory.R
+import io.r3chain.feature.inventory.model.DetailsViewModel
+import io.r3chain.feature.inventory.model.RootViewModel
 import java.text.NumberFormat
 import java.util.Locale
 

@@ -24,9 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.r3chain.R
-import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.data.vo.WasteEntity
+import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.presentation.openLink
 import io.r3chain.core.ui.components.DateInput
 import io.r3chain.core.ui.components.PrimaryButton
@@ -34,6 +33,7 @@ import io.r3chain.core.ui.components.ScreenHeader
 import io.r3chain.core.ui.components.SelectableInput
 import io.r3chain.core.ui.components.TextInput
 import io.r3chain.core.ui.theme.R3Theme
+import io.r3chain.feature.inventory.R
 import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
 import io.r3chain.feature.inventory.ui.components.GroupLabel
