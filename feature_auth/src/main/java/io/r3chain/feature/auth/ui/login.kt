@@ -46,7 +46,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.r3chain.R
 import io.r3chain.core.presentation.openLink
 import io.r3chain.feature.auth.model.AuthViewModel
 import io.r3chain.core.ui.components.CheckboxLabel
@@ -54,6 +53,7 @@ import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.TextInput
 import io.r3chain.core.ui.utils.PasswordDelayVisualTransformation
 import io.r3chain.core.ui.utils.clickableLabel
+import io.r3chain.feature.auth.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

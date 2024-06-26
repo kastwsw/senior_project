@@ -81,6 +81,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
+    implementation(project(":feature_auth"))
+
     implementation(project(":core_ui"))
     implementation(project(":core"))
 }
