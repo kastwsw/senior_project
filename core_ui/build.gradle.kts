@@ -36,7 +36,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtension.get()
     }
 }
 
@@ -53,7 +53,7 @@ dependencies {
     // exif
     api(libs.exifinterface)
 
-    // Integration with activities
+    // Integration with activities (launch and other)
     api(libs.androidx.activity.compose)
 
     // Android Studio Preview support
