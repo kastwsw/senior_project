@@ -35,14 +35,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
-    }
-
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtension.get()
     }
 
     packaging {
@@ -55,21 +47,8 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
 
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-
-    // navigation
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt.navigation.compose)
-
-//    // accompanist for compose
-//    implementation(libs.accompanist.systemuicontroller)
-//    // Add window size utils
-//    implementation("androidx.compose.material3:material3-window-size-class")
-
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
-    implementation(libs.coil.compose)
 
     // UI Tests
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -78,13 +57,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
 
+    implementation(project(":core"))
+
+    implementation(project(":feature_root"))
     implementation(project(":feature_auth"))
     implementation(project(":feature_inventory"))
-
-    implementation(project(":core_ui"))
-    implementation(project(":core"))
 }
 
 hilt {

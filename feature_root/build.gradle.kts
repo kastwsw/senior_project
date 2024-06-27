@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kspPlugin)
+    alias(libs.plugins.hiltPlugin)
 }
 
 android {
@@ -30,12 +32,44 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerExtension.get()
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
+
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    // navigation
+    implementation(libs.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
+
+//    // accompanist for compose
+//    implementation(libs.accompanist.systemuicontroller)
+//    // Add window size utils
+//    implementation("androidx.compose.material3:material3-window-size-class")
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // UI Tests
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    implementation(project(":core_ui"))
+    implementation(project(":core"))
+
+    implementation(project(":feature_auth"))
+    implementation(project(":feature_inventory"))
 }

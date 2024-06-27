@@ -28,7 +28,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import io.r3chain.R
 import io.r3chain.core.data.exceptions.AuthException
 import io.r3chain.core.data.exceptions.NetworkIOException
 import io.r3chain.core.data.exceptions.NoInternetException
@@ -40,6 +39,7 @@ import io.r3chain.feature.root.model.ApiViewModel
 import io.r3chain.core.ui.components.ErrorPlate
 import io.r3chain.core.ui.components.LoadingBox
 import io.r3chain.core.ui.theme.R3Theme
+import io.r3chain.feature.root.R
 import kotlinx.coroutines.delay
 
 @Composable

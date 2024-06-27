@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import io.r3chain.R
 import io.r3chain.feature.root.ui.App
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

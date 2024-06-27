@@ -15,30 +15,6 @@
         android:enableOnBackInvokedCallback="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        tools:targetApi="tiramisu">
-
-        <activity
-            android:name=".feature.root.MainActivity"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- Trigger Google Play services to install the backported photo picker module. -->
-        <!-- Нужны Google Services -->
-<!--        <service android:name="com.google.android.gms.metadata.ModuleDependencies"-->
-<!--            android:enabled="false"-->
-<!--            android:exported="false"-->
-<!--            tools:ignore="MissingClass">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />-->
-<!--            </intent-filter>-->
-<!--            <meta-data android:name="photopicker_activity:0:required" android:value="" />-->
-<!--        </service>-->
-    </application>
+        tools:targetApi="tiramisu" />
 
 </manifest>
