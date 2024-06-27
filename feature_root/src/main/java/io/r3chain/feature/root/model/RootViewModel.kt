@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.UserRepository
+import io.r3chain.feature.auth.AuthScreen
+import io.r3chain.feature.inventory.InventoryScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,6 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 open class RootViewModel @Inject constructor(
+    val authScreen: AuthScreen,
+    val inventoryScreen: InventoryScreen,
     private val userRepository: UserRepository
 ) : ViewModel() {
 

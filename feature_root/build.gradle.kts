@@ -70,6 +70,6 @@ dependencies {
     implementation(project(":core_ui"))
     implementation(project(":core"))
 
-    implementation(project(":feature_auth"))
-    implementation(project(":feature_inventory"))
+    implementation(project(":feature_auth_nav"))
+    implementation(project(":feature_inventory_nav"))
 }

@@ -32,14 +32,12 @@ import io.r3chain.core.data.exceptions.AuthException
 import io.r3chain.core.data.exceptions.NetworkIOException
 import io.r3chain.core.data.exceptions.NoInternetException
 import io.r3chain.core.data.exceptions.SurpriseException
-import io.r3chain.feature.auth.ui.LoginScreen
-import io.r3chain.feature.inventory.ui.InventoryScreen
-import io.r3chain.feature.root.model.RootViewModel
-import io.r3chain.feature.root.model.ApiViewModel
 import io.r3chain.core.ui.components.ErrorPlate
 import io.r3chain.core.ui.components.LoadingBox
 import io.r3chain.core.ui.theme.R3Theme
 import io.r3chain.feature.root.R
+import io.r3chain.feature.root.model.ApiViewModel
+import io.r3chain.feature.root.model.RootViewModel
 import kotlinx.coroutines.delay
 
 @Composable
@@ -76,14 +74,14 @@ private fun Content(
                 }
             }
             composable(route = RootViewModel.ScreenState.AUTH.name) {
-                LoginScreen()
+                model.authScreen.Draw()
             }
             composable(route = RootViewModel.ScreenState.INVENTORY.name) {
-                InventoryScreen()
+                model.inventoryScreen.Draw()
             }
         }
 
-        // errrors
+        // errors
         AppErrors(
             modifier = Modifier
                 .padding(16.dp)

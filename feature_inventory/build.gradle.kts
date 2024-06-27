@@ -67,4 +67,6 @@ dependencies {
 
     implementation(project(":core_ui"))
     implementation(project(":core"))
+
+    api(project(":feature_inventory_nav"))
 }
