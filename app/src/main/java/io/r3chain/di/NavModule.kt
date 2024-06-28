@@ -1,16 +1,16 @@
 package io.r3chain.di
 
-import InventoryScreenImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
 import io.r3chain.feature.auth.AuthScreen
 import io.r3chain.feature.auth.AuthScreenImpl
 import io.r3chain.feature.inventory.InventoryScreen
+import io.r3chain.feature.inventory.InventoryScreenImpl
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 interface NavModule {
 
     @Binds

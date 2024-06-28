@@ -1,8 +1,10 @@
-import androidx.compose.runtime.Composable
-import io.r3chain.feature.inventory.InventoryScreen
-import io.r3chain.feature.inventory.ui.InventoryScreen
+package io.r3chain.feature.inventory
 
-class InventoryScreenImpl() : InventoryScreen {
+import androidx.compose.runtime.Composable
+import io.r3chain.feature.inventory.ui.InventoryScreen
+import javax.inject.Inject
+
+class InventoryScreenImpl @Inject constructor() : InventoryScreen {
 
     @Composable
     override fun Draw() {
