@@ -52,7 +52,7 @@ class FormViewModel @AssistedInject constructor(
     /**
      * Текущий документ верификации.
      */
-    var currentVerificationDoc: WasteDocumentEntity? by mutableStateOf(null)
+    var currentDoc: WasteDocumentEntity? by mutableStateOf(null)
         private set
 
     /**
@@ -180,10 +180,33 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param type Тип документа.
      */
-    fun addDocByType(type: WasteDocType) {
-        currentVerificationDoc = WasteDocumentEntity(
-            type = type
+    fun intentDocByType(type: WasteDocType) {
+        currentDoc = WasteDocumentEntity(
+            type = type,
+            id = (data.documents.maxOfOrNull { it.id } ?: 0) + 1
         )
+    }
+
+    /**
+     * Добавляет документ к соответствующему списку в данных записи мусора.
+     *
+     * @param doc Данные документа.
+     */
+    fun addDoc(doc: WasteDocumentEntity) {
+        changeFormData(data.copy(
+            documents = data.documents + listOf(doc)
+        ))
+    }
+
+    /**
+     * Удаляет документ из соответствующего списка в данных записи мусора.
+     *
+     * @param doc Данные документа.
+     */
+    fun deleteDoc(doc: WasteDocumentEntity) {
+        changeFormData(data.copy(
+            documents = data.documents.filter { it.id != doc.id }
+        ))
     }
 
 }

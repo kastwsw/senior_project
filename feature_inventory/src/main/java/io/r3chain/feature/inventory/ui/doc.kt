@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteDocumentEntity
+import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.ScreenHeader
 import io.r3chain.core.ui.theme.R3Theme
 import io.r3chain.feature.inventory.R
@@ -27,7 +28,7 @@ import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
 
 @Composable
-fun AddDocScreen(
+fun WasteDocScreen(
     rootModel: RootViewModel,
     formViewModel: FormViewModel = hiltViewModel()
 ) {
@@ -40,13 +41,15 @@ fun AddDocScreen(
                 title = stringResource(R.string.inventory_verifications_title),
                 backAction = rootModel::navigateBack
             )
-            formViewModel.currentVerificationDoc?.also {
-                AddDocForm(
+            formViewModel.currentDoc?.also {
+                WasteDocForm(
                     data = it,
                     isNew = true,
                     modifier = Modifier.weight(1f),
                     onDone = {
-                        // TODO: добавить док к записи мусора
+                        // добавить док к записи мусора
+                        formViewModel.addDoc(it)
+                        rootModel.navigateBack()
                     }
                 )
             }
@@ -56,7 +59,7 @@ fun AddDocScreen(
 
 
 @Composable
-private fun AddDocForm(
+private fun WasteDocForm(
     data: WasteDocumentEntity,
     isNew: Boolean,
     modifier: Modifier = Modifier,
@@ -87,7 +90,13 @@ private fun AddDocForm(
 
         Spacer(Modifier.height(120.dp))
 
-        // TODO: кнопка "сохранить"
+        // done
+        PrimaryButton(
+            text = stringResource(R.string.inventory_label_save_form),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            onClick = onDone
+        )
     }
 }
 
@@ -114,7 +123,7 @@ private fun PreviewLight() {
 private fun Demo() {
     R3Theme {
         Surface {
-            AddDocForm(
+            WasteDocForm(
                 data = WasteDocumentEntity(),
                 isNew = true,
                 onDone = {}

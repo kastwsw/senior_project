@@ -203,7 +203,7 @@ private fun NavContent(
             composable(
                 route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.DOC.name
             ) {
-                AddDocScreen(
+                WasteDocScreen(
                     rootModel = model,
                     formViewModel = hiltViewModel(
                         remember(it) {

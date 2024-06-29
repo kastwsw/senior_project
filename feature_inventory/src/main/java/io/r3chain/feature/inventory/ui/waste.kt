@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -25,9 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.r3chain.core.data.vo.WasteDocType
+import io.r3chain.core.data.vo.WasteDocumentEntity
 import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.presentation.openLink
+import io.r3chain.core.ui.components.ActionPlate
+import io.r3chain.core.ui.components.BottomSelect
+import io.r3chain.core.ui.components.ButtonStyle
 import io.r3chain.core.ui.components.DateInput
 import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.ScreenHeader
@@ -40,7 +51,6 @@ import io.r3chain.feature.inventory.model.RootViewModel
 import io.r3chain.feature.inventory.ui.components.GroupLabel
 import io.r3chain.feature.inventory.ui.components.PhotosRow
 import io.r3chain.feature.inventory.ui.components.RowLabel
-import io.r3chain.feature.inventory.ui.components.VerificationDocuments
 import io.r3chain.feature.inventory.ui.components.WasteTypeSelect
 import io.r3chain.feature.inventory.ui.components.WeightInput
 
@@ -78,7 +88,7 @@ fun WasteFormScreen(
                 onUriSelected = formViewModel::uploadImages,
                 onDataChanged = formViewModel::changeFormData,
                 onAddDocument = {
-                    formViewModel.addDocByType(it)
+                    formViewModel.intentDocByType(it)
                     rootModel.navigateToWasteEditDocs(formViewModel.data)
                 },
                 onDone = formViewModel::doneForm
@@ -144,7 +154,7 @@ private fun WasteForm(
         HorizontalDivider(modifier = Modifier.padding(top = 52.dp, bottom = 46.dp))
 
         // documents
-        VerificationDocuments(onAddDocument = onAddDocument)
+        VerificationDocuments(list = data.documents, onAddDocument = onAddDocument)
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 46.dp))
 
@@ -352,6 +362,61 @@ private fun DispatchInputs(
         onDataChanged(
             data.copy(grams = it)
         )
+    }
+}
+
+
+@Composable
+private fun VerificationDocuments(
+    list: List<WasteDocumentEntity>,
+    onAddDocument: (WasteDocType) -> Unit
+) {
+    var expanded by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    GroupLabel(
+        text = stringResource(R.string.inventory_label_documents),
+        paddingValues = PaddingValues(bottom = 24.dp)
+    )
+
+    // TODO: список документов
+    Text(text = list.size.toString())
+
+
+    // добавить документ
+    PrimaryButton(
+        text = stringResource(R.string.inventory_label_add_document),
+        modifier = Modifier.fillMaxWidth(),
+        buttonStyle = ButtonStyle.SECONDARY,
+        icon = Icons.Outlined.Add,
+        onClick = {
+            expanded = true
+        }
+    )
+
+    // выбор вариантов документов
+    BottomSelect(
+        isVisible = expanded,
+        onClose = {
+            expanded = false
+        },
+        onSelect = {
+            expanded = false
+            onAddDocument(it)
+        }
+    ) { optionSelect ->
+        WasteDocType.entries.forEach { type ->
+            val labelId = when (type) {
+                WasteDocType.SLIP -> R.string.inventory_verifications_type_slip
+                WasteDocType.PHOTO -> R.string.inventory_verifications_type_photo
+                WasteDocType.CERT -> R.string.inventory_verifications_type_cert
+                WasteDocType.INVOICE -> R.string.inventory_verifications_type_invoice
+            }
+            ActionPlate(title = stringResource(labelId)) {
+                optionSelect(type)
+            }
+        }
     }
 }
 
