@@ -39,13 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import io.r3chain.core.data.vo.FileAttachEntity
+import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteType
 import io.r3chain.core.ui.components.ActionPlate
 import io.r3chain.core.ui.components.BottomSelect
@@ -367,7 +367,7 @@ private fun FileBox(
 
 @Composable
 fun VerificationDocuments(
-    onAddDocument: (Int) -> Unit
+    onAddDocument: (WasteDocType) -> Unit
 ) {
     var expanded by rememberSaveable {
         mutableStateOf(false)
@@ -377,6 +377,11 @@ fun VerificationDocuments(
         text = stringResource(R.string.inventory_label_documents),
         paddingValues = PaddingValues(bottom = 24.dp)
     )
+
+    // TODO: список документов
+
+
+    // добавить документ
     PrimaryButton(
         text = stringResource(R.string.inventory_label_add_document),
         modifier = Modifier.fillMaxWidth(),
@@ -387,8 +392,7 @@ fun VerificationDocuments(
         }
     )
 
-    val options = stringArrayResource(R.array.inventory_verifications_types)
-
+    // выбор вариантов документов
     BottomSelect(
         isVisible = expanded,
         onClose = {
@@ -399,9 +403,15 @@ fun VerificationDocuments(
             onAddDocument(it)
         }
     ) { optionSelect ->
-        options.forEachIndexed { index, option ->
-            ActionPlate(title = option) {
-                optionSelect(index)
+        WasteDocType.entries.forEach { type ->
+            val labelId = when (type) {
+                WasteDocType.SLIP -> R.string.inventory_verifications_type_slip
+                WasteDocType.PHOTO -> R.string.inventory_verifications_type_photo
+                WasteDocType.CERT -> R.string.inventory_verifications_type_cert
+                WasteDocType.INVOICE -> R.string.inventory_verifications_type_invoice
+            }
+            ActionPlate(title = stringResource(labelId)) {
+                optionSelect(type)
             }
         }
     }

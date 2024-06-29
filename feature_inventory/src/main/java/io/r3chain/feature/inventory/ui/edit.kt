@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.presentation.openLink
@@ -77,7 +78,7 @@ fun WasteFormScreen(
                 onUriSelected = formViewModel::uploadImages,
                 onDataChanged = formViewModel::changeFormData,
                 onAddDocument = {
-                    formViewModel.currentVerificationType = it
+                    formViewModel.addDocByType(it)
                     rootModel.navigateToWasteEditDocs(formViewModel.data)
                 },
                 onDone = formViewModel::doneForm
@@ -106,7 +107,7 @@ private fun WasteForm(
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
     onDataChanged: (WasteEntity) -> Unit,
-    onAddDocument: (Int) -> Unit,
+    onAddDocument: (WasteDocType) -> Unit,
     onDone: () -> Unit
 ) {
     Column(

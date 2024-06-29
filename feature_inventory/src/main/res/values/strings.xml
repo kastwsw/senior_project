@@ -65,13 +65,12 @@
     <string name="inventory_label_weight_grams">grams</string>
 
     <string name="inventory_verifications_title">Weight verification</string>
-    <string name="inventory_verifications_type_label">Document type</string>
-    <string-array name="inventory_verifications_types">
-        <item>Weight slip</item>
-        <item>Photo</item>
-        <item>Certificate</item>
-        <item>Invoice</item>
-    </string-array>
+
+    <string name="inventory_verifications_type_group_label">Document type</string>
+    <string name="inventory_verifications_type_slip">Weight slip</string>
+    <string name="inventory_verifications_type_photo">Photo</string>
+    <string name="inventory_verifications_type_cert">Certificate</string>
+    <string name="inventory_verifications_type_invoice">Invoice</string>
 
     <string name="inventory_label_materials_type_pet">PET</string>
     <string name="inventory_label_materials_type_hdpe">HDPE</string>

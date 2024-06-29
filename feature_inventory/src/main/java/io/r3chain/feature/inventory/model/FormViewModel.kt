@@ -13,6 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.ResourcesGateway
 import io.r3chain.core.data.repositories.WasteMockRepository
 import io.r3chain.core.data.vo.FileAttachEntity
+import io.r3chain.core.data.vo.WasteDocType
+import io.r3chain.core.data.vo.WasteDocumentEntity
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -48,15 +50,16 @@ class FormViewModel @AssistedInject constructor(
     private val filesEvents = resourcesGateway.events
 
     /**
+     * Текущий документ верификации.
+     */
+    var currentVerificationDoc: WasteDocumentEntity? by mutableStateOf(null)
+        private set
+
+    /**
      * Результат обработки формы.
      */
     var doneResult: Result<WasteEntity>? by mutableStateOf(null)
         private set
-
-    /**
-     * Текущий тип верификации.
-     */
-    var currentVerificationType: Int? = null
 
 
     init {
@@ -170,6 +173,17 @@ class FormViewModel @AssistedInject constructor(
 
         // TODO: провалидировать форму (дизейблить/энейблить кнопку send)
         data = newData
+    }
+
+    /**
+     * Создаёт шаблон для добавляемого документа по его типу.
+     *
+     * @param type Тип документа.
+     */
+    fun addDocByType(type: WasteDocType) {
+        currentVerificationDoc = WasteDocumentEntity(
+            type = type
+        )
     }
 
 }
