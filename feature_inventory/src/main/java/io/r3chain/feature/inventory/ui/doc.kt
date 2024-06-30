@@ -1,6 +1,7 @@
 package io.r3chain.feature.inventory.ui
 
 import android.content.res.Configuration
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.WasteDocEntity
+import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.ui.components.AlterButton
 import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.ScreenHeader
@@ -26,6 +29,8 @@ import io.r3chain.core.ui.theme.R3Theme
 import io.r3chain.feature.inventory.R
 import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
+import io.r3chain.feature.inventory.ui.components.PhotoRow
+import io.r3chain.feature.inventory.ui.components.RowLabel
 import io.r3chain.feature.inventory.ui.components.getDocTypeStringId
 
 @Composable
@@ -42,19 +47,23 @@ fun WasteDocScreen(
                 title = stringResource(R.string.inventory_verifications_title),
                 backAction = rootModel::navigateBack
             )
-            formViewModel.currentDoc?.also {
+            formViewModel.verificationData?.also { doc ->
                 WasteDocForm(
-                    data = it,
+                    data = doc,
                     isNew = true,
                     modifier = Modifier.weight(1f),
+                    onUriSelected = {
+                        // загрузить фотки
+                        formViewModel.uploadVerificationResources(doc = doc, uris = it)
+                    },
                     onDelete = {
                         // удалить док из записи мусора
-                        formViewModel.deleteDoc(it)
+                        formViewModel.deleteVerification(doc)
                         rootModel.navigateBack()
                     },
                     onDone = {
                         // добавить док к записи мусора
-                        formViewModel.addDoc(it)
+                        formViewModel.addVerification(doc)
                         rootModel.navigateBack()
                     }
                 )
@@ -70,6 +79,7 @@ private fun WasteDocForm(
     isNew: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    onUriSelected: (List<Uri>) -> Unit,
     onDelete: () -> Unit,
     onDone: () -> Unit
 ) {
@@ -88,8 +98,15 @@ private fun WasteDocForm(
             },
             onValueChange = {}
         )
+        Spacer(Modifier.height(12.dp))
 
-        Spacer(Modifier.height(120.dp))
+        // photo
+        RowLabel(text = stringResource(R.string.inventory_label_photos))
+        PhotoRow(
+            data = data.files,
+            onUriSelected = onUriSelected
+        )
+        Spacer(Modifier.height(28.dp))
 
         // done
         PrimaryButton(
@@ -134,8 +151,15 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteDocForm(
-                data = WasteDocEntity(),
+                data = WasteDocEntity(
+                    type = WasteDocType.CERT,
+                    files = listOf(
+                        FileAttachEntity(uri = Uri.EMPTY, isLoading = true),
+                        FileAttachEntity(uri = Uri.EMPTY, isLoading = true)
+                    )
+                ),
                 isNew = true,
+                onUriSelected = {},
                 onDelete = {},
                 onDone = {}
             )

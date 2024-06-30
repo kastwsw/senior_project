@@ -49,7 +49,7 @@ import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
 import io.r3chain.feature.inventory.ui.components.DocsRow
 import io.r3chain.feature.inventory.ui.components.GroupLabel
-import io.r3chain.feature.inventory.ui.components.PhotosRow
+import io.r3chain.feature.inventory.ui.components.PhotoRow
 import io.r3chain.feature.inventory.ui.components.RowLabel
 import io.r3chain.feature.inventory.ui.components.WasteTypeSelect
 import io.r3chain.feature.inventory.ui.components.WeightInput
@@ -64,16 +64,16 @@ fun WasteFormScreen(
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        val isNew = formViewModel.data.id == 0
+        val isNew = formViewModel.wasteData.id == 0
 
         Column(modifier = Modifier.fillMaxSize()) {
             val title = if (isNew) stringResource(
-                when (formViewModel.data.recordType) {
+                when (formViewModel.wasteData.recordType) {
                     WasteRecordType.COLLECT -> R.string.inventory_add_collect_title
                     WasteRecordType.RECEIVE -> R.string.inventory_add_receive_title
                     WasteRecordType.DISPATCH -> R.string.inventory_add_dispatch_title
                 }
-            ) else stringResource(R.string.inventory_edit_id, formViewModel.data.id)
+            ) else stringResource(R.string.inventory_edit_id, formViewModel.wasteData.id)
 
             // header
             ScreenHeader(
@@ -82,15 +82,16 @@ fun WasteFormScreen(
             )
             // content
             WasteForm(
-                data = formViewModel.data,
+                data = formViewModel.wasteData,
                 isNew = isNew,
                 modifier = Modifier.weight(1f),
                 enabled = !formViewModel.isLoading,
-                onUriSelected = formViewModel::uploadImages,
-                onDataChanged = formViewModel::changeFormData,
+                onUriSelected = formViewModel::uploadWasteResources,
+                onDataChanged = formViewModel::changeWasteData,
+                onEditDocument = formViewModel::deleteVerification,
                 onAddDocument = {
-                    formViewModel.intentDocByType(it)
-                    rootModel.navigateToWasteEditDocs(formViewModel.data)
+                    formViewModel.intentVerificationByType(it)
+                    rootModel.navigateToWasteEditDocs(formViewModel.wasteData)
                 },
                 onDone = formViewModel::doneForm
             )
@@ -118,6 +119,7 @@ private fun WasteForm(
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
     onDataChanged: (WasteEntity) -> Unit,
+    onEditDocument: (WasteDocEntity) -> Unit,
     onAddDocument: (WasteDocType) -> Unit,
     onDone: () -> Unit
 ) {
@@ -139,7 +141,7 @@ private fun WasteForm(
 
         // photos
         RowLabel(text = stringResource(R.string.inventory_label_photos))
-        PhotosRow(
+        PhotoRow(
             data = data.files,
             onUriSelected = onUriSelected
         )
@@ -147,15 +149,22 @@ private fun WasteForm(
 
         // other inputs
         when (data.recordType) {
-            WasteRecordType.COLLECT -> CollectInputs(data = data, isNew = isNew, onDataChanged = onDataChanged)
-            WasteRecordType.RECEIVE -> ReceiveInputs(data = data, isNew = isNew, onDataChanged = onDataChanged)
-            WasteRecordType.DISPATCH -> DispatchInputs(data = data, isNew = isNew, onDataChanged = onDataChanged)
+            WasteRecordType.COLLECT ->
+                CollectInputs(data = data, isNew = isNew, onDataChanged = onDataChanged)
+            WasteRecordType.RECEIVE ->
+                ReceiveInputs(data = data, isNew = isNew, onDataChanged = onDataChanged)
+            WasteRecordType.DISPATCH ->
+                DispatchInputs(data = data, isNew = isNew, onDataChanged = onDataChanged)
         }
 
         HorizontalDivider(modifier = Modifier.padding(top = 52.dp, bottom = 46.dp))
 
         // documents
-        VerificationDocuments(list = data.documents, onAddDocument = onAddDocument)
+        VerificationDocuments(
+            list = data.documents,
+            onEditDocument = onEditDocument,
+            onAddDocument = onAddDocument
+        )
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 46.dp))
 
@@ -370,6 +379,7 @@ private fun DispatchInputs(
 @Composable
 private fun VerificationDocuments(
     list: List<WasteDocEntity>,
+    onEditDocument: (WasteDocEntity) -> Unit,
     onAddDocument: (WasteDocType) -> Unit
 ) {
     var expanded by rememberSaveable {
@@ -383,7 +393,7 @@ private fun VerificationDocuments(
 
     // список документов
     if (list.isNotEmpty()) {
-        DocsRow(list = list)
+        DocsRow(list = list, onItemClick = onEditDocument)
         Spacer(Modifier.height(24.dp))
     }
 
@@ -457,6 +467,7 @@ private fun Demo() {
                 isNew = false,
                 onUriSelected = {},
                 onDataChanged = {},
+                onEditDocument = {},
                 onAddDocument = {},
                 onDone = {}
             )

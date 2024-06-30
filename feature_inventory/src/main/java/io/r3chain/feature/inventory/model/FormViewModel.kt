@@ -13,11 +13,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.ResourcesGateway
 import io.r3chain.core.data.repositories.WasteMockRepository
 import io.r3chain.core.data.vo.FileAttachEntity
+import io.r3chain.core.data.vo.ResourceEntity
 import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteDocEntity
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 @HiltViewModel(assistedFactory = FormViewModel.ViewModelFactory::class)
 class FormViewModel @AssistedInject constructor(
@@ -41,19 +43,19 @@ class FormViewModel @AssistedInject constructor(
     /**
      * Данные для формы.
      */
-    var data by mutableStateOf(entity)
+    var wasteData by mutableStateOf(entity)
+        private set
+
+    /**
+     * Текущий документ верификации.
+     */
+    var verificationData: WasteDocEntity? by mutableStateOf(null)
         private set
 
     /**
      * Данные загружаемых файлов.
      */
-    private val filesEvents = resourcesGateway.events
-
-    /**
-     * Текущий документ верификации.
-     */
-    var currentDoc: WasteDocEntity? by mutableStateOf(null)
-        private set
+    private val wasteFilesEvents = resourcesGateway.events
 
     /**
      * Результат обработки формы.
@@ -63,8 +65,9 @@ class FormViewModel @AssistedInject constructor(
 
 
     init {
+        // собирать данные загрузки файлов записи мусора
         viewModelScope.launch {
-            filesEvents.collect { event ->
+            wasteFilesEvents.collect { event ->
                 when (event.type) {
                     ResourcesGateway.FileEventType.DONE -> updateAttach(event.file)
                     ResourcesGateway.FileEventType.REMOVE -> removeAttach(event.file)
@@ -75,22 +78,22 @@ class FormViewModel @AssistedInject constructor(
 
 
     /**
-     * Загружает файлы изображений на сервер.
+     * Загружает файлы изображений.
      *
-     * @param images Список uri загружаемых файлов.
+     * @param uris Список uri загружаемых файлов.
      */
-    fun uploadImages(images: List<Uri>) {
+    fun uploadWasteResources(uris: List<Uri>) {
         viewModelScope.launch {
             // сформировать данные добавленных файлов
-            val addedFiles = images.map {
+            val addedFiles = uris.map {
                 FileAttachEntity(uri = it, isLoading = true)
             }
             // передать их в стейт формы
-            changeFormData(
-                value = data.copy(files = data.files + addedFiles),
+            changeWasteData(
+                value = wasteData.copy(files = wasteData.files + addedFiles),
                 isByFile = true
             )
-            // запустить их загрузку
+            // запустить их загрузку на сервер
             addedFiles.forEach {
                 resourcesGateway.startUploadFile(it)
             }
@@ -99,32 +102,62 @@ class FormViewModel @AssistedInject constructor(
 
 
     /**
+     * Загружает файлы основных фоток верефикации.
+     *
+     * @param doc Документ верификации в который нужно загрузить файлы.
+     * @param uris Список uri загружаемых файлов.
+     */
+    fun uploadVerificationResources(doc: WasteDocEntity, uris: List<Uri>) {
+        viewModelScope.launch {
+            // сформировать данные добавленных файлов
+            val addedFiles = uris.map {
+                FileAttachEntity(
+                    uri = it,
+                    isLoading = false,
+                    // TODO: убрать этот mock
+                    resource = ResourceEntity(
+                        id = (0..100).random(),
+                        posterLink = it.toString(),
+                        latitude = 37.7749,
+                        longitude = -122.4194,
+                        time = Instant.now().toEpochMilli()
+                    )
+                )
+            }
+            changeVerificationData(
+                value = doc.copy(files = doc.files + addedFiles)
+            )
+            // TODO: зпустить их загрузка на сервер
+        }
+    }
+
+
+    /**
      * Обновить данные прикрепляемого файла.
      */
     private fun updateAttach(file: FileAttachEntity) {
-        val newList = data.files.indexOfFirst {
+        val newList = wasteData.files.indexOfFirst {
             it.uri == file.uri
         }.takeIf {
             it != -1
         }?.let { index ->
-            data.files.toMutableList().apply {
+            wasteData.files.toMutableList().apply {
                 set(index, file)
             }.toList()
         }
-        if (newList != null) changeFormData(
-            value = data.copy(files = newList),
+        if (newList != null) changeWasteData(
+            value = wasteData.copy(files = newList),
             isByFile = true
         )
     }
-
 
     /**
      * Убрать прикрепляемый файл.
      */
     private fun removeAttach(file: FileAttachEntity) {
         // список без file
-        changeFormData(
-            value = data.copy(files = data.files.filter { it != file }),
+        changeWasteData(
+            value = wasteData.copy(files = wasteData.files.filter { it != file }),
             isByFile = true
         )
     }
@@ -138,7 +171,7 @@ class FormViewModel @AssistedInject constructor(
             isLoading = true
             delay(300)
             // TODO: по параметрам data определить куда её передавать
-            wasteRepository.addWaste(data).also {
+            wasteRepository.addWaste(wasteData).also {
                 // TODO: передать с успехом новые данные, которые вернул сервер
                 doneResult = Result.success(it)
             }
@@ -152,7 +185,7 @@ class FormViewModel @AssistedInject constructor(
      * @param value Основной объект данных.
      * @param isByFile True - данные из файлов имеют больший приоритет (оверрайдят данные value).
      */
-    fun changeFormData(value: WasteEntity, isByFile: Boolean = false) {
+    fun changeWasteData(value: WasteEntity, isByFile: Boolean = false) {
         // взять время и локацию из файла, если необходимо
         val newData = if (!isByFile) value else value.copy(
             // первое попавшееся время
@@ -172,7 +205,37 @@ class FormViewModel @AssistedInject constructor(
         )
 
         // TODO: провалидировать форму (дизейблить/энейблить кнопку send)
-        data = newData
+        wasteData = newData
+    }
+
+
+    /**
+     * Изменить значения текущего документа верификации.
+     *
+     * @param value Основной объект данных.
+     */
+    private fun changeVerificationData(value: WasteDocEntity) {
+        // обновить данные формы верификации
+        verificationData = value
+
+//        // обновить данные документа в общем списке
+//        val newDocs = wasteData.documents.indexOfFirst {
+//            it.id == value.id
+//        }.takeIf {
+//            it != -1
+//        }?.let { index ->
+//            wasteData.documents.toMutableList().apply {
+//                set(index, value)
+//            }.toList()
+//        }
+//
+//        // новые документы в стейт формы
+//        changeWasteData(
+//            value = wasteData.copy(
+//                documents = newDocs ?: emptyList()
+//            ),
+//            isByFile = false
+//        )
     }
 
     /**
@@ -180,10 +243,12 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param type Тип документа.
      */
-    fun intentDocByType(type: WasteDocType) {
-        currentDoc = WasteDocEntity(
-            type = type,
-            id = (data.documents.maxOfOrNull { it.id } ?: 0) + 1
+    fun intentVerificationByType(type: WasteDocType) {
+        changeVerificationData(
+            WasteDocEntity(
+                type = type,
+                id = (wasteData.documents.maxOfOrNull { it.id } ?: 0) + 1
+            )
         )
     }
 
@@ -192,9 +257,9 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param doc Данные документа.
      */
-    fun addDoc(doc: WasteDocEntity) {
-        changeFormData(data.copy(
-            documents = data.documents + listOf(doc)
+    fun addVerification(doc: WasteDocEntity) {
+        changeWasteData(wasteData.copy(
+            documents = wasteData.documents + listOf(doc)
         ))
     }
 
@@ -203,9 +268,9 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param doc Данные документа.
      */
-    fun deleteDoc(doc: WasteDocEntity) {
-        changeFormData(data.copy(
-            documents = data.documents.filter { it.id != doc.id }
+    fun deleteVerification(doc: WasteDocEntity) {
+        changeWasteData(wasteData.copy(
+            documents = wasteData.documents.filter { it.id != doc.id }
         ))
     }
 

@@ -258,7 +258,7 @@ fun WeightKgInput(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PhotosRow(
+fun PhotoRow(
     data: List<FileAttachEntity>,
     onUriSelected: (List<Uri>) -> Unit
 ) {
@@ -268,7 +268,6 @@ fun PhotosRow(
 
     // 4 colums grid
     val columnsAmount = 4
-    val shape = RoundedCornerShape(8.dp)
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -276,28 +275,8 @@ fun PhotosRow(
         modifier = Modifier.fillMaxWidth()
     ) {
         // фотки
-        data.forEach { file ->
-            if (file.isLoading) {
-                // загружается
-                FileBox(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(36.dp),
-                        strokeWidth = 4.dp,
-                        strokeCap = StrokeCap.Round
-                    )
-                }
-            } else {
-                FileItem(
-                    file = file,
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f)
-                        .clip(shape = shape)
-                )
-            }
+        data.forEach {
+            FileItem(file = it, modifier = Modifier.weight(1f))
         }
         // кнопка добавить
         FileBox(
@@ -374,24 +353,42 @@ private fun FileItem(
     file: FileAttachEntity,
     modifier: Modifier = Modifier
 ) {
-    // загружено
-    file.resource?.also { vo ->
-        Image(
-            painter = rememberAsyncImagePainter(vo.posterLink),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.then(modifier)
-        )
+    if (file.isLoading) {
+        // загружается
+        FileBox(
+            modifier = Modifier
+                .then(modifier)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(36.dp),
+                strokeWidth = 4.dp,
+                strokeCap = StrokeCap.Round
+            )
+        }
+    } else {
+        // загружено
+        file.resource?.also { vo ->
+            Image(
+                painter = rememberAsyncImagePainter(vo.posterLink),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .then(modifier)
+                    .aspectRatio(1f)
+                    .clip(shape = RoundedCornerShape(8.dp))
+            )
+        }
+        // TODO: если ошибка
+        // TODO: возможность удалить
     }
-    // TODO: если ошибка
-    // TODO: возможность удалить
 }
 
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DocsRow(
-    list: List<WasteDocEntity>
+    list: List<WasteDocEntity>,
+    onItemClick: (WasteDocEntity) -> Unit
 ) {
     // 2 colums grid
     val columnsAmount = 2
@@ -406,7 +403,9 @@ fun DocsRow(
             DocItem(
                 doc = it,
                 modifier = Modifier.weight(1f)
-            ) {}
+            ) {
+                onItemClick(it)
+            }
         }
 
         // добивает для ровной строки
@@ -447,7 +446,9 @@ private fun DocItem(
                     painter = rememberAsyncImagePainter(it),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(56.dp)
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(shape = RoundedCornerShape(8.dp))
                 )
             }
             Spacer(Modifier.width(8.dp))
