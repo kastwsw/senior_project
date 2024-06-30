@@ -18,14 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import io.r3chain.core.data.vo.WasteDocType
-import io.r3chain.core.data.vo.WasteDocumentEntity
+import io.r3chain.core.data.vo.WasteDocEntity
+import io.r3chain.core.ui.components.AlterButton
 import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.ScreenHeader
 import io.r3chain.core.ui.theme.R3Theme
 import io.r3chain.feature.inventory.R
 import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
+import io.r3chain.feature.inventory.ui.components.getDocTypeStringId
 
 @Composable
 fun WasteDocScreen(
@@ -46,6 +47,11 @@ fun WasteDocScreen(
                     data = it,
                     isNew = true,
                     modifier = Modifier.weight(1f),
+                    onDelete = {
+                        // удалить док из записи мусора
+                        formViewModel.deleteDoc(it)
+                        rootModel.navigateBack()
+                    },
                     onDone = {
                         // добавить док к записи мусора
                         formViewModel.addDoc(it)
@@ -60,10 +66,11 @@ fun WasteDocScreen(
 
 @Composable
 private fun WasteDocForm(
-    data: WasteDocumentEntity,
+    data: WasteDocEntity,
     isNew: Boolean,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    onDelete: () -> Unit,
     onDone: () -> Unit
 ) {
     Column(
@@ -72,14 +79,8 @@ private fun WasteDocForm(
             .verticalScroll(rememberScrollState())
             .padding(24.dp)
     ) {
-        val labelId = when (data.type) {
-            WasteDocType.SLIP -> R.string.inventory_verifications_type_slip
-            WasteDocType.PHOTO -> R.string.inventory_verifications_type_photo
-            WasteDocType.CERT -> R.string.inventory_verifications_type_cert
-            WasteDocType.INVOICE -> R.string.inventory_verifications_type_invoice
-        }
         TextField(
-            value = stringResource(labelId),
+            value = stringResource(getDocTypeStringId(data.type)),
             enabled = false,
             modifier = Modifier.fillMaxWidth(),
             label = {
@@ -97,6 +98,15 @@ private fun WasteDocForm(
             enabled = enabled,
             onClick = onDone
         )
+
+        if (!isNew) {
+            Spacer(Modifier.height(4.dp))
+            AlterButton(
+                text = stringResource(R.string.inventory_label_delete_waste),
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onDelete
+            )
+        }
     }
 }
 
@@ -124,8 +134,9 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteDocForm(
-                data = WasteDocumentEntity(),
+                data = WasteDocEntity(),
                 isNew = true,
+                onDelete = {},
                 onDone = {}
             )
         }

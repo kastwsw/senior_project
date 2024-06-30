@@ -14,7 +14,7 @@ import io.r3chain.core.data.repositories.ResourcesGateway
 import io.r3chain.core.data.repositories.WasteMockRepository
 import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.WasteDocType
-import io.r3chain.core.data.vo.WasteDocumentEntity
+import io.r3chain.core.data.vo.WasteDocEntity
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,7 +52,7 @@ class FormViewModel @AssistedInject constructor(
     /**
      * Текущий документ верификации.
      */
-    var currentDoc: WasteDocumentEntity? by mutableStateOf(null)
+    var currentDoc: WasteDocEntity? by mutableStateOf(null)
         private set
 
     /**
@@ -181,7 +181,7 @@ class FormViewModel @AssistedInject constructor(
      * @param type Тип документа.
      */
     fun intentDocByType(type: WasteDocType) {
-        currentDoc = WasteDocumentEntity(
+        currentDoc = WasteDocEntity(
             type = type,
             id = (data.documents.maxOfOrNull { it.id } ?: 0) + 1
         )
@@ -192,7 +192,7 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param doc Данные документа.
      */
-    fun addDoc(doc: WasteDocumentEntity) {
+    fun addDoc(doc: WasteDocEntity) {
         changeFormData(data.copy(
             documents = data.documents + listOf(doc)
         ))
@@ -203,7 +203,7 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param doc Данные документа.
      */
-    fun deleteDoc(doc: WasteDocumentEntity) {
+    fun deleteDoc(doc: WasteDocEntity) {
         changeFormData(data.copy(
             documents = data.documents.filter { it.id != doc.id }
         ))

@@ -72,6 +72,8 @@
     <string name="inventory_verifications_type_cert">Certificate</string>
     <string name="inventory_verifications_type_invoice">Invoice</string>
 
+    <string name="inventory_verifications_resources_count">%s items</string>
+
     <string name="inventory_label_materials_type_pet">PET</string>
     <string name="inventory_label_materials_type_hdpe">HDPE</string>
     <string name="inventory_label_materials_type_pvc">PVC</string>

@@ -17,7 +17,6 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,8 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.r3chain.core.data.vo.WasteDocEntity
 import io.r3chain.core.data.vo.WasteDocType
-import io.r3chain.core.data.vo.WasteDocumentEntity
 import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.presentation.openLink
@@ -48,11 +47,13 @@ import io.r3chain.core.ui.theme.R3Theme
 import io.r3chain.feature.inventory.R
 import io.r3chain.feature.inventory.model.FormViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
+import io.r3chain.feature.inventory.ui.components.DocsRow
 import io.r3chain.feature.inventory.ui.components.GroupLabel
 import io.r3chain.feature.inventory.ui.components.PhotosRow
 import io.r3chain.feature.inventory.ui.components.RowLabel
 import io.r3chain.feature.inventory.ui.components.WasteTypeSelect
 import io.r3chain.feature.inventory.ui.components.WeightInput
+import io.r3chain.feature.inventory.ui.components.getDocTypeStringId
 
 
 @Composable
@@ -368,7 +369,7 @@ private fun DispatchInputs(
 
 @Composable
 private fun VerificationDocuments(
-    list: List<WasteDocumentEntity>,
+    list: List<WasteDocEntity>,
     onAddDocument: (WasteDocType) -> Unit
 ) {
     var expanded by rememberSaveable {
@@ -380,9 +381,11 @@ private fun VerificationDocuments(
         paddingValues = PaddingValues(bottom = 24.dp)
     )
 
-    // TODO: список документов
-    Text(text = list.size.toString())
-
+    // список документов
+    if (list.isNotEmpty()) {
+        DocsRow(list = list)
+        Spacer(Modifier.height(24.dp))
+    }
 
     // добавить документ
     PrimaryButton(
@@ -407,13 +410,9 @@ private fun VerificationDocuments(
         }
     ) { optionSelect ->
         WasteDocType.entries.forEach { type ->
-            val labelId = when (type) {
-                WasteDocType.SLIP -> R.string.inventory_verifications_type_slip
-                WasteDocType.PHOTO -> R.string.inventory_verifications_type_photo
-                WasteDocType.CERT -> R.string.inventory_verifications_type_cert
-                WasteDocType.INVOICE -> R.string.inventory_verifications_type_invoice
-            }
-            ActionPlate(title = stringResource(labelId)) {
+            ActionPlate(
+                title = stringResource(getDocTypeStringId(type))
+            ) {
                 optionSelect(type)
             }
         }
@@ -447,8 +446,13 @@ private fun Demo() {
             WasteForm(
                 data = WasteEntity(
                     recordType = WasteRecordType.COLLECT,
-                    geoLatLong = 0.0 to 0.0,
-                    time = 0
+//                    geoLatLong = 0.0 to 0.0,
+//                    time = 0,
+                    documents = listOf(
+                        WasteDocEntity(type = WasteDocType.SLIP),
+                        WasteDocEntity(type = WasteDocType.INVOICE),
+                        WasteDocEntity(type = WasteDocType.CERT)
+                    )
                 ),
                 isNew = false,
                 onUriSelected = {},
