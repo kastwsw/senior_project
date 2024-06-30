@@ -214,28 +214,9 @@ class FormViewModel @AssistedInject constructor(
      *
      * @param value Основной объект данных.
      */
-    private fun changeVerificationData(value: WasteDocEntity) {
+    fun changeVerificationData(value: WasteDocEntity) {
         // обновить данные формы верификации
         verificationData = value
-
-//        // обновить данные документа в общем списке
-//        val newDocs = wasteData.documents.indexOfFirst {
-//            it.id == value.id
-//        }.takeIf {
-//            it != -1
-//        }?.let { index ->
-//            wasteData.documents.toMutableList().apply {
-//                set(index, value)
-//            }.toList()
-//        }
-//
-//        // новые документы в стейт формы
-//        changeWasteData(
-//            value = wasteData.copy(
-//                documents = newDocs ?: emptyList()
-//            ),
-//            isByFile = false
-//        )
     }
 
     /**
@@ -245,10 +226,7 @@ class FormViewModel @AssistedInject constructor(
      */
     fun intentVerificationByType(type: WasteDocType) {
         changeVerificationData(
-            WasteDocEntity(
-                type = type,
-                id = (wasteData.documents.maxOfOrNull { it.id } ?: 0) + 1
-            )
+            WasteDocEntity(type = type)
         )
     }
 
@@ -258,9 +236,36 @@ class FormViewModel @AssistedInject constructor(
      * @param doc Данные документа.
      */
     fun addVerification(doc: WasteDocEntity) {
+        val newId = (wasteData.documents.maxOfOrNull { it.id } ?: 0) + 1
         changeWasteData(wasteData.copy(
-            documents = wasteData.documents + listOf(doc)
+            documents = wasteData.documents + listOf(doc.copy(id = newId))
         ))
+    }
+
+    /**
+     * Обновляет документ в данных записи мусора.
+     *
+     * @param doc Данные документа.
+     */
+    fun updateVerification(doc: WasteDocEntity) {
+        // обновить данные документа в общем списке
+        val newDocs = wasteData.documents.indexOfFirst {
+            it.id == doc.id
+        }.takeIf {
+            it != -1
+        }?.let { index ->
+            wasteData.documents.toMutableList().apply {
+                set(index, doc)
+            }.toList()
+        }
+
+        // новые документы в стейт формы
+        changeWasteData(
+            value = wasteData.copy(
+                documents = newDocs ?: emptyList()
+            ),
+            isByFile = false
+        )
     }
 
     /**

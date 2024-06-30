@@ -63,8 +63,7 @@ class RootViewModel @Inject constructor(
         navigateToWasteEdit(WasteEntity(recordType = WasteRecordType.DISPATCH))
     }
 
-    fun navigateToWasteEditDocs(record: WasteEntity) {
-        intentWaste = record
+    fun navigateToWasteEditDocs() {
         navController?.navigate(ScreenState.EDIT.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }

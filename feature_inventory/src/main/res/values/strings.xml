@@ -72,7 +72,12 @@
     <string name="inventory_verifications_type_cert">Certificate</string>
     <string name="inventory_verifications_type_invoice">Invoice</string>
 
-    <string name="inventory_verifications_resources_count">%s items</string>
+    <plurals name="inventory_verifications_resources_count">
+        <item quantity="one">%d item</item>
+        <item quantity="few">%d items</item>
+        <item quantity="many">%d items</item>
+        <item quantity="other">%d items</item>
+    </plurals>
 
     <string name="inventory_label_materials_type_pet">PET</string>
     <string name="inventory_label_materials_type_hdpe">HDPE</string>

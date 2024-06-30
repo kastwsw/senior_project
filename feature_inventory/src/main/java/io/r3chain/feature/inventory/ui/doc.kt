@@ -50,7 +50,7 @@ fun WasteDocScreen(
             formViewModel.verificationData?.also { doc ->
                 WasteDocForm(
                     data = doc,
-                    isNew = true,
+                    isNew = doc.id == 0,
                     modifier = Modifier.weight(1f),
                     onUriSelected = {
                         // загрузить фотки
@@ -61,7 +61,12 @@ fun WasteDocScreen(
                         formViewModel.deleteVerification(doc)
                         rootModel.navigateBack()
                     },
-                    onDone = {
+                    onUpdate = {
+                        // обновить док
+                        formViewModel.updateVerification(doc)
+                        rootModel.navigateBack()
+                    },
+                    onCreate = {
                         // добавить док к записи мусора
                         formViewModel.addVerification(doc)
                         rootModel.navigateBack()
@@ -81,7 +86,8 @@ private fun WasteDocForm(
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
     onDelete: () -> Unit,
-    onDone: () -> Unit
+    onUpdate: () -> Unit,
+    onCreate: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -112,12 +118,14 @@ private fun WasteDocForm(
         PrimaryButton(
             text = stringResource(R.string.inventory_label_save_form),
             modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            onClick = onDone
-        )
+            enabled = enabled
+        ) {
+            if (isNew) onCreate()
+            else onUpdate()
+        }
 
         if (!isNew) {
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(18.dp))
             AlterButton(
                 text = stringResource(R.string.inventory_label_delete_waste),
                 modifier = Modifier.fillMaxWidth(),
@@ -161,7 +169,8 @@ private fun Demo() {
                 isNew = true,
                 onUriSelected = {},
                 onDelete = {},
-                onDone = {}
+                onUpdate = {},
+                onCreate = {}
             )
         }
     }

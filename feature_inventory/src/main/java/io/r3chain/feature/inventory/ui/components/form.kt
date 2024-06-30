@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
@@ -451,7 +452,7 @@ private fun DocItem(
                         .clip(shape = RoundedCornerShape(8.dp))
                 )
             }
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(12.dp))
             Column {
                 Text(
                     text = stringResource(getDocTypeStringId(doc.type)),
@@ -459,9 +460,10 @@ private fun DocItem(
                 )
                 if (doc.files.isNotEmpty()) {
                     Text(
-                        text = stringResource(
-                            R.string.inventory_verifications_resources_count,
-                            doc.files.size.toString()
+                        text = pluralStringResource(
+                            R.plurals.inventory_verifications_resources_count,
+                            doc.files.size,
+                            doc.files.size
                         ),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

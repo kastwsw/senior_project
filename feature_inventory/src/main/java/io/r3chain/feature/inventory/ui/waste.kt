@@ -88,10 +88,13 @@ fun WasteFormScreen(
                 enabled = !formViewModel.isLoading,
                 onUriSelected = formViewModel::uploadWasteResources,
                 onDataChanged = formViewModel::changeWasteData,
-                onEditDocument = formViewModel::deleteVerification,
+                onEditDocument = {
+                    formViewModel.changeVerificationData(it)
+                    rootModel.navigateToWasteEditDocs()
+                },
                 onAddDocument = {
                     formViewModel.intentVerificationByType(it)
-                    rootModel.navigateToWasteEditDocs(formViewModel.wasteData)
+                    rootModel.navigateToWasteEditDocs()
                 },
                 onDone = formViewModel::doneForm
             )
