@@ -14,8 +14,8 @@ import io.r3chain.core.data.repositories.ResourcesGateway
 import io.r3chain.core.data.repositories.WasteMockRepository
 import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.ResourceEntity
-import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteDocEntity
+import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -101,6 +101,16 @@ class FormViewModel @AssistedInject constructor(
     }
 
 
+    fun deleteWasteResource(file: FileAttachEntity) {
+        viewModelScope.launch {
+            resourcesGateway.removeFile(file)
+            changeWasteData(
+                wasteData.copy(files = getListWithoutFile(wasteData.files, file))
+            )
+        }
+    }
+
+
     /**
      * Загружает файлы основных фоток верефикации.
      *
@@ -132,6 +142,19 @@ class FormViewModel @AssistedInject constructor(
     }
 
 
+    fun deleteVerificationResource(file: FileAttachEntity) {
+        viewModelScope.launch {
+            // TODO: остановить если что-то грузится на сервер
+//            resourcesGateway.removeFile(file)
+            verificationData?.also { data ->
+                changeVerificationData(
+                    data.copy(files = getListWithoutFile(data.files, file))
+                )
+            }
+        }
+    }
+
+
     /**
      * Загружает файлы дополнительных фоток верефикации.
      *
@@ -159,6 +182,19 @@ class FormViewModel @AssistedInject constructor(
                 value = doc.copy(files2 = doc.files2 + addedFiles)
             )
             // TODO: запустить их загрузку на сервер
+        }
+    }
+
+
+    fun deleteVerificationResource2(file: FileAttachEntity) {
+        viewModelScope.launch {
+            // TODO: остановить если что-то грузится на сервер
+//            resourcesGateway.removeFile(file)
+            verificationData?.also { data ->
+                changeVerificationData(
+                    data.copy(files2 = getListWithoutFile(data.files2, file))
+                )
+            }
         }
     }
 
@@ -308,6 +344,24 @@ class FormViewModel @AssistedInject constructor(
         changeWasteData(wasteData.copy(
             documents = wasteData.documents.filter { it.id != doc.id }
         ))
+    }
+
+
+    /**
+     * Возвращает новый список без файла.
+     *
+     * @param list Изначальный список.
+     * @param file Файл, который нужно убрать..
+     */
+    private fun getListWithoutFile(
+        list: List<FileAttachEntity>,
+        file: FileAttachEntity
+    ): List<FileAttachEntity> = list.filter {
+        if (file.resource != null) {
+            file.resource!!.id != it.resource?.id
+        } else {
+            file.uri.toString() != it.uri.toString()
+        }
     }
 
 }

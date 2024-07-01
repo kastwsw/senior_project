@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -40,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.pluralStringResource
@@ -261,7 +263,8 @@ fun WeightKgInput(
 @Composable
 fun PhotoRow(
     data: List<FileAttachEntity>,
-    onUriSelected: (List<Uri>) -> Unit
+    onUriSelected: (List<Uri>) -> Unit,
+    onDelete: (FileAttachEntity) -> Unit
 ) {
     var isImageSelectVisible by rememberSaveable {
         mutableStateOf(false)
@@ -277,7 +280,12 @@ fun PhotoRow(
     ) {
         // фотки
         data.forEach {
-            FileItem(file = it, modifier = Modifier.weight(1f))
+            FileItem(
+                file = it,
+                modifier = Modifier.weight(1f)
+            ) {
+                onDelete(it)
+            }
         }
         // кнопка добавить
         FileBox(
@@ -352,7 +360,8 @@ private fun FileBox(
 @Composable
 private fun FileItem(
     file: FileAttachEntity,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     if (file.isLoading) {
         // загружается
@@ -369,15 +378,35 @@ private fun FileItem(
     } else {
         // загружено
         file.resource?.also { vo ->
-            Image(
-                painter = rememberAsyncImagePainter(vo.posterLink),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            val shape = RoundedCornerShape(8.dp)
+            Box(
                 modifier = Modifier
                     .then(modifier)
                     .aspectRatio(1f)
-                    .clip(shape = RoundedCornerShape(8.dp))
-            )
+                    .clickable(role = Role.Button, onClick = onClick)
+                    .clip(shape = shape),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(vo.posterLink),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(shape = shape)
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(color = Color.Black.copy(alpha = 0.38f))
+                )
+                Icon(
+                    imageVector = Icons.Outlined.DeleteOutline,
+                    modifier = Modifier.size(24.dp),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
         }
         // TODO: если ошибка
         // TODO: возможность удалить

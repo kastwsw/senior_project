@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.WasteDocEntity
 import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteEntity
@@ -87,6 +88,7 @@ fun WasteFormScreen(
                 modifier = Modifier.weight(1f),
                 enabled = !formViewModel.isLoading,
                 onUriSelected = formViewModel::uploadWasteResources,
+                onFileDeleted = formViewModel::deleteWasteResource,
                 onDataChanged = formViewModel::changeWasteData,
                 onEditDocument = {
                     formViewModel.changeVerificationData(it)
@@ -121,6 +123,7 @@ private fun WasteForm(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
+    onFileDeleted: (FileAttachEntity) -> Unit,
     onDataChanged: (WasteEntity) -> Unit,
     onEditDocument: (WasteDocEntity) -> Unit,
     onAddDocument: (WasteDocType) -> Unit,
@@ -146,7 +149,8 @@ private fun WasteForm(
         RowLabel(text = stringResource(R.string.inventory_label_photos))
         PhotoRow(
             data = data.files,
-            onUriSelected = onUriSelected
+            onUriSelected = onUriSelected,
+            onDelete = onFileDeleted
         )
         Spacer(Modifier.height(28.dp))
 
@@ -469,6 +473,7 @@ private fun Demo() {
                 ),
                 isNew = false,
                 onUriSelected = {},
+                onFileDeleted = {},
                 onDataChanged = {},
                 onEditDocument = {},
                 onAddDocument = {},

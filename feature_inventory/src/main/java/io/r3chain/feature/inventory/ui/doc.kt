@@ -58,9 +58,15 @@ fun WasteDocScreen(
                         // загрузить файлы
                         formViewModel.uploadVerificationResources(doc = doc, uris = it)
                     },
+                    onFileDeleted = {
+                        formViewModel.deleteVerificationResource(it)
+                    },
                     onUriSelected2 = {
                         // загрузить файлы
                         formViewModel.uploadVerificationResources2(doc = doc, uris = it)
+                    },
+                    onFileDeleted2 = {
+                        formViewModel.deleteVerificationResource2(it)
                     },
                     onDataChanged = {
                         // проапдейтить данные
@@ -96,7 +102,9 @@ private fun WasteDocForm(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     onUriSelected: (List<Uri>) -> Unit,
+    onFileDeleted: (FileAttachEntity) -> Unit,
     onUriSelected2: (List<Uri>) -> Unit,
+    onFileDeleted2: (FileAttachEntity) -> Unit,
     onDataChanged: (WasteDocEntity) -> Unit,
     onDelete: () -> Unit,
     onUpdate: () -> Unit,
@@ -124,9 +132,11 @@ private fun WasteDocForm(
             RowLabel(text = stringResource(R.string.inventory_label_photos_slip))
             PhotoRow(
                 data = data.files,
-                onUriSelected = onUriSelected
+                onUriSelected = onUriSelected,
+                onDelete = onFileDeleted
             )
             Spacer(Modifier.height(16.dp))
+
             // number
             RowLabel(text = stringResource(R.string.inventory_vehicle_number_label))
             TextInput(
@@ -141,18 +151,21 @@ private fun WasteDocForm(
                 }
             )
             Spacer(Modifier.height(16.dp))
+
             // photo
             RowLabel(text = stringResource(R.string.inventory_label_vehicle_photo))
             PhotoRow(
                 data = data.files2,
-                onUriSelected = onUriSelected2
+                onUriSelected = onUriSelected2,
+                onDelete = onFileDeleted2
             )
         } else {
             // photo
             RowLabel(text = stringResource(R.string.inventory_label_photos))
             PhotoRow(
                 data = data.files,
-                onUriSelected = onUriSelected
+                onUriSelected = onUriSelected,
+                onDelete = onFileDeleted
             )
         }
         Spacer(Modifier.height(28.dp))
@@ -211,7 +224,9 @@ private fun Demo() {
                 ),
                 isNew = true,
                 onUriSelected = {},
+                onFileDeleted = {},
                 onUriSelected2 = {},
+                onFileDeleted2 = {},
                 onDataChanged = {},
                 onDelete = {},
                 onUpdate = {},
