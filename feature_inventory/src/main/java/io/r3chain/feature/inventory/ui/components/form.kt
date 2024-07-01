@@ -458,12 +458,13 @@ private fun DocItem(
                     text = stringResource(getDocTypeStringId(doc.type)),
                     style = MaterialTheme.typography.labelMedium
                 )
-                if (doc.files.isNotEmpty()) {
+                val filesAmount = doc.files.size + doc.files2.size
+                if (filesAmount > 0) {
                     Text(
                         text = pluralStringResource(
                             R.plurals.inventory_verifications_resources_count,
-                            doc.files.size,
-                            doc.files.size
+                            filesAmount,
+                            filesAmount
                         ),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant

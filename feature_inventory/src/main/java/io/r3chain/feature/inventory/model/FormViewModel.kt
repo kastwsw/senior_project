@@ -104,7 +104,7 @@ class FormViewModel @AssistedInject constructor(
     /**
      * Загружает файлы основных фоток верефикации.
      *
-     * @param doc Документ верификации в который нужно загрузить файлы.
+     * @param doc Документ верификации, в который нужно загрузить файлы.
      * @param uris Список uri загружаемых файлов.
      */
     fun uploadVerificationResources(doc: WasteDocEntity, uris: List<Uri>) {
@@ -127,7 +127,38 @@ class FormViewModel @AssistedInject constructor(
             changeVerificationData(
                 value = doc.copy(files = doc.files + addedFiles)
             )
-            // TODO: зпустить их загрузка на сервер
+            // TODO: запустить их загрузку на сервер
+        }
+    }
+
+
+    /**
+     * Загружает файлы дополнительных фоток верефикации.
+     *
+     * @param doc Документ верификации, в который нужно загрузить файлы.
+     * @param uris Список uri загружаемых файлов.
+     */
+    fun uploadVerificationResources2(doc: WasteDocEntity, uris: List<Uri>) {
+        viewModelScope.launch {
+            // сформировать данные добавленных файлов
+            val addedFiles = uris.map {
+                FileAttachEntity(
+                    uri = it,
+                    isLoading = false,
+                    // TODO: убрать этот mock
+                    resource = ResourceEntity(
+                        id = (0..100).random(),
+                        posterLink = it.toString(),
+                        latitude = 37.7749,
+                        longitude = -122.4194,
+                        time = Instant.now().toEpochMilli()
+                    )
+                )
+            }
+            changeVerificationData(
+                value = doc.copy(files2 = doc.files2 + addedFiles)
+            )
+            // TODO: запустить их загрузку на сервер
         }
     }
 
