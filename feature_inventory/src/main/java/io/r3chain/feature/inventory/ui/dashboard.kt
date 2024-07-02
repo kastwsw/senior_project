@@ -37,12 +37,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.valentinilk.shimmer.shimmer
 import io.r3chain.core.data.vo.UserVO
 import io.r3chain.core.data.vo.WasteEntity
@@ -52,6 +55,8 @@ import io.r3chain.feature.inventory.model.DashboardViewModel
 import io.r3chain.feature.inventory.model.RootViewModel
 import io.r3chain.feature.inventory.ui.components.UserAvatar
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -296,6 +301,12 @@ private fun RecordsList(
                 )
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         )
+
+        val formatter = remember {
+            NumberFormat.getInstance(Locale.getDefault()).apply {
+                maximumFractionDigits = 3
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -308,10 +319,7 @@ private fun RecordsList(
                 items = data,
                 key = { it.id }
             ) { item ->
-                WasteItem(
-                    data = item,
-                    onClick = onClick
-                )
+                WasteCard(data = item, formatter = formatter, onClick = onClick)
             }
         }
     }
@@ -319,8 +327,9 @@ private fun RecordsList(
 
 
 @Composable
-private fun WasteItem(
+private fun WasteCard(
     data: WasteEntity,
+    formatter: NumberFormat,
     onClick: (WasteEntity) -> Unit
 ) {
     ElevatedCard(
@@ -336,17 +345,39 @@ private fun WasteItem(
             modifier = Modifier
                 .padding(vertical = 12.dp, horizontal = 16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .background(color = MaterialTheme.colorScheme.outlineVariant)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(
-                text = data.id.toString(),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(16.dp)
-            )
+            data.files.firstOrNull()?.resource?.posterLink?.also {
+                Image(
+                    painter = rememberAsyncImagePainter(it),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(shape = RoundedCornerShape(8.dp))
+                )
+            }
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                data.grams?.also {
+                    Text(
+                        text = stringResource(
+                            R.string.inventory_details_weight,
+                            formatter.format(it.toDouble() / 1000)
+                        ),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Spacer(Modifier.height(4.dp))
+                }
+                Text(
+                    text = data.materialTypes.joinToString(limit = 3) { it.name },
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Text(
+                    text = data.partner.takeIf { it.isNotBlank() }
+                        ?: data.venue.takeIf { it.isNotBlank() }
+                        ?: data.recipient.takeIf { it.isNotBlank() }
+                        ?: "",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         }
     }
 }

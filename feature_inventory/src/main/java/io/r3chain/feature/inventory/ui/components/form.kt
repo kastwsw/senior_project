@@ -409,7 +409,6 @@ private fun FileItem(
             }
         }
         // TODO: если ошибка
-        // TODO: возможность удалить
     }
 }
 

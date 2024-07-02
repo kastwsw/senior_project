@@ -98,7 +98,8 @@ fun WasteFormScreen(
                     formViewModel.intentVerificationByType(it)
                     rootModel.navigateToWasteEditDocs()
                 },
-                onDone = formViewModel::doneForm
+                onUpdate = formViewModel::updateWasteRecord,
+                onCreate = formViewModel::createWasteRecord
             )
         }
     }
@@ -127,7 +128,8 @@ private fun WasteForm(
     onDataChanged: (WasteEntity) -> Unit,
     onEditDocument: (WasteDocEntity) -> Unit,
     onAddDocument: (WasteDocType) -> Unit,
-    onDone: () -> Unit
+    onUpdate: () -> Unit,
+    onCreate: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -180,7 +182,10 @@ private fun WasteForm(
             text = stringResource(R.string.inventory_label_save_form),
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            onClick = onDone
+            onClick = {
+                if (isNew) onCreate()
+                else onUpdate()
+            }
         )
         Spacer(Modifier.height(16.dp))
     }
@@ -477,7 +482,8 @@ private fun Demo() {
                 onDataChanged = {},
                 onEditDocument = {},
                 onAddDocument = {},
-                onDone = {}
+                onUpdate = {},
+                onCreate = {}
             )
         }
     }

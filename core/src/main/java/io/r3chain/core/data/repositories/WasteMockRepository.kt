@@ -2,6 +2,7 @@ package io.r3chain.core.data.repositories
 
 import io.r3chain.core.data.services.DataInMemory
 import io.r3chain.core.data.vo.WasteEntity
+import io.r3chain.core.data.vo.WasteRecordType
 import javax.inject.Inject
 
 class WasteMockRepository @Inject constructor(
@@ -20,14 +21,27 @@ class WasteMockRepository @Inject constructor(
 
 
     suspend fun addWaste(value: WasteEntity): WasteEntity {
-        // TODO: по параметрам value определить куда её передавать
-//        service.addToDispatched(value)
-        return service.addToInventory(value)
+        return if (value.recordType == WasteRecordType.DISPATCH) {
+            service.addToDispatched(value)
+        } else {
+            service.addToInventory(value)
+        }
+    }
+
+    suspend fun updateWaste(value: WasteEntity): WasteEntity {
+        return if (value.recordType == WasteRecordType.DISPATCH) {
+            service.updateInDispatched(value)
+        } else {
+            service.updateInInventory(value)
+        }
     }
 
     suspend fun removeWaste(value: WasteEntity) {
-        // TODO: по параметрам value определить откуда её убирать
-        service.removeFromInventory(value)
+        if (value.recordType == WasteRecordType.DISPATCH) {
+            service.removeFromDispatched(value)
+        } else {
+            service.removeFromInventory(value)
+        }
     }
 
 }

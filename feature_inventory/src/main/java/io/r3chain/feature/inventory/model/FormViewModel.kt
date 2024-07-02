@@ -231,15 +231,30 @@ class FormViewModel @AssistedInject constructor(
 
 
     /**
-     * Отрабатывает подтверждение пользователем заполенния формы.
+     * Создание новой записи по данным из формы..
      */
-    fun doneForm() {
+    fun createWasteRecord() {
         viewModelScope.launch {
             isLoading = true
             delay(300)
-            // TODO: по параметрам data определить куда её передавать
+            // TODO: передать с успехом новые данные, которые вернул сервер
             wasteRepository.addWaste(wasteData).also {
-                // TODO: передать с успехом новые данные, которые вернул сервер
+                doneResult = Result.success(it)
+            }
+        }
+    }
+
+    /**
+     * Обновление текущей записи по данным из формы..
+     */
+    fun updateWasteRecord() {
+        viewModelScope.launch {
+            isLoading = true
+            delay(300)
+            // TODO: убрать мок
+            wasteRepository.updateWaste(wasteData).also {
+                // TODO: можно запилить какой-нить updateResult,
+                //  если нужно где-то выводить, что данные были обновлены
                 doneResult = Result.success(it)
             }
         }
