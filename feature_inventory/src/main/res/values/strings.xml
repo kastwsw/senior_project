@@ -104,4 +104,12 @@
     <string name="inventory_details_weight">%s kg</string>
     <string name="inventory_edit_id">Waste N%s</string>
 
+
+    <string name="details_material_type">Material type</string>
+    <string name="details_date">Date</string>
+    <string name="details_sender">Sender</string>
+    <string name="details_destination">Destination</string>
+    <string name="details_partner_contact">Partner contact</string>
+    <string name="details_tracking_number">Tracking number</string>
+
 </resources>
