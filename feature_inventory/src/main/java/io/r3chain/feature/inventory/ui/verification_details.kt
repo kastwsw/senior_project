@@ -134,14 +134,10 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteDocDetails(
-                data = WasteDocEntity(type = WasteDocType.SLIP),
+                data = dummyWasteDoc,
                 onFileClicked = {},
                 onShare = {}
             )
         }
     }
 }
-
-
-
-

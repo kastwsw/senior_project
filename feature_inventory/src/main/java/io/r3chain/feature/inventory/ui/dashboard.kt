@@ -4,6 +4,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,9 +23,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SecondaryTabRow
@@ -33,11 +48,16 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -131,14 +151,18 @@ fun DashboardScreen(
                         data = dashboardModel.inventoryList.collectAsState(
                             emptyList()
                         ).value,
-                        onItemClick = rootModel::navigateToWasteDetails
+                        onEdit = rootModel::navigateToWasteEdit,
+                        onDelete = rootModel::deleteRecord,
+                        onDetails = rootModel::navigateToWasteDetails
                     )
 
                     DashboardSections.DISPATCHED -> DispatchedContent(
                         data = dashboardModel.dispatchedList.collectAsState(
                             emptyList()
                         ).value,
-                        onItemClick = rootModel::navigateToWasteDetails
+                        onEdit = rootModel::navigateToWasteEdit,
+                        onDelete = rootModel::deleteRecord,
+                        onDetails = rootModel::navigateToWasteDetails
                     )
                 }
             }
@@ -230,19 +254,23 @@ private fun HeadCard(
 @Composable
 private fun InventoryContent(
     data: List<WasteEntity>,
-    onItemClick: (WasteEntity) -> Unit
+    onEdit: (WasteEntity) -> Unit,
+    onDelete: (WasteEntity) -> Unit,
+    onDetails: (WasteEntity) -> Unit
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 24.dp)
+            .padding(top = 16.dp)
     ) {
         if (data.isEmpty()) EmptyListText(
             text = stringResource(R.string.inventory_tab_empty_inventory),
             modifier = Modifier.align(Alignment.Center)
         ) else RecordsList(
             data = data,
-            onClick = onItemClick
+            onEdit = onEdit,
+            onDelete = onDelete,
+            onDetails = onDetails
         )
     }
 }
@@ -251,7 +279,9 @@ private fun InventoryContent(
 @Composable
 private fun DispatchedContent(
     data: List<WasteEntity>,
-    onItemClick: (WasteEntity) -> Unit
+    onEdit: (WasteEntity) -> Unit,
+    onDelete: (WasteEntity) -> Unit,
+    onDetails: (WasteEntity) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -263,7 +293,9 @@ private fun DispatchedContent(
             modifier = Modifier.align(Alignment.Center)
         ) else RecordsList(
             data = data,
-            onClick = onItemClick
+            onEdit = onEdit,
+            onDelete = onDelete,
+            onDetails = onDetails
         )
     }
 }
@@ -285,22 +317,71 @@ private fun EmptyListText(
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun RecordsList(
     data: List<WasteEntity>,
-    onClick: (WasteEntity) -> Unit
+    onEdit: (WasteEntity) -> Unit,
+    onDelete: (WasteEntity) -> Unit,
+    onDetails: (WasteEntity) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(
-            text = "Filters",
+        // filters
+        Row(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = RoundedCornerShape(4.dp)
-                )
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        )
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            // date
+            InputChip(
+                selected = false,
+                label = {
+                    Text(text = stringResource(R.string.filter_label_date))
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.CalendarToday,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                },
+                onClick = {}
+            )
+
+            // type
+            FilterChip(
+                selected = false,
+                label = {
+                    Text(text = stringResource(R.string.filter_label_type))
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                },
+                onClick = {}
+            )
+
+            // partner
+            FilterChip(
+                selected = false,
+                label = {
+                    Text(text = stringResource(R.string.filter_label_partner))
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                },
+                onClick = {}
+            )
+        }
 
         val formatter = remember {
             NumberFormat.getInstance(Locale.getDefault()).apply {
@@ -319,7 +400,14 @@ private fun RecordsList(
                 items = data,
                 key = { it.id }
             ) { item ->
-                WasteCard(data = item, formatter = formatter, onClick = onClick)
+                WasteCard(
+                    data = item,
+                    formatter = formatter,
+                    modifier = Modifier.animateItemPlacement(),
+                    onEdit = onEdit,
+                    onDelete = onDelete,
+                    onDetails = onDetails
+                )
             }
         }
     }
@@ -330,56 +418,133 @@ private fun RecordsList(
 private fun WasteCard(
     data: WasteEntity,
     formatter: NumberFormat,
-    onClick: (WasteEntity) -> Unit
+    modifier: Modifier = Modifier,
+    onEdit: (WasteEntity) -> Unit,
+    onDelete: (WasteEntity) -> Unit,
+    onDetails: (WasteEntity) -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
+            .then(modifier)
             .fillMaxWidth()
             .padding(bottom = 12.dp),
         shape = RoundedCornerShape(12.dp),
         onClick = {
-            onClick(data)
+            onDetails(data)
         }
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .padding(vertical = 12.dp, horizontal = 16.dp)
+                .fillMaxWidth()
         ) {
-            data.files.firstOrNull()?.resource?.posterLink?.also {
-                Image(
-                    painter = rememberAsyncImagePainter(it),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(shape = RoundedCornerShape(8.dp))
-                )
-            }
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                data.grams?.also {
-                    Text(
-                        text = stringResource(
-                            R.string.inventory_details_weight,
-                            formatter.format(it.toDouble() / 1000)
-                        ),
-                        style = MaterialTheme.typography.titleSmall
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp, horizontal = 16.dp)
+            ) {
+                // фото
+                data.files.firstOrNull()?.resource?.posterLink?.also {
+                    Image(
+                        painter = rememberAsyncImagePainter(it),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(shape = RoundedCornerShape(8.dp))
                     )
-                    Spacer(Modifier.height(4.dp))
                 }
-                Text(
-                    text = data.materialTypes.joinToString(limit = 3) { it.name },
-                    style = MaterialTheme.typography.labelSmall
-                )
-                Text(
-                    text = data.partner.takeIf { it.isNotBlank() }
-                        ?: data.venue.takeIf { it.isNotBlank() }
-                        ?: data.recipient.takeIf { it.isNotBlank() }
-                        ?: "",
-                    style = MaterialTheme.typography.labelSmall
-                )
+                // данные
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 16.dp)
+                ) {
+                    data.grams?.also {
+                        Text(
+                            text = stringResource(
+                                R.string.inventory_details_weight,
+                                formatter.format(it.toDouble() / 1000)
+                            ),
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Spacer(Modifier.height(4.dp))
+                    }
+                    Text(
+                        text = data.materialTypes.joinToString(limit = 3) { it.name },
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                    Text(
+                        text = data.partner.takeIf { it.isNotBlank() }
+                            ?: data.venue.takeIf { it.isNotBlank() }
+                            ?: data.recipient.takeIf { it.isNotBlank() }
+                            ?: "",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
+
+            Box(
+                modifier = Modifier.align(Alignment.TopEnd)
+            ) {
+                // menu
+                var expanded by remember {
+                    mutableStateOf(false)
+                }
+
+                IconButton(
+                    onClick = {
+                        expanded = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.MoreVert,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+                    WasteMenuItem(
+                        label = stringResource(R.string.inventory_label_edit_waste),
+                        icon = Icons.Outlined.Edit
+                    ) {
+                        expanded = false
+                        onEdit(data)
+                    }
+                    WasteMenuItem(
+                        label = stringResource(R.string.inventory_label_delete_waste),
+                        icon = Icons.Outlined.Delete
+                    ) {
+                        expanded = false
+                        onDelete(data)
+                    }
+                }
             }
         }
     }
+}
+
+
+@Composable
+private fun WasteMenuItem(label: String, icon: ImageVector, onClick: () -> Unit) {
+    DropdownMenuItem(
+        text = {
+            Text(text = label)
+        },
+        onClick = onClick,
+        leadingIcon = {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    )
 }
 
 
@@ -396,13 +561,30 @@ private enum class DashboardSections(val labelId: Int) {
 private fun HeadCardPreview() {
     R3Theme {
         Surface {
-            HeadCard(
-                totalAmount = "100",
-                user = UserVO(
-                    firstName = "User Name",
-                    email = "john@doe.com"
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                HeadCard(
+                    totalAmount = "100",
+                    user = UserVO(
+                        firstName = "User Name",
+                        email = "john@doe.com"
+                    )
+                ) {}
+
+                val formatter = remember {
+                    NumberFormat.getInstance(Locale.getDefault()).apply {
+                        maximumFractionDigits = 3
+                    }
+                }
+                WasteCard(
+                    data = dummyWasteRecord,
+                    formatter = formatter,
+                    onEdit = {},
+                    onDelete = {},
+                    onDetails = {}
                 )
-            ) {}
+            }
         }
     }
 }

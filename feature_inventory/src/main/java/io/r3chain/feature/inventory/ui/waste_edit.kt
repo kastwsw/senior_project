@@ -466,16 +466,7 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteForm(
-                data = WasteEntity(
-                    recordType = WasteRecordType.COLLECT,
-//                    geoLatLong = 0.0 to 0.0,
-//                    time = 0,
-                    documents = listOf(
-                        WasteDocEntity(type = WasteDocType.SLIP),
-                        WasteDocEntity(type = WasteDocType.INVOICE),
-                        WasteDocEntity(type = WasteDocType.CERT)
-                    )
-                ),
+                data = dummyWasteRecord,
                 isNew = false,
                 onUriSelected = {},
                 onFileDeleted = {},

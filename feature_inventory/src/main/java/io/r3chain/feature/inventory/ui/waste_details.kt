@@ -360,17 +360,7 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteRecordDetails(
-                data = WasteEntity(
-                    recordType = WasteRecordType.COLLECT,
-                    geoLatLong = 0.0 to 0.0,
-                    time = 0,
-                    materialTypes = listOf(WasteType.HDPE, WasteType.PVC, WasteType.PP),
-                    documents = listOf(
-                        WasteDocEntity(type = WasteDocType.SLIP),
-                        WasteDocEntity(type = WasteDocType.INVOICE),
-                        WasteDocEntity(type = WasteDocType.CERT)
-                    )
-                ),
+                data = dummyWasteRecord,
                 onDocument = {},
                 onEdit = {},
                 onDelete = {}

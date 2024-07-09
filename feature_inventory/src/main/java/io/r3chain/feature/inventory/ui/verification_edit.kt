@@ -215,13 +215,7 @@ private fun Demo() {
     R3Theme {
         Surface {
             WasteDocForm(
-                data = WasteDocEntity(
-                    type = WasteDocType.SLIP,
-                    files = listOf(
-                        FileAttachEntity(uri = Uri.EMPTY, isLoading = true),
-                        FileAttachEntity(uri = Uri.EMPTY, isLoading = true)
-                    )
-                ),
+                data = dummyWasteDoc,
                 isNew = true,
                 onUriSelected = {},
                 onFileDeleted = {},
