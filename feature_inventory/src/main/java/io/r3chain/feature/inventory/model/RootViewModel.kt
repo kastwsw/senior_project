@@ -117,7 +117,7 @@ class RootViewModel @Inject constructor(
     }
 
     enum class ScreenStateWaste {
-        FORM, DOC
+        RECORD, DOC
     }
 
 }

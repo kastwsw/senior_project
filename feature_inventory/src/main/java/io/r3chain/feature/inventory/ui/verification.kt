@@ -36,7 +36,7 @@ import io.r3chain.feature.inventory.ui.components.RowLabel
 import io.r3chain.feature.inventory.ui.components.getDocTypeStringId
 
 @Composable
-fun WasteDocScreen(
+fun WasteDocFormScreen(
     rootModel: RootViewModel,
     formViewModel: FormViewModel = hiltViewModel()
 ) {

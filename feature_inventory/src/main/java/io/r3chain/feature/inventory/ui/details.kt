@@ -51,6 +51,7 @@ import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.data.vo.WasteRecordType
 import io.r3chain.core.data.vo.WasteType
+import io.r3chain.core.presentation.openUri
 import io.r3chain.core.ui.components.AlterButton
 import io.r3chain.core.ui.components.LinkButton
 import io.r3chain.core.ui.components.ScreenHeader
@@ -191,7 +192,8 @@ private fun WasteRecordDetails(
         DetailsPhotoRow(
             list = data.files
         ) {
-            // TODO: открывать файл по ссылке
+            // открывать файл по ссылке
+            context.openUri(it.uri)
         }
         Spacer(modifier = Modifier.height(32.dp))
 
