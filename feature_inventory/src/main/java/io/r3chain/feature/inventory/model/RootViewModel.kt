@@ -76,6 +76,12 @@ class RootViewModel @Inject constructor(
         }
     }
 
+    fun navigateToWasteDetailsDocs() {
+        navController?.navigate(ScreenState.DETAILS.name + ScreenStateWaste.DOC.name) {
+            launchSingleTop = true
+        }
+    }
+
 
     private val _newRecords = MutableSharedFlow<WasteEntity>(
         // 0 - новые подписчики не получат предыдущие ошибки

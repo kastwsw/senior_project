@@ -140,6 +140,9 @@ fun WasteDetailsScreen(
                     // детальные данные записи
                     DetailsSections.DETAILS -> WasteRecordDetails(
                         data = detailsViewModel.data,
+                        onDocument = {
+                            rootModel.navigateToWasteDetailsDocs()
+                        },
                         onEdit = {
                             rootModel.navigateToWasteEdit(detailsViewModel.data)
                         },
@@ -167,6 +170,7 @@ fun WasteDetailsScreen(
 @Composable
 private fun WasteRecordDetails(
     data: WasteEntity,
+    onDocument: (WasteDocEntity) -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -216,9 +220,7 @@ private fun WasteRecordDetails(
             text = stringResource(R.string.inventory_label_documents),
             paddingValues = PaddingValues(bottom = 24.dp)
         )
-        DocsRow(list = data.documents) {
-            // TODO: открывать экран с деталями документа верификации
-        }
+        DocsRow(list = data.documents, onItemClick = onDocument)
         Spacer(modifier = Modifier.height(48.dp))
 
         // кнопки
@@ -368,6 +370,7 @@ private fun Demo() {
                         WasteDocEntity(type = WasteDocType.CERT)
                     )
                 ),
+                onDocument = {},
                 onEdit = {},
                 onDelete = {}
             )

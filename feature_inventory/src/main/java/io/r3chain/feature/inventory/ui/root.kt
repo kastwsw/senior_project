@@ -242,9 +242,9 @@ private fun NavContent(
             composable(
                 route = RootViewModel.ScreenState.DETAILS.name + RootViewModel.ScreenStateWaste.DOC.name
             ) {
-                WasteDocFormScreen(
+                WasteDocDetailsScreen(
                     rootModel = model,
-                    formViewModel = hiltViewModel(
+                    detailsViewModel = hiltViewModel(
                         remember(it) {
                             navigationController.getBackStackEntry(
                                 route = RootViewModel.ScreenState.DETAILS.name
