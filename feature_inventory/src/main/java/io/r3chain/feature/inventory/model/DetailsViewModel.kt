@@ -9,6 +9,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.r3chain.core.data.vo.WasteDocEntity
 import io.r3chain.core.data.vo.WasteEntity
 import kotlinx.coroutines.launch
 
@@ -32,7 +33,13 @@ class DetailsViewModel @AssistedInject constructor(
     /**
      * Данные записи.
      */
-    var data by mutableStateOf(entity)
+    var wasteData by mutableStateOf(entity)
+        private set
+
+    /**
+     * Текущий документ верификации.
+     */
+    var verificationData: WasteDocEntity? by mutableStateOf(null)
         private set
 
 
@@ -43,6 +50,16 @@ class DetailsViewModel @AssistedInject constructor(
 //            data = wasteRepository.getWaste()
             isLoading = false
         }
+    }
+
+    /**
+     * Изменить значения текущего документа верификации.
+     *
+     * @param value Основной объект данных.
+     */
+    fun changeVerificationData(value: WasteDocEntity) {
+        // обновить данные формы верификации
+        verificationData = value
     }
 
 }

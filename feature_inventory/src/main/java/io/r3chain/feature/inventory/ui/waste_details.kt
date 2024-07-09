@@ -86,7 +86,7 @@ fun WasteDetailsScreen(
             ScreenHeader(
                 title = stringResource(
                     R.string.inventory_details_weight,
-                    formatter.format((detailsViewModel.data.grams ?: 0).toDouble() / 1000)
+                    formatter.format((detailsViewModel.wasteData.grams ?: 0).toDouble() / 1000)
                 ),
                 backAction = rootModel::navigateBack
             )
@@ -139,20 +139,21 @@ fun WasteDetailsScreen(
                 when (sections[pageIndex]) {
                     // детальные данные записи
                     DetailsSections.DETAILS -> WasteRecordDetails(
-                        data = detailsViewModel.data,
+                        data = detailsViewModel.wasteData,
                         onDocument = {
+                            detailsViewModel.changeVerificationData(it)
                             rootModel.navigateToWasteDetailsDocs()
                         },
                         onEdit = {
-                            rootModel.navigateToWasteEdit(detailsViewModel.data)
+                            rootModel.navigateToWasteEdit(detailsViewModel.wasteData)
                         },
                         onDelete = {
-                            rootModel.deleteRecord(detailsViewModel.data)
+                            rootModel.deleteRecord(detailsViewModel.wasteData)
                         }
                     )
                     // трекинг
                     DetailsSections.TRACKING -> WasteRecordTracking(
-                        data = detailsViewModel.data
+                        data = detailsViewModel.wasteData
                     )
                 }
             }
@@ -240,7 +241,7 @@ private fun WasteRecordDetails(
 
 
 @Composable
-private fun DetailsLabel(text: String) {
+fun DetailsLabel(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.labelSmall,
@@ -250,7 +251,7 @@ private fun DetailsLabel(text: String) {
 }
 
 @Composable
-private fun DetailsValue(text: String) {
+fun DetailsValue(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.labelMedium,
