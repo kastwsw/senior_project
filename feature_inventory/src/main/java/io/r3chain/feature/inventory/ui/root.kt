@@ -199,7 +199,7 @@ private fun NavContent(
                 WasteFormScreen(rootModel = model, formViewModel = formViewModel)
             }
 
-            // document verification
+            // document verification form
             composable(
                 route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.DOC.name
             ) {

@@ -83,11 +83,11 @@ fun DashboardScreen(
 
             // tabs
             val sections = remember {
-                Sections.entries
+                DashboardSections.entries
             }
 
             val pagerState = rememberPagerState(
-                initialPage = Sections.INVENTORY.ordinal,
+                initialPage = DashboardSections.INVENTORY.ordinal,
                 pageCount = { sections.size }
             )
             val coroutineScope = rememberCoroutineScope()
@@ -127,14 +127,14 @@ fun DashboardScreen(
                     .weight(1f)
             ) { pageIndex ->
                 when (sections[pageIndex]) {
-                    Sections.INVENTORY -> InventoryContent(
+                    DashboardSections.INVENTORY -> InventoryContent(
                         data = dashboardModel.inventoryList.collectAsState(
                             emptyList()
                         ).value,
                         onItemClick = rootModel::navigateToWasteDetails
                     )
 
-                    Sections.DISPATCHED -> DispatchedContent(
+                    DashboardSections.DISPATCHED -> DispatchedContent(
                         data = dashboardModel.dispatchedList.collectAsState(
                             emptyList()
                         ).value,
@@ -143,9 +143,9 @@ fun DashboardScreen(
                 }
             }
 
-            BackHandler(enabled = pagerState.currentPage != Sections.INVENTORY.ordinal) {
+            BackHandler(enabled = pagerState.currentPage != DashboardSections.INVENTORY.ordinal) {
                 coroutineScope.launch {
-                    pagerState.animateScrollToPage(Sections.INVENTORY.ordinal)
+                    pagerState.animateScrollToPage(DashboardSections.INVENTORY.ordinal)
                 }
             }
         }
@@ -383,7 +383,7 @@ private fun WasteCard(
 }
 
 
-private enum class Sections(val labelId: Int) {
+private enum class DashboardSections(val labelId: Int) {
     INVENTORY(R.string.inventory_tab_label_inventory),
     DISPATCHED(R.string.inventory_tab_label_dispatched)
 }
