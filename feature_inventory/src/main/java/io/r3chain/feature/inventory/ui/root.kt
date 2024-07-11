@@ -179,31 +179,31 @@ private fun NavContent(
         // waste edit
         navigation(
             route = RootViewModel.ScreenState.EDIT.name,
-            startDestination = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.FORM.name
+            startDestination = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.RECORD.name
         ) {
-            // form
+            // waste record form
             composable(
-                route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.FORM.name
+                route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.RECORD.name
             ) { backStackEntry ->
-                // собрать модель данных
-                val formViewModel = hiltViewModel<FormViewModel, FormViewModel.ViewModelFactory>(
-                    remember(backStackEntry) {
-                        navigationController.getBackStackEntry(
-                            route = RootViewModel.ScreenState.EDIT.name
-                        )
+                WasteFormScreen(
+                    rootModel = model,
+                    formViewModel = hiltViewModel<FormViewModel, FormViewModel.ViewModelFactory>(
+                        remember(backStackEntry) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.EDIT.name
+                            )
+                        }
+                    ) { factory ->
+                        factory.create(model.intentWaste!!)
                     }
-                ) { factory ->
-                    factory.create(model.intentWaste!!)
-                }
-                // отрисовать
-                WasteFormScreen(rootModel = model, formViewModel = formViewModel)
+                )
             }
 
-            // document verification
+            // document verification form
             composable(
                 route = RootViewModel.ScreenState.EDIT.name + RootViewModel.ScreenStateWaste.DOC.name
             ) {
-                AddDocScreen(
+                WasteDocFormScreen(
                     rootModel = model,
                     formViewModel = hiltViewModel(
                         remember(it) {
@@ -216,15 +216,45 @@ private fun NavContent(
             }
         }
 
-        // waste details
-        composable(route = RootViewModel.ScreenState.DETAILS.name) {
-            WasteDetailsScreen(
-                rootModel = model,
-                detailsViewModel = hiltViewModel<DetailsViewModel, DetailsViewModel.ViewModelFactory> { factory ->
-                    factory.create(model.intentWaste!!)
-                }
-            )
+        navigation(
+            route = RootViewModel.ScreenState.DETAILS.name,
+            startDestination = RootViewModel.ScreenState.DETAILS.name + RootViewModel.ScreenStateWaste.RECORD.name
+        ) {
+            // waste details
+            composable(
+                route = RootViewModel.ScreenState.DETAILS.name + RootViewModel.ScreenStateWaste.RECORD.name
+            ) { backStackEntry ->
+                WasteDetailsScreen(
+                    rootModel = model,
+                    detailsViewModel = hiltViewModel<DetailsViewModel, DetailsViewModel.ViewModelFactory>(
+                        remember(backStackEntry) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.DETAILS.name
+                            )
+                        }
+                    ) { factory ->
+                        factory.create(model.intentWaste!!)
+                    }
+                )
+            }
+
+            // document verification
+            composable(
+                route = RootViewModel.ScreenState.DETAILS.name + RootViewModel.ScreenStateWaste.DOC.name
+            ) {
+                WasteDocDetailsScreen(
+                    rootModel = model,
+                    detailsViewModel = hiltViewModel(
+                        remember(it) {
+                            navigationController.getBackStackEntry(
+                                route = RootViewModel.ScreenState.DETAILS.name
+                            )
+                        }
+                    )
+                )
+            }
         }
+
     }
 
     // back action support

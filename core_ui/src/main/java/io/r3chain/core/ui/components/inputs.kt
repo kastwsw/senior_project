@@ -290,6 +290,7 @@ fun TextInput(
                     .clickable(
                         onClickLabel = placeholderValue,
                         role = Role.Button,
+                        enabled = enabled,
                         onClick = {
                             focusRequester?.requestFocus()
                             onClick()

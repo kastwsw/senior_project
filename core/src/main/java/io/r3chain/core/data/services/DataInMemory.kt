@@ -24,6 +24,21 @@ class DataInMemory @Inject constructor() {
         return newValue
     }
 
+    suspend fun updateInInventory(value: WasteEntity): WasteEntity {
+        _inventory.value.indexOfFirst {
+            it.id == value.id
+        }.takeIf {
+            it != -1
+        }?.let { index ->
+            _inventory.emit(
+                _inventory.value.toMutableList().apply {
+                    set(index, value)
+                }.toList()
+            )
+        }
+        return value
+    }
+
     suspend fun removeFromInventory(value: WasteEntity) {
         _inventory.emit(
             _inventory.value.filter {
@@ -39,6 +54,21 @@ class DataInMemory @Inject constructor() {
         )
         _dispatched.emit(_dispatched.value + listOf(newValue))
         return newValue
+    }
+
+    suspend fun updateInDispatched(value: WasteEntity): WasteEntity {
+        _dispatched.value.indexOfFirst {
+            it.id == value.id
+        }.takeIf {
+            it != -1
+        }?.let { index ->
+            _dispatched.emit(
+                _dispatched.value.toMutableList().apply {
+                    set(index, value)
+                }.toList()
+            )
+        }
+        return value
     }
 
     suspend fun removeFromDispatched(value: WasteEntity) {

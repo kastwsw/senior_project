@@ -17,16 +17,20 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,22 +41,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import io.r3chain.core.data.vo.FileAttachEntity
+import io.r3chain.core.data.vo.WasteDocEntity
+import io.r3chain.core.data.vo.WasteDocType
 import io.r3chain.core.data.vo.WasteType
-import io.r3chain.core.ui.components.ActionPlate
-import io.r3chain.core.ui.components.BottomSelect
-import io.r3chain.core.ui.components.ButtonStyle
 import io.r3chain.core.ui.components.ImagesSelect
 import io.r3chain.core.ui.components.IntegerInput
-import io.r3chain.core.ui.components.PrimaryButton
 import io.r3chain.core.ui.components.TextInput
 import io.r3chain.feature.inventory.R
 import java.text.NumberFormat
@@ -69,6 +72,17 @@ fun GroupLabel(
         style = MaterialTheme.typography.titleMedium,
         modifier = Modifier.padding(paddingValues)
     )
+}
+
+
+/**
+ * Возвращает id стоки для описания типа документа.
+ */
+fun getDocTypeStringId(type: WasteDocType) = when (type) {
+    WasteDocType.SLIP -> R.string.inventory_verifications_type_slip
+    WasteDocType.PHOTO -> R.string.inventory_verifications_type_photo
+    WasteDocType.CERT -> R.string.inventory_verifications_type_cert
+    WasteDocType.INVOICE -> R.string.inventory_verifications_type_invoice
 }
 
 
@@ -247,9 +261,10 @@ fun WeightKgInput(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PhotosRow(
+fun PhotoRow(
     data: List<FileAttachEntity>,
-    onUriSelected: (List<Uri>) -> Unit
+    onUriSelected: (List<Uri>) -> Unit,
+    onDelete: (FileAttachEntity) -> Unit
 ) {
     var isImageSelectVisible by rememberSaveable {
         mutableStateOf(false)
@@ -257,42 +272,19 @@ fun PhotosRow(
 
     // 4 colums grid
     val columnsAmount = 4
-    val shape = RoundedCornerShape(8.dp)
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        maxItemsInEachRow = 4,
+        maxItemsInEachRow = columnsAmount,
         modifier = Modifier.fillMaxWidth()
     ) {
         // фотки
-        data.forEach { file ->
-            if (file.isLoading) {
-                // загружается
-                FileBox(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(36.dp),
-                        strokeWidth = 4.dp,
-                        strokeCap = StrokeCap.Round
-                    )
-                }
-            } else {
-                // загружено
-                file.resource?.also { vo ->
-                    Image(
-                        painter = rememberAsyncImagePainter(vo.posterLink),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .weight(1f)
-                            .aspectRatio(1f)
-                            .clip(shape = shape)
-                    )
-                }
-                // TODO: если ошибка
-                // TODO: возможность удалить
+        data.forEach {
+            FileItem(
+                file = it,
+                modifier = Modifier.weight(1f)
+            ) {
+                onDelete(it)
             }
         }
         // кнопка добавить
@@ -366,42 +358,146 @@ private fun FileBox(
 
 
 @Composable
-fun VerificationDocuments(
-    onAddDocument: (Int) -> Unit
+private fun FileItem(
+    file: FileAttachEntity,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
-    var expanded by rememberSaveable {
-        mutableStateOf(false)
+    if (file.isLoading) {
+        // загружается
+        FileBox(
+            modifier = Modifier
+                .then(modifier)
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(36.dp),
+                strokeWidth = 4.dp,
+                strokeCap = StrokeCap.Round
+            )
+        }
+    } else {
+        // загружено
+        file.resource?.also { vo ->
+            val shape = RoundedCornerShape(8.dp)
+            Box(
+                modifier = Modifier
+                    .then(modifier)
+                    .aspectRatio(1f)
+                    .clickable(role = Role.Button, onClick = onClick)
+                    .clip(shape = shape),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(vo.posterLink),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clip(shape = shape)
+                )
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(color = Color.Black.copy(alpha = 0.38f))
+                )
+                Icon(
+                    imageVector = Icons.Outlined.DeleteOutline,
+                    modifier = Modifier.size(24.dp),
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+        }
+        // TODO: если ошибка
     }
+}
 
-    GroupLabel(
-        text = stringResource(R.string.inventory_label_documents),
-        paddingValues = PaddingValues(bottom = 24.dp)
-    )
-    PrimaryButton(
-        text = stringResource(R.string.inventory_label_add_document),
-        modifier = Modifier.fillMaxWidth(),
-        buttonStyle = ButtonStyle.SECONDARY,
-        icon = Icons.Outlined.Add,
-        onClick = {
-            expanded = true
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun DocsRow(
+    list: List<WasteDocEntity>,
+    onItemClick: (WasteDocEntity) -> Unit
+) {
+    // 2 colums grid
+    val columnsAmount = 2
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        maxItemsInEachRow = columnsAmount,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // доки
+        list.forEach {
+            DocItem(
+                doc = it,
+                modifier = Modifier.weight(1f)
+            ) {
+                onItemClick(it)
+            }
         }
-    )
 
-    val options = stringArrayResource(R.array.inventory_verifications_types)
-
-    BottomSelect(
-        isVisible = expanded,
-        onClose = {
-            expanded = false
-        },
-        onSelect = {
-            expanded = false
-            onAddDocument(it)
+        // добивает для ровной строки
+        (list.size % columnsAmount).takeIf {
+            it != 0
+        }?.also {
+            repeat(columnsAmount - it) {
+                Spacer(
+                    Modifier
+                        .weight(1f)
+                        .height(8.dp)
+                )
+            }
         }
-    ) { optionSelect ->
-        options.forEachIndexed { index, option ->
-            ActionPlate(title = option) {
-                optionSelect(index)
+    }
+}
+
+
+@Composable
+private fun DocItem(
+    doc: WasteDocEntity,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    OutlinedCard(
+        modifier = Modifier.then(modifier),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (doc.files.isEmpty()) {
+                Spacer(Modifier.size(56.dp))
+            } else doc.files.firstOrNull()?.resource?.posterLink?.also {
+                Image(
+                    painter = rememberAsyncImagePainter(it),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(shape = RoundedCornerShape(8.dp))
+                )
+            }
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = stringResource(getDocTypeStringId(doc.type)),
+                    style = MaterialTheme.typography.labelMedium
+                )
+                val filesAmount = doc.files.size + doc.files2.size
+                if (filesAmount > 0) {
+                    Text(
+                        text = pluralStringResource(
+                            R.plurals.inventory_verifications_resources_count,
+                            filesAmount,
+                            filesAmount
+                        ),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }

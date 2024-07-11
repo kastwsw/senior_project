@@ -17,6 +17,10 @@
 
     <!-- INVENTORY -->
 
+    <string name="filter_label_date">Date</string>
+    <string name="filter_label_type">Type</string>
+    <string name="filter_label_partner">Partner</string>
+
     <string name="inventory_total_title">Total amount, kg</string>
 
     <string name="inventory_tab_label_inventory">Inventory</string>
@@ -64,14 +68,25 @@
     <string name="inventory_label_weight">Weight, kg</string>
     <string name="inventory_label_weight_grams">grams</string>
 
+    <string name="inventory_label_photos_slip">Weight slip</string>
+    <string name="inventory_label_vehicle_photo">Vehicle Photo</string>
+    <string name="inventory_vehicle_number_label">Vehicle number</string>
+    <string name="inventory_vehicle_number_hint">Number</string>
+
     <string name="inventory_verifications_title">Weight verification</string>
-    <string name="inventory_verifications_type_label">Document type</string>
-    <string-array name="inventory_verifications_types">
-        <item>Weight slip</item>
-        <item>Photo</item>
-        <item>Certificate</item>
-        <item>Invoice</item>
-    </string-array>
+
+    <string name="inventory_verifications_type_group_label">Document type</string>
+    <string name="inventory_verifications_type_slip">Weight slip</string>
+    <string name="inventory_verifications_type_photo">Photo</string>
+    <string name="inventory_verifications_type_cert">Certificate</string>
+    <string name="inventory_verifications_type_invoice">Invoice</string>
+
+    <plurals name="inventory_verifications_resources_count">
+        <item quantity="one">%d file</item>
+        <item quantity="few">%d files</item>
+        <item quantity="many">%d files</item>
+        <item quantity="other">%d files</item>
+    </plurals>
 
     <string name="inventory_label_materials_type_pet">PET</string>
     <string name="inventory_label_materials_type_hdpe">HDPE</string>
@@ -89,8 +104,22 @@
     <string name="inventory_label_add_image">Add image</string>
     <string name="inventory_label_edit_waste">Edit</string>
     <string name="inventory_label_delete_waste">Delete</string>
+    <string name="inventory_label_share">Share</string>
 
     <string name="inventory_details_weight">%s kg</string>
     <string name="inventory_edit_id">Waste N%s</string>
+
+
+    <!-- DETAILS -->
+
+    <string name="details_tab_label_waste">Details</string>
+    <string name="details_tab_label_tracking">Tracking</string>
+
+    <string name="details_material_type">Material type</string>
+    <string name="details_date">Date</string>
+    <string name="details_sender">Sender</string>
+    <string name="details_destination">Destination</string>
+    <string name="details_partner_contact">Partner contact</string>
+    <string name="details_tracking_number">Tracking number</string>
 
 </resources>

@@ -63,8 +63,7 @@ class RootViewModel @Inject constructor(
         navigateToWasteEdit(WasteEntity(recordType = WasteRecordType.DISPATCH))
     }
 
-    fun navigateToWasteEditDocs(record: WasteEntity) {
-        intentWaste = record
+    fun navigateToWasteEditDocs() {
         navController?.navigate(ScreenState.EDIT.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }
@@ -73,6 +72,12 @@ class RootViewModel @Inject constructor(
     fun navigateToWasteDetails(record: WasteEntity) {
         intentWaste = record
         navController?.navigate(ScreenState.DETAILS.name) {
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToWasteDetailsDocs() {
+        navController?.navigate(ScreenState.DETAILS.name + ScreenStateWaste.DOC.name) {
             launchSingleTop = true
         }
     }
@@ -118,7 +123,7 @@ class RootViewModel @Inject constructor(
     }
 
     enum class ScreenStateWaste {
-        FORM, DOC
+        RECORD, DOC
     }
 
 }

@@ -11,6 +11,6 @@ data class WasteEntity(
     val partner: String = "",
     val venue: String = "",
     val recipient: String = "",
-    val documents: List<WasteDocumentEntity> = emptyList(),
+    val documents: List<WasteDocEntity> = emptyList(),
     val files: List<FileAttachEntity> = emptyList()
 )
