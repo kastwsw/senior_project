@@ -61,9 +61,6 @@ dependencies {
     // Unit Tests
     testImplementation(libs.junit)
 
-    // UI Tests
-    androidTestImplementation(libs.androidx.junit)
-
     implementation(project(":core_ui"))
     implementation(project(":core"))
 
