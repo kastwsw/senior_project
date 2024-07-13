@@ -66,6 +66,8 @@ dependencies {
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.coroutines.test)
+
     implementation(project(":core_api"))
 }
 

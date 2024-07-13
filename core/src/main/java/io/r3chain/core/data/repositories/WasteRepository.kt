@@ -29,7 +29,7 @@ class WasteRepository @Inject constructor(
     suspend fun getRecords() {
         apiService.safeApiCall {
             apiClient
-                .createService(io.r3chain.core.api.apis.WasteRecordApi::class.java)
+                .createService(WasteRecordApi::class.java)
                 .apiV1WasteRecordListPost(
                     WasteRecordListRequestDto(
                         partnerTypeList = emptyList(),
