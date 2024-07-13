@@ -12,7 +12,7 @@ import io.r3chain.core.data.vo.UserExtVO
 )
 abstract class CacheDatabase : RoomDatabase() {
 
-    abstract fun userDao(): io.r3chain.core.data.db.UserDao
+    abstract fun userDao(): UserDao
 
-    abstract fun userExtDao(): io.r3chain.core.data.db.UserExtDao
+    abstract fun userExtDao(): UserExtDao
 }
