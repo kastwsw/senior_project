@@ -5,22 +5,22 @@ import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.data.vo.WasteRecordType
 import javax.inject.Inject
 
-class WasteMockRepository @Inject constructor(
+class WasteRepositoryImpl @Inject constructor(
     private val service: DataInMemory
-) {
+) : WasteRepository {
 
     /**
      * Получает все inventory-записи пользователя.
      */
-    fun getInventory() = service.inventory
+    override fun getInventory() = service.inventory
 
     /**
      * Получает все dispatch-записи пользователя.
      */
-    fun getDispatched() = service.dispatched
+    override fun getDispatched() = service.dispatched
 
 
-    suspend fun addWaste(value: WasteEntity): WasteEntity {
+    override suspend fun addWaste(value: WasteEntity): WasteEntity {
         return if (value.recordType == WasteRecordType.DISPATCH) {
             service.addToDispatched(value)
         } else {
@@ -28,7 +28,7 @@ class WasteMockRepository @Inject constructor(
         }
     }
 
-    suspend fun updateWaste(value: WasteEntity): WasteEntity {
+    override suspend fun updateWaste(value: WasteEntity): WasteEntity {
         return if (value.recordType == WasteRecordType.DISPATCH) {
             service.updateInDispatched(value)
         } else {
@@ -36,7 +36,7 @@ class WasteMockRepository @Inject constructor(
         }
     }
 
-    suspend fun removeWaste(value: WasteEntity) {
+    override suspend fun removeWaste(value: WasteEntity) {
         if (value.recordType == WasteRecordType.DISPATCH) {
             service.removeFromDispatched(value)
         } else {

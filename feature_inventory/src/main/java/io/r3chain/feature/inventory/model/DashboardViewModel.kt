@@ -8,14 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.UserRepository
-import io.r3chain.core.data.repositories.WasteMockRepository
+import io.r3chain.core.data.repositories.WasteRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val wasteRepository: WasteMockRepository
+    private val wasteRepository: WasteRepository
 ) : ViewModel() {
 
     /**

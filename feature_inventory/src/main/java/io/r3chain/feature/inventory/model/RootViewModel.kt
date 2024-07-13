@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.r3chain.core.data.repositories.WasteMockRepository
+import io.r3chain.core.data.repositories.WasteRepository
 import io.r3chain.core.data.vo.WasteEntity
 import io.r3chain.core.data.vo.WasteRecordType
 import kotlinx.coroutines.channels.BufferOverflow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RootViewModel @Inject constructor(
-    private val wasteRepository: WasteMockRepository
+    private val wasteRepository: WasteRepository
 ) : ViewModel() {
 
     /**

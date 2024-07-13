@@ -11,7 +11,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.r3chain.core.data.repositories.ResourcesGateway
-import io.r3chain.core.data.repositories.WasteMockRepository
+import io.r3chain.core.data.repositories.WasteRepository
 import io.r3chain.core.data.vo.FileAttachEntity
 import io.r3chain.core.data.vo.ResourceEntity
 import io.r3chain.core.data.vo.WasteDocEntity
@@ -25,7 +25,7 @@ import java.time.Instant
 class FormViewModel @AssistedInject constructor(
     @Assisted
     private val entity: WasteEntity,
-    private val wasteRepository: WasteMockRepository,
+    private val wasteRepository: WasteRepository,
     private val resourcesGateway: ResourcesGateway
 ) : ViewModel() {
 
