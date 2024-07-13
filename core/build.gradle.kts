@@ -64,9 +64,12 @@ dependencies {
     implementation(libs.room.paging)
     ksp(libs.room.compiler)
 
+    // Unit Tests
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
     testImplementation(libs.coroutines.test)
+
+    // UI Tests
+    androidTestImplementation(libs.androidx.junit)
 
     implementation(project(":core_api"))
 }

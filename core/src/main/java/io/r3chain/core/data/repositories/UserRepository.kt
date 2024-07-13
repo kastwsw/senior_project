@@ -39,7 +39,7 @@ interface UserRepository {
      *
      * @return Null - no authorization.
      */
-    fun getAuthTokenFlow(): Flow<String?>
+    fun getAuthTokenFlow(): Flow<String>
 
     /**
      * Обноляет флаг отправки нотификаций.

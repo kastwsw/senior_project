@@ -56,17 +56,18 @@ dependencies {
 
     implementation(libs.coil.compose)
 
-    // UI Tests
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
+    // Unit Tests
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.arch.test)
+    testImplementation(libs.robolectric)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
 
+    // UI Tests
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
