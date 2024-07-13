@@ -17,9 +17,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class ProfileViewModelTest {
@@ -36,9 +36,9 @@ class ProfileViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-        userRepository = mock(UserRepository::class.java)
-        `when`(userRepository.getUserFlow()).thenReturn(flowOf(null))
-        `when`(userRepository.getUserExtFlow()).thenReturn(flowOf(null))
+        userRepository = mock()
+        whenever(userRepository.getUserFlow()).thenReturn(flowOf(null))
+        whenever(userRepository.getUserExtFlow()).thenReturn(flowOf(null))
         viewModel = ProfileViewModel(userRepository)
     }
 
@@ -59,7 +59,7 @@ class ProfileViewModelTest {
         viewModel.signOut()
         advanceUntilIdle()
         verify(userRepository).exit()
-        assertTrue(viewModel.isLoading) // В соответствии с комментариями в коде
+        assertTrue(viewModel.isLoading)
     }
 
     @Test
@@ -72,7 +72,7 @@ class ProfileViewModelTest {
 
     @Test
     fun testUploadImage() = runTest {
-        val uri = mock(Uri::class.java)
+        val uri: Uri = mock()
         viewModel.uploadImage(uri)
         advanceUntilIdle()
         verify(userRepository).uploadAvatarImage(uri)

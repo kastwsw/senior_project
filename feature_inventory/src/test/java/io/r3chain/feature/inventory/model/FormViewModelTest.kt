@@ -23,9 +23,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
@@ -49,10 +49,11 @@ class FormViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-        wasteRepository = mock(WasteRepository::class.java)
-        resourcesGateway = mock(ResourcesGateway::class.java)
+        wasteRepository = mock()
+        resourcesGateway = mock()
 
-        `when`(resourcesGateway.events).thenReturn(testEventFlow)
+        whenever(resourcesGateway.events)
+            .thenReturn(testEventFlow)
 
         viewModel = FormViewModel(testWasteEntity, wasteRepository, resourcesGateway)
     }

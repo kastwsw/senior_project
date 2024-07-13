@@ -68,9 +68,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
 
-    // UI Tests
-    androidTestImplementation(libs.androidx.junit)
-
     implementation(project(":core_api"))
 }
 

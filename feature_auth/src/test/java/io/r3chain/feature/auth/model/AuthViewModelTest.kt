@@ -17,9 +17,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @ExperimentalCoroutinesApi
 class AuthViewModelTest {
@@ -36,8 +36,9 @@ class AuthViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
-        userRepository = mock(UserRepository::class.java)
-        `when`(userRepository.getRememberMeFlow()).thenReturn(flowOf(false))
+        userRepository = mock()
+        whenever(userRepository.getRememberMeFlow())
+            .thenReturn(flowOf(false))
         viewModel = AuthViewModel(userRepository)
     }
 
@@ -91,7 +92,8 @@ class AuthViewModelTest {
 
     @Test
     fun testSignIn() = runTest {
-        `when`(userRepository.authUser("test3@example.com", "test_pass")).thenReturn(Unit)
+        whenever(userRepository.authUser("test3@example.com", "test_pass"))
+            .thenReturn(Unit)
 
         viewModel.signIn()
 
