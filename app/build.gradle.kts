@@ -66,8 +66,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(project(":core_ui"))
     implementation(project(":core"))
+    implementation(project(":core_ui"))
 
     implementation(project(":feature_root"))
     implementation(project(":feature_auth"))
