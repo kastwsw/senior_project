@@ -55,11 +55,11 @@ dependencies {
 
     // UI Tests
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
 
+    implementation(project(":core_ui"))
     implementation(project(":core"))
 
     implementation(project(":feature_root"))

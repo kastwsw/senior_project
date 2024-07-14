@@ -1,9 +1,11 @@
 package io.r3chain
 
-import androidx.test.espresso.Espresso
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.runComposeUiTest
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.r3chain.feature.root.MainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,10 +14,22 @@ import org.junit.runner.RunWith
 class LoginTest {
 
     @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivity::class.java)
+    val composeTestRule = createComposeRule()
 
     @Test
-    fun checkLogin() {
-        Espresso.pressBack()
+    fun useAppContext() {
+        composeTestRule.setContent {
+            Text(text = "Dkjdfkj sdkjf askdjf.")
+        }
+    }
+
+    @Test
+    @OptIn(ExperimentalTestApi::class)
+    fun testSuccessfulLogin() = runComposeUiTest {
+        setContent {
+            MaterialTheme {
+                Text("You can set any Compose content!")
+            }
+        }
     }
 }

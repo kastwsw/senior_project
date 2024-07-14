@@ -53,10 +53,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // UI Tests
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
     // Unit Tests
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)

@@ -43,20 +43,19 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
 
+    // Integration with activities (launch and other)
+    api(libs.androidx.activity.compose)
+    // Compose
     api(platform(libs.androidx.compose.bom))
     api(libs.androidx.material3)
     api(libs.androidx.material.icons)
+    // Android Studio Preview support
+    api(libs.androidx.ui.tooling.preview)
+    debugApi(libs.androidx.ui.tooling)
 
     // shimmer effect
     api(libs.shimmer.compose)
 
     // exif
     api(libs.exifinterface)
-
-    // Integration with activities (launch and other)
-    api(libs.androidx.activity.compose)
-
-    // Android Studio Preview support
-    api(libs.androidx.ui.tooling.preview)
-    debugApi(libs.androidx.ui.tooling)
 }
