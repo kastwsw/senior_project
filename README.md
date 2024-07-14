@@ -18,7 +18,7 @@
 
 ____
 ### Авторизация и аздел профиля пользователя:
-<img src="https://raw.githubusercontent.com/kastwsw/senior_project/master/Screenshot_1720995527.png" width="300">
+<img src="https://raw.githubusercontent.com/kastwsw/senior_project/master/Screenshot_1720995477.png" width="300">
 <img src="https://raw.githubusercontent.com/kastwsw/senior_project/master/Screenshot_1720995837.png" width="300">
 
 ____
