@@ -20,13 +20,15 @@ class LoginTest {
 
     @Test
     fun testSuccessfulLogin() {
-//        // Ввод имени пользователя
-//        composeTestRule.onNodeWithText("Email")
-//            .performTextReplacement("testuser")
-//
-//        // Ввод пароля
-//        composeTestRule.onNodeWithText("Password")
-//            .performTextReplacement("password123")
+        // Ввод имени пользователя
+        composeTestRule.onNodeWithText("Email")
+            .performTextReplacement("test3@example.com")
+
+        // Ввод пароля
+        composeTestRule.onNodeWithText("Password")
+            .performTextReplacement("test_pass")
+
+        Thread.sleep(300)
 
         // Нажатие кнопки "Login"
         composeTestRule.onNodeWithText("Sign In")
