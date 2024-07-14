@@ -1,11 +1,9 @@
 package io.r3chain
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.runComposeUiTest
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.r3chain.feature.root.MainActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,22 +12,11 @@ import org.junit.runner.RunWith
 class LoginTest {
 
     @get:Rule
-    val composeTestRule = createComposeRule()
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun useAppContext() {
-        composeTestRule.setContent {
-            Text(text = "Dkjdfkj sdkjf askdjf.")
-        }
+    fun testSuccessfulLogin() {
+        composeTestRule.onNodeWithText("Email").assertExists()
     }
 
-    @Test
-    @OptIn(ExperimentalTestApi::class)
-    fun testSuccessfulLogin() = runComposeUiTest {
-        setContent {
-            MaterialTheme {
-                Text("You can set any Compose content!")
-            }
-        }
-    }
 }
