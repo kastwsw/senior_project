@@ -18,23 +18,25 @@
 
 ____
 ### Авторизация и аздел профиля пользователя:
-<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/109101022/348573635-d3f654c6-b5ce-4147-9993-fa33ae9e5bcc.png" width="300">
-<img src="https://github.com/user-attachments/assets/dfca1cdf-6478-4f0e-b27b-fc648995e57d.png" width="300">
-![Screenshot_1720995837](https://github.com/user-attachments/assets/d3f654c6-b5ce-4147-9993-fa33ae9e5bcc)
-![Screenshot_1720995477](https://github.com/user-attachments/assets/dfca1cdf-6478-4f0e-b27b-fc648995e57d)
+![Screenshot_1720995837](https://github.com/user-attachments/assets/24cede6b-ab28-417b-8e47-2b19e0429d1c)
+![Screenshot_1720995477](https://github.com/user-attachments/assets/4f9fdaaf-e2c0-4910-98e9-44704d514c2d)
 
 ____
 ### Можно сделать фото, либо загрузить графический файл:
-<img src="https://user-images.githubusercontent.com/71641200/212620663-fbc5987b-75db-4548-89ae-f05931c31143.png" width="300">
+![Screenshot_1720995569](https://github.com/user-attachments/assets/91891cca-26fa-4b9e-8938-6fdf18bbc268)
 
 ____
 ### Запись сбора мусора имеет разные параметры, в зависимости от типа сбора:
-<img src="https://user-images.githubusercontent.com/71641200/212620663-fbc5987b-75db-4548-89ae-f05931c31143.png" width="300">
+![Screenshot_1720995671](https://github.com/user-attachments/assets/d7283bd1-2fa4-4d81-9696-2a61c2a2ff25)
+![Screenshot_1720995628](https://github.com/user-attachments/assets/e9df1c92-e269-4b28-a336-2f8ea2eaa67f)
+![Screenshot_1720995569](https://github.com/user-attachments/assets/d5b16ec7-b4a5-4d80-911d-0909a4e538e1)
 
 ____
 ### Экран со списком записей:
-<img src="https://user-images.githubusercontent.com/71641200/212623210-da417066-cee2-4a31-96ef-a61f60f73abe.png" width="300">
+![Screenshot_1720995723](https://github.com/user-attachments/assets/63ead953-4193-4d59-88db-a8e3193c63a8)
 
 ____
 ### Экран запись детально:
+![Screenshot_1720995765](https://github.com/user-attachments/assets/8294f373-bcef-44cc-a12a-ef06e881fb60)
+
 <img src="https://user-images.githubusercontent.com/71641200/212624036-65b2717c-8dc2-45be-b804-d0fd9d9ee10b.png" width="300">
