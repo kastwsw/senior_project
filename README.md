@@ -17,7 +17,7 @@
 - доступ к записям через общий список и экран детали.
 
 ____
-### Авторизация и аздел профиля пользователя:
+### Авторизация и раздел профиля пользователя:
 <img src="https://raw.githubusercontent.com/kastwsw/senior_project/master/Screenshot_1720995477.png" width="300">
 <img src="https://raw.githubusercontent.com/kastwsw/senior_project/master/Screenshot_1720995837.png" width="300">
 
