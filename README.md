@@ -18,7 +18,8 @@
 
 ____
 ### Авторизация и аздел профиля пользователя:
-<img src="https://user-images.githubusercontent.com/71641200/212624036-65b2717c-8dc2-45be-b804-d0fd9d9ee10b.png" width="300">
+![Screenshot_1720995837](https://github.com/user-attachments/assets/d3f654c6-b5ce-4147-9993-fa33ae9e5bcc)
+![Screenshot_1720995477](https://github.com/user-attachments/assets/dfca1cdf-6478-4f0e-b27b-fc648995e57d)
 
 ____
 ### Можно сделать фото, либо загрузить графический файл:
