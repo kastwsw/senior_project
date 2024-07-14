@@ -18,7 +18,7 @@
 
 ____
 ### Авторизация и аздел профиля пользователя:
-<img src="https://github.com/user-attachments/assets/d3f654c6-b5ce-4147-9993-fa33ae9e5bcc.png" width="300">
+<img src="https://github-production-user-asset-6210df.s3.amazonaws.com/109101022/348573635-d3f654c6-b5ce-4147-9993-fa33ae9e5bcc.png" width="300">
 <img src="https://github.com/user-attachments/assets/dfca1cdf-6478-4f0e-b27b-fc648995e57d.png" width="300">
 ![Screenshot_1720995837](https://github.com/user-attachments/assets/d3f654c6-b5ce-4147-9993-fa33ae9e5bcc)
 ![Screenshot_1720995477](https://github.com/user-attachments/assets/dfca1cdf-6478-4f0e-b27b-fc648995e57d)
