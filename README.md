@@ -18,8 +18,8 @@
 
 ____
 ### Авторизация и аздел профиля пользователя:
-![Screenshot_1720995837](https://github.com/user-attachments/assets/24cede6b-ab28-417b-8e47-2b19e0429d1c)
-![Screenshot_1720995477](https://github.com/user-attachments/assets/4f9fdaaf-e2c0-4910-98e9-44704d514c2d)
+![Screenshot_1720995477](https://github.com/user-attachments/assets/8d9b213f-9e2a-4a00-b7a9-3d519b00f3df)
+![Screenshot_1720995837](https://github.com/user-attachments/assets/8ba6d62e-9a7a-4e38-84fb-278090c94dba)
 
 ____
 ### Можно сделать фото, либо загрузить графический файл:
